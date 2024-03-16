@@ -70,19 +70,19 @@ const {
           CREATE TABLE likes (
             id SERIAL PRIMARY KEY,
             userId INTEGER REFERENCES users(id),
-            loopId INTEGER REFERENCES loops(id),
+            loopId INTEGER REFERENCES loops(id)
           );
 
           CREATE TABLE follows (
             id SERIAL PRIMARY KEY,
             followingUserId INTEGER REFERENCES users(id),
-            followedUserId INTEGER REFERENCES users(id),
-          );
+            followedUserId INTEGER REFERENCES users(id)          
+            );
 
           CREATE TABLE requests_to_follow (
             id SERIAL PRIMARY KEY,
             followingUserId INTEGER REFERENCES users(id),
-            followedUserId INTEGER REFERENCES users(id),
+            followedUserId INTEGER REFERENCES users(id)
           );
 
           CREATE TABLE notifications (
@@ -91,7 +91,7 @@ const {
             loopId INTEGER REFERENCES loops(id),
             timestamp TIMESTAMP NOT NULL,
             fresh boolean DEFAULT true NOT NULL
-          )
+          );
       `);
   
       console.log("Finished building tables!");
@@ -101,7 +101,7 @@ const {
     }
   }
   
-  async function createInitialUsers() {
+ /* async function createInitialUsers() {
     try {
       console.log("Starting to create users...");
   
@@ -333,7 +333,7 @@ const {
       console.log("Error creating comments!");
       throw error;
     }
-  }
+  }*/
   
   async function rebuildDB() {
     try {
@@ -341,10 +341,10 @@ const {
   
       await dropTables();
       await createTables();
-      await createInitialUsers();
-      await createInitialRecipes();
-      await createInitialReviews();
-      await createInitialComments();
+     // await createInitialUsers();
+     // await createInitialRecipes();
+     // await createInitialReviews();
+     // await createInitialComments();
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
@@ -423,6 +423,6 @@ const {
   
   
   rebuildDB()
-    .then(testDB)
+    //.then(testDB)
     .catch(console.error)
     .finally(() => client.end());

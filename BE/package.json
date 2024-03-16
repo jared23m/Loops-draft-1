@@ -12,12 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ljreaux/Loops-draft-1/tree/main/BE"
+    "url": "https://github.com/jared23m/Loops-draft-1/tree/main/BE"
   },
   "author": "Jared May",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ljreaux/Loops-draft-1/issues"
+    "url": "https://github.com/jared23m/Loops-draft-1/issues"
   },
   "homepage": "https://github.com/jared23m/Loops-draft-1#readme",
   "dependencies": {
