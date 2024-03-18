@@ -6,11 +6,13 @@ const {
   } = require('./index');
 
 const {  
-    createRelativeChord
+    createRelativeChord,
+    getRelativeChordsByLoopId
   } = require('./relativeChords');
 
 const {  
-    createAbsoluteChord
+    createAbsoluteChord,
+    getAbsoluteChordsByLoopId
   } = require('./absoluteChords');
 
 
@@ -290,8 +292,28 @@ async function createLoop({
       throw error;
     }
   }
+
+  async function getLoopWithChordsById(loopId){
+    try {
+      const loopRow = await getLoopRowById(loopId);
+      const relativeChords = await getRelativeChordsByLoopId(loopId);
+      const absoluteChords = await getAbsoluteChordsByLoopId(loopId);
+
+      const returnObj = {
+        ...loopRow,
+        relativeChords,
+        absoluteChords
+      }
+
+      return returnObj;
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
-    getLoopRowById
+    getLoopRowById,
+    getLoopWithChordsById
   }

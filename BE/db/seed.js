@@ -11,7 +11,7 @@ const {
 } = require('./users');
 
 const {  
-  createLoop, getLoopRowById
+  createLoop, getLoopRowById, getLoopWithChordsById
 } = require('./loops');
 
 const {  
@@ -188,14 +188,8 @@ const {
       const userRow2 = await getUserRowById(2);
       console.log("user with id 2: ", userRow2);
 
-      const loopRow1 = await getLoopRowById(1);
-      console.log("loop with id 1: ", loopRow1);
-
-      const relativeChords1 = await getRelativeChordsByLoopId(1);
-      console.log("relative chords by loop id 1: ", relativeChords1);
-
-      const absoluteChords1 = await getAbsoluteChordsByLoopId(1);
-      console.log("absolute chords by loop id 1: ", absoluteChords1);
+      const loopWithChords1 = await getLoopWithChordsById(1);
+      console.log("loop 1 with chords", loopWithChords1);
 
     } catch (error){
       console.log("Error testing db")
