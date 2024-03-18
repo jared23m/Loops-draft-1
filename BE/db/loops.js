@@ -311,9 +311,34 @@ async function createLoop({
     }
   }
 
+  async function getAllPublicLoopsWithChords(){
+    try {
+      const {rows: publicLoopIds} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE status='public'
+        `
+      );
+
+      const publicLoopsWithChords = await Promise.all(
+        publicLoopIds.map((id)=>{
+          return getLoopWithChordsById(id.id);
+        })
+
+      )
+
+      return publicLoopsWithChords;
+
+    } catch (error){
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
     getLoopRowById,
-    getLoopWithChordsById
+    getLoopWithChordsById,
+    getAllPublicLoopsWithChords
   }

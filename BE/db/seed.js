@@ -11,7 +11,7 @@ const {
 } = require('./users');
 
 const {  
-  createLoop, getLoopRowById, getLoopWithChordsById
+  createLoop, getLoopRowById, getLoopWithChordsById, getAllPublicLoopsWithChords
 } = require('./loops');
 
 const {  
@@ -162,6 +162,16 @@ const {
         title: title,
         relativeChordNames: ["I", "V", "vi", "IV"]
       });
+
+      await createLoop({ 
+        userId: 2,
+        parentLoopId: null,
+        status: "public",
+        keySig: "Cmaj/Amin",
+        timestamp: timestamp,
+        title: title,
+        relativeChordNames: ["I", "V", "vi", "IV"]
+      });
       console.log("Finished creating loops!");
     } catch (error) {
       console.error("Error creating loops!");
@@ -188,8 +198,8 @@ const {
       const userRow2 = await getUserRowById(2);
       console.log("user with id 2: ", userRow2);
 
-      const loopWithChords1 = await getLoopWithChordsById(1);
-      console.log("loop 1 with chords", loopWithChords1);
+      const publicLoopsWithChords = await getAllPublicLoopsWithChords();
+      console.log("public loops with chords", publicLoopsWithChords);
 
     } catch (error){
       console.log("Error testing db")

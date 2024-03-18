@@ -5,7 +5,8 @@ const { requireUser, requireAdmin } = require("./utils");
 const {
     createLoop, 
     getLoopRowById,
-    updateLoop
+    updateLoop,
+    getAllPublicLoopsWithChords
 } = require("../db/loops");
 
 const {
@@ -262,5 +263,14 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       next(err);
     }
   });
+
+  loopsRouter.get("/public", async (req, res, next) => {
+    try {
+      const publicLoopsWithChords = await getAllPublicLoopsWithChords();
+      res.send(publicLoopsWithChords);
+    } catch (error){
+      throw (error);
+    }
+  })
 
   module.exports = loopsRouter;
