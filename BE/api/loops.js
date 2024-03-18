@@ -6,18 +6,10 @@ const {
     createLoop
 } = require("../db/loops");
 
-const keySigNames = ["Cmaj/Amin", 
-                    "Dbmaj/Bbmin", 
-                    "Dmaj/Bmin", 
-                    "Ebmaj/Cmin", 
-                    "Emaj/C#min", 
-                    "Fmaj/Dmin", 
-                    "Gbmaj/Ebmin", 
-                    "Gmaj/Bmin",
-                    "Abmaj/Fmin",
-                    "Amaj/F#min",
-                    "Bbmaj/Gmin",
-                    "Bmaj/G#min"]
+const {
+  keySigNames,
+  relativeChordNameOptions
+} = require("../db/index");
 
 loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { id: userId } = req.user;
@@ -49,7 +41,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
                     "Emaj/C#min", 
                     "Fmaj/Dmin", 
                     "Gbmaj/Ebmin", 
-                    "Gmaj/Bmin",
+                    "Gmaj/Emin",
                     "Abmaj/Fmin",
                     "Amaj/F#min",
                     "Bbmaj/Gmin",
@@ -58,9 +50,40 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           });
     }
 
+    if (!body.relativeChordNames || body.relativeChordNames.length == 0 || body.relativeChordNames.length > 4){
+      next({
+        name: "relativeChordArrayInvalid",
+        message: `A loop must have at least 1 and no more than 4 relative chord names.`
+      });
+    }
+
+    let chordNameInvalid;
+    let counter = 0;
+
+    while (!chordNameInvalid && counter < body.relativeChordNames.length){
+      const found = relativeChordNameOptions.find((option) =>{
+        return body.relativeChordNames[counter].toLowerCase() == option;
+      });
+
+      if (!found){
+        chordNameInvalid = true;
+      }
+
+      counter = counter + 1;
+    }
+
+    if (chordNameInvalid){
+      next({
+        name: "relativeChordNameInvalid",
+        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
+        either capital or lowercase. It can have an optional "dim" suffix.`
+      });
+    }
+
     const currentDate = new Date();
-    body.timestamp = currentDate.getTime();
-    body.title = "placeholder";
+    body.timestamp = currentDate.toLocaleString();
+    const timestampArr = body.timestamp.split(',');
+    body.title = timestampArr[0];
     
     const loop = { ...body, userId };
     try {

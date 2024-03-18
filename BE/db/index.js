@@ -9,6 +9,29 @@ const client = new Client({
       : undefined,
 });
 
+const relativeRootIdOptions = ["i", "bii", "ii", "biii", "iii", "iv", "bv",  "v", "bvi", "vi", "bvii", "vii"];
+
+const relativeChordNameOptions = ["i", "bii", "ii", "biii", "iii", "iv", "bv",  "v", "bvi", "vi", "bvii", "vii", "idim", "biidim", "iidim", "biiidim", "iiidim", "ivdim", "bvdim",  "vdim", "bvidim", "vidim", "bviidim", "viidim"]
+
+const keySigNames = ["Cmaj/Amin", 
+"Dbmaj/Bbmin", 
+"Dmaj/Bmin", 
+"Ebmaj/Cmin", 
+"Emaj/C#min", 
+"Fmaj/Dmin", 
+"Gbmaj/Ebmin", 
+"Gmaj/Emin",
+"Abmaj/Fmin",
+"Amaj/F#min",
+"Bbmaj/Gmin",
+"Bmaj/G#min"]
+
+const rootShiftArr = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+
 module.exports = {
-    client
+    client,
+    relativeRootIdOptions,
+    keySigNames,
+    rootShiftArr,
+    relativeChordNameOptions
 }

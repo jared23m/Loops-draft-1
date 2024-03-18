@@ -1,5 +1,8 @@
 const {  
-    client
+    client,
+    relativeRootIdOptions,
+    keySigNames,
+    rootShiftArr
   } = require('./index');
 
 const {  
@@ -10,21 +13,7 @@ const {
     createAbsoluteChord
   } = require('./absoluteChords');
 
-const relativeRootIdOptions = ["i", "bii", "ii", "biii", "iii", "iv", "bv",  "v", "bvi", "vi", "bvii", "vii"];
-const keySigNames = ["Cmaj/Amin", 
-"Dbmaj/Bbmin", 
-"Dmaj/Bmin", 
-"Ebmaj/Cmin", 
-"Emaj/C#min", 
-"Fmaj/Dmin", 
-"Gbmaj/Ebmin", 
-"Gmaj/Emin",
-"Abmaj/Fmin",
-"Amaj/F#min",
-"Bbmaj/Gmin",
-"Bmaj/G#min"]
 
-const rootShiftArr = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
 async function createLoop({
     userId,
