@@ -27,7 +27,6 @@ async function createLoop({
     relativeChordNames
   }) {
     try {
-      console.log("parentloopid", parentLoopId);
       const {
         rows: [loop],
       } = await client.query(
@@ -128,9 +127,6 @@ async function createLoop({
   }) {
     try {
 
-      console.log("here");
-      console.log(status);
-      console.log(keySig);
       const {
         rows: [loop],
       } = await client.query(
@@ -142,8 +138,6 @@ async function createLoop({
       `,
         [loopId, status, keySig]
       );
-
-      console.log(loop);
 
       let relativeChords;
 
@@ -212,15 +206,12 @@ async function createLoop({
 
       let keySigIndex;
 
-      console.log("keysig",loop.keysig);
 
         keySigNames.forEach((option, index) => {
           if  (loop.keysig == option){
             keySigIndex = index;
           }
         })
-
-        console.log("keysigindex", keySigIndex);
 
       await client.query(
         `
@@ -238,7 +229,6 @@ async function createLoop({
         `,
         [loopId])
 
-      console.log("relativeChords", relativeChordsGet);
 
       const absoluteChords = await Promise.all(
         relativeChordsGet.map((chord) => {
@@ -257,10 +247,7 @@ async function createLoop({
         })
       )
 
-      console.log("absolute", absoluteChords);
-
       const loopRow = await getLoopRowById(loop.id);
-      console.log("looprow", loopRow);
       return await getLoopRowById(loop.id);
     } catch (error) {
       throw error;
