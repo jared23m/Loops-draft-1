@@ -13,7 +13,8 @@ const {
         const {rows: [relativeChord]} = await client.query(
             `
             INSERT INTO relative_chords(loopId, relativeRootId, quality, name, position) 
-            VALUES($1, $2, $3, $4, $5)      
+            VALUES($1, $2, $3, $4, $5) 
+            RETURNING *;
             `,
             [loopId, relativeRootId, quality, name, position]
         );

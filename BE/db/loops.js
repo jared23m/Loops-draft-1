@@ -6,7 +6,25 @@ const {
     createRelativeChord
   } = require('./relativeChords');
 
+const {  
+    createAbsoluteChord
+  } = require('./absoluteChords');
+
 const relativeRootIdOptions = ["i", "bii", "ii", "biii", "iii", "iv", "bv",  "v", "bvi", "vi", "bvii", "vii"];
+const keySigNames = ["Cmaj/Amin", 
+"Dbmaj/Bbmin", 
+"Dmaj/Bmin", 
+"Ebmaj/Cmin", 
+"Emaj/C#min", 
+"Fmaj/Dmin", 
+"Gbmaj/Ebmin", 
+"Gmaj/Emin",
+"Abmaj/Fmin",
+"Amaj/F#min",
+"Bbmaj/Gmin",
+"Bmaj/G#min"]
+
+const rootShiftArr = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
 async function createLoop({
     userId,
@@ -31,10 +49,18 @@ async function createLoop({
 
       const relativeChords = await Promise.all(
         relativeChordNames.map((chord, index)=>{
+                let numerals;
+                if (chord[0] == "b"){
+                  const numeralsArr = chord.split('');
+                  numeralsArr.splice(0, 1);
+                  numerals = numeralsArr.join('');
+                } else {
+                  numerals = chord;
+                }
                 let quality;
-                if (chord == chord.toUpperCase()){
+                if (numerals == numerals.toUpperCase()){
                     quality = "maj";
-                } else if (chord[chord.length - 1] == 'm'){
+                } else if (numerals[numerals.length - 1] == 'm'){
                     quality = "dim";
                 } else {
                     quality = "min";
@@ -69,6 +95,31 @@ async function createLoop({
                     name: chord, 
                     position: index
                 });
+        })
+      )
+
+      let keySigIndex;
+
+        keySigNames.forEach((option, index) => {
+          if  (loop.keysig == option){
+            keySigIndex = index;
+          }
+      })
+
+      const absoluteChords = await Promise.all(
+        relativeChords.map((chord) => {
+          let absoluteRootId = chord.relativerootid + keySigIndex;
+          while (absoluteRootId >= 12){
+            absoluteRootId = absoluteRootId - 12;
+          }
+          const name = `${rootShiftArr[absoluteRootId]}${chord.quality}`;
+          return createAbsoluteChord({
+            loopId: loop.id, 
+            absoluteRootId, 
+            quality: chord.quality,
+            name,
+            position: chord.position
+        });
         })
       )
       return getLoopRowById(loop.id);

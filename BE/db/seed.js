@@ -17,6 +17,10 @@ const {
 const {  
   getRelativeChordsByLoopId
 } = require('./relativeChords');
+
+const {  
+  getAbsoluteChordsByLoopId
+} = require('./absoluteChords');
   
   async function dropTables() {
     try {
@@ -151,10 +155,10 @@ const {
         userId: 1,
         parentLoopId: null,
         status: "public",
-        keySig: "Cmaj/Amin",
+        keySig: "Gmaj/Emin",
         timestamp: timestamp,
         title: "placeholder",
-        relativeChordNames: ["I", "ii", "iii", "IV"]
+        relativeChordNames: ["I", "V", "vi", "IV"]
       });
       console.log("Finished creating loops!");
     } catch (error) {
@@ -187,6 +191,9 @@ const {
 
       const relativeChords1 = await getRelativeChordsByLoopId(1);
       console.log("relative chords by loop id 1: ", relativeChords1);
+
+      const absoluteChords1 = await getAbsoluteChordsByLoopId(1);
+      console.log("absolute chords by loop id 1: ", absoluteChords1);
 
     } catch (error){
       console.log("Error testing db")
