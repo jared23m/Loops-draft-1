@@ -70,3 +70,5 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       next(err);
     }
   });
+
+  module.exports = loopsRouter;

@@ -2,7 +2,6 @@ const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
 const { requireUser, requireAdmin } = require("./utils");
-const { returnImageUrl } = require("./uploadImage");
 
 const {
     getUserRowByUsername,
@@ -86,3 +85,5 @@ usersRouter.post("/login", async (req, res, next) => {
     next(err);
   }
 });
+
+module.exports = usersRouter;
