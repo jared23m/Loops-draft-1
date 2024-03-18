@@ -149,7 +149,9 @@ const {
     try {
       console.log("Starting to create loops...");
       const currentDate = new Date();
-      const timestamp = currentDate.getTime();
+      const timestamp = currentDate.toLocaleString();
+      const timestampArr = timestamp.split(',');
+      const title = timestampArr[0];
   
       await createLoop({ 
         userId: 1,
@@ -157,7 +159,7 @@ const {
         status: "public",
         keySig: "Gmaj/Emin",
         timestamp: timestamp,
-        title: "placeholder",
+        title: title,
         relativeChordNames: ["I", "V", "vi", "IV"]
       });
       console.log("Finished creating loops!");
