@@ -205,7 +205,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     });
 
 
-    loopsRouter.put("/:loopId", requireUser, async (req, res, next) => {
+  loopsRouter.put("/:loopId", requireUser, async (req, res, next) => {
       const { id: userId } = req.user;
       const { loopId } = req.params;
       const { body } = req;
