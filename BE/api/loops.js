@@ -85,8 +85,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     const currentDate = new Date();
     body.timestamp = currentDate.toLocaleString();
-    const timestampArr = body.timestamp.split(',');
-    body.title = timestampArr[0];
     
     const loop = { ...body, userId };
     try {
@@ -104,7 +102,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     body.parentLoopId = loopId;
 
-    body.status = 'parent';
+    body.status = 'reply';
 
     const keySigMatch = keySigNames.find((name) => {
         return body.keySig == name;
@@ -162,8 +160,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     const currentDate = new Date();
     body.timestamp = currentDate.toLocaleString();
-    const timestampArr = body.timestamp.split(',');
-    body.title = timestampArr[0];
     
     const loop = { ...body, userId };
     try {
@@ -191,8 +187,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             });
           }
 
-          if (potentialLoop.status == 'parent'){
-            body.status = 'parent';
+          if (potentialLoop.status == 'reply'){
+            body.status = 'reply';
           } else if  (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
             next({
                 name: "LoopStatusInvalid",

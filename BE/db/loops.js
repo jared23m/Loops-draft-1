@@ -23,7 +23,6 @@ async function createLoop({
     status,
     keySig,
     timestamp,
-    title,
     relativeChordNames
   }) {
     try {
@@ -31,11 +30,11 @@ async function createLoop({
         rows: [loop],
       } = await client.query(
         `
-        INSERT INTO loops(userId, parentLoopId, status, keySig, timestamp, title) 
-        VALUES($1, $2, $3, $4, $5, $6)
+        INSERT INTO loops(userId, parentLoopId, status, keySig, timestamp) 
+        VALUES($1, $2, $3, $4, $5)
         RETURNING *;
       `,
-        [userId, parentLoopId, status, keySig, timestamp, title]
+        [userId, parentLoopId, status, keySig, timestamp]
       );
 
       const relativeChords = await Promise.all(
@@ -322,10 +321,45 @@ async function createLoop({
     }
   }
 
+  async function getLoopWithChildrenById(loopId){
+    try {
+      const loop = await getLoopWithChordsById(loopId);
+
+      const {rows: children} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE parentLoopId=$1;
+        `,
+        [loopId]
+      )
+
+      let returnObj;
+
+      if (!children || children.length == 0){
+        returnObj = loop;
+      } else {
+        const childLoops = await Promise.all(
+          children.map((child)=>{
+            return getLoopWithChildrenById(child.id);
+          })
+        );
+
+        returnObj = {
+          ...loop,
+          childLoops
+        }
+        return returnObj;
+      }
+    } catch (error){
+      throw (error);
+    }
+  }
   module.exports = {
     createLoop,
     updateLoop,
     getLoopRowById,
     getLoopWithChordsById,
-    getAllPublicLoopsWithChords
+    getAllPublicLoopsWithChords,
+    getLoopWithChildrenById
   }

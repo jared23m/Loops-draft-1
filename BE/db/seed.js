@@ -11,7 +11,7 @@ const {
 } = require('./users');
 
 const {  
-  createLoop, getLoopRowById, getLoopWithChordsById, getAllPublicLoopsWithChords
+  createLoop, getLoopRowById, getLoopWithChordsById, getAllPublicLoopsWithChords, getLoopWithChildrenById
 } = require('./loops');
 
 const {  
@@ -65,7 +65,6 @@ const {
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,
           keySig varchar(255) NOT NULL,
-          title varchar(255) NOT NULL,
           likeCount int DEFAULT 0 NOT NULL
         );
   
@@ -150,8 +149,6 @@ const {
       console.log("Starting to create loops...");
       const currentDate = new Date();
       const timestamp = currentDate.toLocaleString();
-      const timestampArr = timestamp.split(',');
-      const title = timestampArr[0];
   
       await createLoop({ 
         userId: 1,
@@ -159,17 +156,24 @@ const {
         status: "public",
         keySig: "Gmaj/Emin",
         timestamp: timestamp,
-        title: title,
         relativeChordNames: ["I", "V", "vi", "IV"]
       });
 
       await createLoop({ 
         userId: 2,
-        parentLoopId: null,
-        status: "public",
+        parentLoopId: 1,
+        status: "reply",
         keySig: "Cmaj/Amin",
         timestamp: timestamp,
-        title: title,
+        relativeChordNames: ["I", "V", "vi", "IV"]
+      });
+
+      await createLoop({ 
+        userId: 1,
+        parentLoopId: 2,
+        status: "reply",
+        keySig: "Emaj/C#min",
+        timestamp: timestamp,
         relativeChordNames: ["I", "V", "vi", "IV"]
       });
       console.log("Finished creating loops!");
@@ -198,8 +202,8 @@ const {
       const userRow2 = await getUserRowById(2);
       console.log("user with id 2: ", userRow2);
 
-      const publicLoopsWithChords = await getAllPublicLoopsWithChords();
-      console.log("public loops with chords", publicLoopsWithChords);
+      const loop1WithChildren = await getLoopWithChildrenById(1);
+      console.log("loop 1 with children", loop1WithChildren);
 
     } catch (error){
       console.log("Error testing db")
