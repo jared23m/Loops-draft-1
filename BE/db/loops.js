@@ -225,6 +225,7 @@ async function createLoop({
 
       if (!children || children.length == 0){
         returnObj = loop;
+        return returnObj;
       } else {
         const childLoops = await Promise.all(
           children.map((child)=>{
