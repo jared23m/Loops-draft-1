@@ -242,11 +242,26 @@ async function createLoop({
       throw (error);
     }
   }
+
+  async function getStartLoopRowById(loopId){
+    try {
+      const loop = await getLoopRowById(loopId);
+      if (!loop.parentloopid){
+        return loop;
+      } else {
+        return await getStartLoopRowById(loop.parentloopid);
+      }
+    } catch (error){
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
     getLoopRowById,
     getLoopWithChordsById,
     getAllPublicLoopsWithChords,
-    getLoopWithChildrenById
+    getLoopWithChildrenById,
+    getStartLoopRowById
   }

@@ -6,7 +6,8 @@ const {
     createLoop, 
     getLoopRowById,
     updateLoop,
-    getAllPublicLoopsWithChords
+    getAllPublicLoopsWithChords,
+    getStartLoopRowById
 } = require("../db/loops");
 
 const {
@@ -22,10 +23,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         body.parentLoopId = null;
     }
 
-    if (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
+    if (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly' || body.status == 'loopBank')){
         next({
             name: "LoopStatusInvalid",
-            message: "A loop must either be public, private, or followOnly",
+            message: "A loop created through this endpoint must either be public, private, followOnly, or loopBank.",
           });
     }
 
@@ -78,7 +79,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     if (chordNameInvalid){
       next({
         name: "relativeChordNameInvalid",
-        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
+        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
         either capital or lowercase. It can have an optional "dim" suffix.`
       });
     }
@@ -101,12 +102,25 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { body } = req;
     try {
     const loopInQuestion = await getLoopRowById(loopId);
-    
-    if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
+  
+    if (loopInQuestion.status == 'loopBank'){
+      next({
+        name: "LoopBankError",
+        message: `This loop is a loopBank loop. You cannot reply to it, even if you are the creator.`
+      });
+    } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
       next({
         name: "PrivateLoopError",
         message: `This loop is private. You can only reply to it if you are the creator. `
       });
+    } else if (loopInQuestion.status == 'reply'){
+      const startLoopRow = await getStartLoopRowById(loopId);
+      if (startLoopRow.status == 'private' && userId != startLoopRow.userid){
+        next({
+          name: "PrivateLoopError",
+          message: `The start loop of this loop is private. You can only reply to it if you are the creator of the start loop. `
+        });
+      }
     }
 
     body.parentLoopId = loopId;
@@ -162,7 +176,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     if (chordNameInvalid){
       next({
         name: "relativeChordNameInvalid",
-        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
+        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
         either capital or lowercase. It can have an optional "dim" suffix.`
       });
     }
@@ -201,10 +215,15 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               name: "LoopIsAReplyError",
               message: "You cannot edit the status of a loop that is a reply to another loop."
             });
+          } else if (potentialLoop.status == 'loopBank'){
+            next({
+              name: "LoopIsALoopBankError",
+              message: "You cannot edit the status of a loop that is a loopBank loop."
+            });
           } else if (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
             next({
                 name: "LoopStatusInvalid",
-                message: "A loop must either be public, private, or followOnly",
+                message: "You can only edit this loop to become public, private, or followOnly."
               });
            }
 
