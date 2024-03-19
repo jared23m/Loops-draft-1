@@ -99,6 +99,15 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { id: userId } = req.user;
     const { loopId } = req.params;
     const { body } = req;
+    try {
+    const loopInQuestion = await getLoopRowById(loopId);
+    
+    if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
+      next({
+        name: "PrivateLoopError",
+        message: `This loop is private. You can only reply to it if you are the creator. `
+      });
+    }
 
     body.parentLoopId = loopId;
 
@@ -162,7 +171,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     body.timestamp = currentDate.toLocaleString();
     
     const loop = { ...body, userId };
-    try {
+  
         const newLoop = await createLoop(loop);
         res.send(newLoop);
       } catch (err) {
@@ -188,70 +197,18 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           }
 
           if (potentialLoop.status == 'reply'){
-            body.status = 'reply';
-          } else if  (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
+            next({
+              name: "LoopIsAReplyError",
+              message: "You cannot edit the status of a loop that is a reply to another loop."
+            });
+          } else if (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
             next({
                 name: "LoopStatusInvalid",
                 message: "A loop must either be public, private, or followOnly",
               });
            }
 
-          const keySigMatch = keySigNames.find((name) => {
-              return body.keySig == name;
-          })
 
-          if (!keySigMatch){
-              next({
-                  name: "KeySigInvalid",
-                  message: `A loop must have one of these key signature names:
-                          "Cmaj/Amin',  
-                          "Dbmaj/Bbmin", 
-                          "Dmaj/Bmin",
-                          "Ebmaj/Cmin", 
-                          "Emaj/C#min", 
-                          "Fmaj/Dmin", 
-                          "Gbmaj/Ebmin", 
-                          "Gmaj/Emin",
-                          "Abmaj/Fmin",
-                          "Amaj/F#min",
-                          "Bbmaj/Gmin",
-                          "Bmaj/G#min"
-                          `
-                });
-          }
-
-          if ((body.relativeChordNames) && (body.relativeChordNames.length == 0 || body.relativeChordNames.length > 4)){
-            next({
-              name: "relativeChordArrayInvalid",
-              message: `A loop must have at least 1 and no more than 4 relative chord names.`
-            });
-          }
-
-          if (body.relativeChordNames){
-            let chordNameInvalid;
-            let counter = 0;
-  
-            while (!chordNameInvalid && counter < body.relativeChordNames.length){
-              const found = relativeChordNameOptions.find((option) =>{
-                return body.relativeChordNames[counter].toLowerCase() == option;
-              });
-  
-              if (!found){
-                chordNameInvalid = true;
-              }
-  
-              counter = counter + 1;
-            }
-  
-            if (chordNameInvalid){
-              next({
-                name: "relativeChordNameInvalid",
-                message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
-                either capital or lowercase. It can have an optional "dim" suffix.`
-              });
-            }
-          }
-          
           const loop = { ...body, loopId};
           const newLoop = await updateLoop(loop);
           res.send(newLoop);
