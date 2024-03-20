@@ -6,7 +6,10 @@ const {
     createLoop, 
     getLoopRowById,
     updateLoop,
-    getAllPublicLoopsWithChords
+    getAllPublicLoopsWithChords,
+    getStartLoopRowById,
+    getLoopWithChildrenById,
+    getThrulineById
 } = require("../db/loops");
 
 const {
@@ -22,11 +25,12 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         body.parentLoopId = null;
     }
 
-    if (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
+    if (!(body.status == 'public' || body.status == 'private' || body.status == 'loopBank')){
         next({
             name: "LoopStatusInvalid",
-            message: "A loop must either be public, private, or followOnly",
+            message: "A loop created through this endpoint must either be public, private, or loopBank.",
           });
+        return
     }
 
     const keySigMatch = keySigNames.find((name) => {
@@ -51,6 +55,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
                     "Bmaj/G#min"
                     `
           });
+          return
     }
 
     if (!body.relativeChordNames || body.relativeChordNames.length == 0 || body.relativeChordNames.length > 4){
@@ -58,6 +63,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         name: "relativeChordArrayInvalid",
         message: `A loop must have at least 1 and no more than 4 relative chord names.`
       });
+      return
     }
 
     let chordNameInvalid;
@@ -78,9 +84,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     if (chordNameInvalid){
       next({
         name: "relativeChordNameInvalid",
-        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
+        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
         either capital or lowercase. It can have an optional "dim" suffix.`
       });
+      return
     }
 
     const currentDate = new Date();
@@ -99,6 +106,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { id: userId } = req.user;
     const { loopId } = req.params;
     const { body } = req;
+    try {
+    const loopInQuestion = await getStartLoopRowById(loopId);
+  
+    if (loopInQuestion.status == 'loopBank'){
+      next({
+        name: "LoopBankError",
+        message: `This loop is a loopBank loop. You cannot reply to it, even if you are the creator.`
+      });
+      return
+    } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
+      next({
+        name: "PrivateLoopError",
+        message: `This loop is private, or a reply to a private loop. You can only reply to it if you are the creator. `
+      });
+      return
+    }
 
     body.parentLoopId = loopId;
 
@@ -126,6 +149,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
                     "Bmaj/G#min"
                     `
           });
+          return
     }
 
     if (!body.relativeChordNames || body.relativeChordNames.length == 0 || body.relativeChordNames.length > 4){
@@ -133,6 +157,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         name: "relativeChordArrayInvalid",
         message: `A loop must have at least 1 and no more than 4 relative chord names.`
       });
+      return
     }
 
     let chordNameInvalid;
@@ -153,16 +178,17 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     if (chordNameInvalid){
       next({
         name: "relativeChordNameInvalid",
-        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
+        message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
         either capital or lowercase. It can have an optional "dim" suffix.`
       });
-    }
+      return
+    } 
 
     const currentDate = new Date();
     body.timestamp = currentDate.toLocaleString();
     
     const loop = { ...body, userId };
-    try {
+  
         const newLoop = await createLoop(loop);
         res.send(newLoop);
       } catch (err) {
@@ -171,7 +197,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     });
 
 
-    loopsRouter.put("/:loopId", requireUser, async (req, res, next) => {
+  loopsRouter.put("/:loopId", requireUser, async (req, res, next) => {
       const { id: userId } = req.user;
       const { loopId } = req.params;
       const { body } = req;
@@ -185,76 +211,30 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               name: "InvalidCredentials",
               message: `Tokened user did not make this loop.`
             });
-          }
-
-          if (potentialLoop.status == 'reply'){
-            body.status = 'reply';
-          } else if  (!(body.status == 'public' || body.status == 'private' || body.status == 'followOnly')){
+            return
+          } else if (potentialLoop.status == 'reply'){
+            next({
+              name: "LoopIsAReplyError",
+              message: "You cannot edit the status of a loop that is a reply to another loop."
+            });
+            return
+          } else if (potentialLoop.status == 'loopBank'){
+            next({
+              name: "LoopIsALoopBankError",
+              message: "You cannot edit the status of a loop that is a loopBank loop."
+            });
+            return
+          } else if (!(body.status == 'public' || body.status == 'private')){
             next({
                 name: "LoopStatusInvalid",
-                message: "A loop must either be public, private, or followOnly",
+                message: "You can only edit this loop to become public or private."
               });
+            return
            }
 
-          const keySigMatch = keySigNames.find((name) => {
-              return body.keySig == name;
-          })
-
-          if (!keySigMatch){
-              next({
-                  name: "KeySigInvalid",
-                  message: `A loop must have one of these key signature names:
-                          "Cmaj/Amin',  
-                          "Dbmaj/Bbmin", 
-                          "Dmaj/Bmin",
-                          "Ebmaj/Cmin", 
-                          "Emaj/C#min", 
-                          "Fmaj/Dmin", 
-                          "Gbmaj/Ebmin", 
-                          "Gmaj/Emin",
-                          "Abmaj/Fmin",
-                          "Amaj/F#min",
-                          "Bbmaj/Gmin",
-                          "Bmaj/G#min"
-                          `
-                });
-          }
-
-          if ((body.relativeChordNames) && (body.relativeChordNames.length == 0 || body.relativeChordNames.length > 4)){
-            next({
-              name: "relativeChordArrayInvalid",
-              message: `A loop must have at least 1 and no more than 4 relative chord names.`
-            });
-          }
-
-          if (body.relativeChordNames){
-            let chordNameInvalid;
-            let counter = 0;
-  
-            while (!chordNameInvalid && counter < body.relativeChordNames.length){
-              const found = relativeChordNameOptions.find((option) =>{
-                return body.relativeChordNames[counter].toLowerCase() == option;
-              });
-  
-              if (!found){
-                chordNameInvalid = true;
-              }
-  
-              counter = counter + 1;
-            }
-  
-            if (chordNameInvalid){
-              next({
-                name: "relativeChordNameInvalid",
-                message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). It must be a roman numeral 1-7, 
-                either capital or lowercase. It can have an optional "dim" suffix.`
-              });
-            }
-          }
-          
-          const loop = { ...body, loopId};
-          const newLoop = await updateLoop(loop);
-          res.send(newLoop);
+            const loop = { ...body, loopId};
+            const newLoop = await updateLoop(loop);
+            res.send(newLoop);
     } catch (err) {
       next(err);
     }
@@ -269,4 +249,73 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     }
   })
 
+  loopsRouter.get("/:loopId", async (req, res, next) => {
+    const { loopId } = req.params;
+
+    let reqUserId;
+    if (req.user && req.user.id){
+      reqUserId = req.user.id;
+    }
+  
+    try {
+      const loopInQuestion = await getLoopRowById(loopId);
+      if (loopInQuestion.status == 'loopBank'){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a loopBank loop."
+        });
+        return
+      } else if (loopInQuestion.status == 'reply'){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a reply loop."
+        });
+        return
+      } else if (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
+        });
+        return
+      }
+
+      const loop = await getLoopWithChildrenById(loopId);
+      res.send(loop);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  loopsRouter.get("/thruline/:loopId", async (req, res, next) => {
+    const {loopId} = req.params;
+
+    let reqUserId;
+    if (req.user && req.user.id){
+      reqUserId = req.user.id;
+    }
+
+    try{
+      const loopInQuestion = await getStartLoopRowById(loopId);
+      if (loopInQuestion.status == 'loopBank'){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a loopBank loop."
+        });
+        return
+      } else if (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
+        });
+        return
+      } 
+
+      const thruline = await getThrulineById(loopId);
+      const flattedThruline = thruline.flat(Infinity);
+
+      res.send(flattedThruline);
+    } catch (error){
+      throw error
+    }
+  })
   module.exports = loopsRouter;
