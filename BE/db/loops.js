@@ -274,6 +274,56 @@ async function createLoop({
     }
   }
 
+  async function destroyLoopById(loopId){
+    try{
+      const {rows: childLoops} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE parentLoopId = $1;
+         `,
+         [loopId]
+      );
+
+      if (childLoops && childLoops.length != 0){
+        const deleteChildLoops = await Promise.all(
+          childLoops.map((childLoop) => {
+            return destroyLoopById(childLoop.id);
+          })
+        )
+      }
+
+      await client.query(
+        `
+        DELETE FROM relative_chords
+        WHERE loopId = $1;
+        `,
+        [loopId]
+      )
+
+      await client.query(
+        `
+        DELETE FROM absolute_chords
+        WHERE loopId = $1;
+        `,
+        [loopId]
+      )
+      
+      await client.query(
+        `
+        DELETE FROM loops
+        WHERE id = $1;
+      `,
+      [loopId]
+      )
+
+      return null;
+      
+    } catch (error){
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
@@ -282,5 +332,6 @@ async function createLoop({
     getAllPublicLoopsWithChords,
     getLoopWithChildrenById,
     getStartLoopRowById,
-    getThrulineById
+    getThrulineById,
+    destroyLoopById
   }

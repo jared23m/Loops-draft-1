@@ -169,6 +169,15 @@ const {
       });
 
       await createLoop({ 
+        userId: 2,
+        parentLoopId: 1,
+        status: "reply",
+        keySig: "Fmaj/Dmin",
+        timestamp: timestamp,
+        relativeChordNames: ["I", "V", "vi", "IV"]
+      });
+
+      await createLoop({ 
         userId: 1,
         parentLoopId: 2,
         status: "reply",

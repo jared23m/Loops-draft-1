@@ -9,7 +9,8 @@ const {
     getAllPublicLoopsWithChords,
     getStartLoopRowById,
     getLoopWithChildrenById,
-    getThrulineById
+    getThrulineById,
+    destroyLoopById
 } = require("../db/loops");
 
 const {
@@ -318,4 +319,27 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       throw error
     }
   })
+
+  loopsRouter.delete("/:loopId", requireUser, async (req, res, next) => {
+    const { loopId } = req.params;
+    try {
+      const aboutToDestroy = await getLoopWithChildrenById(loopId);
+      if (aboutToDestroy.userid != req.user.id){
+        next({
+          name: "InvalidCredentials",
+           message: `Tokened user did not make this loop.`
+        });
+        return
+      }
+      
+      const destroyedLoop = await destroyLoopById(loopId);
+      res.send({
+        name: "DeleteConfirmation",
+        destroyedLoop: aboutToDestroy,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+  
   module.exports = loopsRouter;
