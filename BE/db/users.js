@@ -140,10 +140,26 @@ async function createUser({ email, password, username, admin }) {
       throw (error);
     }
   }
+
+  async function getAllUsers(){
+    try{
+        const {rows: users} = await client.query(
+          `
+          SELECT id, username, admin
+          FROM users;
+          `
+        )
+
+        return users;
+    } catch (error){
+      throw (error);
+    }
+  }
   module.exports= {
     createUser,
     getUserRowByUsername,
     getUserRowById,
     getPrivateUserPageById,
-    getPublicUserPageById
+    getPublicUserPageById,
+    getAllUsers
   }

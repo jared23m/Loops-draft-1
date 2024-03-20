@@ -7,7 +7,8 @@ const {
     getUserRowByUsername,
     createUser,
     getPrivateUserPageById,
-    getPublicUserPageById
+    getPublicUserPageById,
+    getAllUsers
 } = require("../db/users");
 
 const jwt = require("jsonwebtoken");
@@ -102,6 +103,15 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     res.send(user);
   } catch (err) {
     next(err);
+  }
+});
+
+usersRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await getAllUsers();
+    res.send( users );
+  } catch (error) {
+    throw (error);
   }
 });
 
