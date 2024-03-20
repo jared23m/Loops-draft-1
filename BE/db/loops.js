@@ -257,6 +257,23 @@ async function createLoop({
     }
   }
 
+  async function getThrulineById(loopId){
+    try {
+      const singleLoop = await getLoopWithChordsById(loopId);
+      if (singleLoop.parentloopid){
+        const thruline = await getThrulineById(singleLoop.parentloopid);
+        return [
+          singleLoop,
+          thruline
+        ]
+      } else {
+        return singleLoop;
+      }
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
@@ -264,5 +281,6 @@ async function createLoop({
     getLoopWithChordsById,
     getAllPublicLoopsWithChords,
     getLoopWithChildrenById,
-    getStartLoopRowById
+    getStartLoopRowById,
+    getThrulineById
   }

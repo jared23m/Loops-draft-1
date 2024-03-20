@@ -8,7 +8,8 @@ const {
     updateLoop,
     getAllPublicLoopsWithChords,
     getStartLoopRowById,
-    getLoopWithChildrenById
+    getLoopWithChildrenById,
+    getThrulineById
 } = require("../db/loops");
 
 const {
@@ -106,7 +107,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { loopId } = req.params;
     const { body } = req;
     try {
-    const loopInQuestion = await getLoopRowById(loopId);
+    const loopInQuestion = await getStartLoopRowById(loopId);
   
     if (loopInQuestion.status == 'loopBank'){
       next({
@@ -117,18 +118,9 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
       next({
         name: "PrivateLoopError",
-        message: `This loop is private. You can only reply to it if you are the creator. `
+        message: `This loop is private, or a reply to a private loop. You can only reply to it if you are the creator. `
       });
       return
-    } else if (loopInQuestion.status == 'reply'){
-      const startLoopRow = await getStartLoopRowById(loopId);
-      if (startLoopRow.status == 'private' && userId != startLoopRow.userid){
-        next({
-          name: "PrivateLoopError",
-          message: `The start loop of this loop is private. You can only reply to it if you are the creator of the start loop. `
-        });
-        return
-      }
     }
 
     body.parentLoopId = loopId;
@@ -294,4 +286,36 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     }
   });
 
+  loopsRouter.get("/thruline/:loopId", async (req, res, next) => {
+    const {loopId} = req.params;
+
+    let reqUserId;
+    if (req.user && req.user.id){
+      reqUserId = req.user.id;
+    }
+
+    try{
+      const loopInQuestion = await getStartLoopRowById(loopId);
+      if (loopInQuestion.status == 'loopBank'){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a loopBank loop."
+        });
+        return
+      } else if (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid){
+        next({
+          name: "LoopStatusError",
+          message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
+        });
+        return
+      } 
+
+      const thruline = await getThrulineById(loopId);
+      const flattedThruline = thruline.flat(Infinity);
+
+      res.send(flattedThruline);
+    } catch (error){
+      throw error
+    }
+  })
   module.exports = loopsRouter;
