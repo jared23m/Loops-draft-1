@@ -11,7 +11,12 @@ const {
 } = require('./users');
 
 const {  
-  createLoop, getLoopRowById, getLoopWithChordsById, getAllPublicLoopsWithChords, getLoopWithChildrenById
+  createLoop, 
+  getLoopRowById, 
+  getLoopWithChordsById, 
+  getAllPublicLoopsWithChords, 
+  getLoopWithChildrenById,
+  forkLoop
 } = require('./loops');
 
 const {  
@@ -213,6 +218,9 @@ const {
 
       const loop1WithChildren = await getLoopWithChildrenById(1);
       console.log("loop 1 with children", loop1WithChildren);
+
+      const forkedLoop = await forkLoop(1, 2, 'public');
+      console.log("forked loop test", forkedLoop);
 
     } catch (error){
       console.log("Error testing db")

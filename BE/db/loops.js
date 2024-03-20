@@ -324,6 +324,76 @@ async function createLoop({
     }
   }
 
+  async function forkLoop(loopId, forkingUser, status){
+    try{
+      const loopWithChildren = await getLoopWithChildrenById(loopId);
+      const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
+        return relativeChord.name;
+      })
+
+      const loopData = {
+        userId: forkingUser,
+        parentLoopId: null,
+        status,
+        keySig: loopWithChildren.keysig,
+        timestamp: loopWithChildren.timestamp,
+        relativeChordNames
+      }
+
+      console.log("loopData", loopData);
+
+      const createdLoop = await createLoop(loopData);
+
+      console.log('createdloop', createdLoop);
+
+      if (loopWithChildren.childLoops) {
+        await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser);
+      }
+
+      return await getLoopWithChildrenById(createdLoop.id);
+
+    } catch (error){
+      throw (error);
+    }
+  }
+
+  async function createForkChildren(loopId, childLoops, forkingUser){
+    try{
+      const childLayerDuplicates = await Promise.all(
+        childLoops.map((childLoop) => {
+          const relativeChordNames = childLoop.relativeChords.map((relativeChord) => {
+            return relativeChord.name;
+          })
+          const loopData = {
+            userId: forkingUser,
+            parentLoopId: loopId,
+            status: 'reply',
+            keySig: childLoop.keysig,
+            timestamp: childLoop.timestamp,
+            relativeChordNames
+          }
+
+          return createLoop(loopData);
+        })
+      )
+
+      const childrenOfChildren = await Promise.all(
+        childLoops.map((childLoop, index) => {
+          if (childLoop.childLoops){
+            return createForkChildren(childLayerDuplicates[index].id, childLoop.childLoops, forkingUser);
+          } else {
+            return null;
+          }
+        })
+      )
+
+      return null;
+
+    } catch (error){
+      throw (error);
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
@@ -333,5 +403,6 @@ async function createLoop({
     getLoopWithChildrenById,
     getStartLoopRowById,
     getThrulineById,
-    destroyLoopById
+    destroyLoopById,
+    forkLoop
   }
