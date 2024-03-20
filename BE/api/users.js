@@ -5,7 +5,9 @@ const { requireUser, requireAdmin } = require("./utils");
 
 const {
     getUserRowByUsername,
-    createUser
+    createUser,
+    getPrivateUserPageById,
+    getPublicUserPageById
 } = require("../db/users");
 
 const jwt = require("jsonwebtoken");
@@ -81,6 +83,23 @@ usersRouter.post("/login", async (req, res, next) => {
         message: "Invalid username or password",
       });
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.get("/:userId/", async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    let user;
+
+    if (req.user && req.user.id == userId) {
+      user = await getPrivateUserPageById(userId);
+    } else {
+      user = await getPublicUserPageById(userId);
+    }
+
+    res.send(user);
   } catch (err) {
     next(err);
   }

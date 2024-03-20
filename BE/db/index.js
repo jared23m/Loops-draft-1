@@ -28,10 +28,16 @@ const keySigNames = ["Cmaj/Amin",
 
 const rootShiftArr = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
+async function filter(arr, callback) {
+  const fail = Symbol()
+  return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
+}
+
 module.exports = {
     client,
     relativeRootIdOptions,
     keySigNames,
     rootShiftArr,
-    relativeChordNameOptions
+    relativeChordNameOptions,
+    filter
 }
