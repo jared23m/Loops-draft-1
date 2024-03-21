@@ -340,11 +340,7 @@ async function createLoop({
         relativeChordNames
       }
 
-      console.log("loopData", loopData);
-
       const createdLoop = await createLoop(loopData);
-
-      console.log('createdloop', createdLoop);
 
       if (loopWithChildren.childLoops) {
         await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser);

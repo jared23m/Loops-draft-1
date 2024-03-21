@@ -10,7 +10,8 @@ const {
     getStartLoopRowById,
     getLoopWithChildrenById,
     getThrulineById,
-    destroyLoopById
+    destroyLoopById,
+    forkLoop
 } = require("../db/loops");
 
 const {
@@ -322,6 +323,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
   loopsRouter.delete("/:loopId", requireUser, async (req, res, next) => {
     const { loopId } = req.params;
+    body.loopId = loopId;
     try {
       const aboutToDestroy = await getLoopWithChildrenById(loopId);
       if (aboutToDestroy.userid != req.user.id){
@@ -341,5 +343,47 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       next(err);
     }
   });
+
+  loopsRouter.post("/fork/:loopId", requireUser, async (req, res, next) => {
+    const { id: forkingUser } = req.user;
+    const { loopId } = req.params;
+    const { body } = req;
+
+    try {
+    
+      const loopInQuestion = await getStartLoopRowById(loopId);
+  
+    if (loopInQuestion.status == 'loopBank'){
+      next({
+        name: "LoopBankError",
+        message: `This loop is a loopBank loop. You cannot fork it, even if you are the creator.`
+      });
+      return
+    } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
+      next({
+        name: "PrivateLoopError",
+        message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
+      });
+      return
+    }
+
+
+  if (!(body.status == 'public' || body.status == 'private')){
+      next({
+          name: "LoopStatusInvalid",
+          message: "A loop created through this endpoint must either be public, private, or loopBank.",
+        });
+      return
+  }
+
+  console.log("here");
+   const forkedLoop = await forkLoop(loopId, forkingUser, body.status);
+   console.log("forkedLoop", forkedLoop);
+  res.send(forkedLoop);
+      } catch (err) {
+        next(err);
+      }
+    });
+
   
   module.exports = loopsRouter;
