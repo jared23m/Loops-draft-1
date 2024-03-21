@@ -20,6 +20,7 @@ const {
 async function createLoop({
     userId,
     parentLoopId,
+    originalLoopId = null,
     status,
     keySig,
     timestamp,
@@ -30,11 +31,11 @@ async function createLoop({
         rows: [loop],
       } = await client.query(
         `
-        INSERT INTO loops(userId, parentLoopId, status, keySig, timestamp) 
-        VALUES($1, $2, $3, $4, $5)
+        INSERT INTO loops(userId, parentLoopId, originalLoopId, status, keySig, timestamp) 
+        VALUES($1, $2, $3, $4, $5, $6)
         RETURNING *;
       `,
-        [userId, parentLoopId, status, keySig, timestamp]
+        [userId, parentLoopId, originalLoopId, status, keySig, timestamp]
       );
 
       const relativeChords = await Promise.all(
@@ -324,7 +325,7 @@ async function createLoop({
     }
   }
 
-  async function forkLoop(loopId, forkingUser){
+  async function forkLoop(loopId, forkingUser, status){
     try{
       const loopWithChildren = await getLoopWithChildrenById(loopId);
       const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
@@ -334,7 +335,8 @@ async function createLoop({
       const loopData = {
         userId: forkingUser,
         parentLoopId: null,
-        status: "privateFork",
+        originalLoopId: loopId,
+        status,
         keySig: loopWithChildren.keysig,
         timestamp: loopWithChildren.timestamp,
         relativeChordNames
@@ -363,6 +365,7 @@ async function createLoop({
           const loopData = {
             userId: forkingUser,
             parentLoopId: loopId,
+            originalLoopId: childLoop.id,
             status: 'reply',
             keySig: childLoop.keysig,
             timestamp: childLoop.timestamp,
