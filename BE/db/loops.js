@@ -324,7 +324,7 @@ async function createLoop({
     }
   }
 
-  async function forkLoop(loopId, forkingUser, status){
+  async function forkLoop(loopId, forkingUser){
     try{
       const loopWithChildren = await getLoopWithChildrenById(loopId);
       const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
@@ -334,7 +334,7 @@ async function createLoop({
       const loopData = {
         userId: forkingUser,
         parentLoopId: null,
-        status,
+        status: "privateFork",
         keySig: loopWithChildren.keysig,
         timestamp: loopWithChildren.timestamp,
         relativeChordNames

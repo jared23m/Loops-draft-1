@@ -365,21 +365,16 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
       });
       return
+    } else if (loopInQuestion.status == "privateFork" && userId != loopInQuestion.userid) {
+      next({
+        name: "PrivateForkLoopError",
+        message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
+      });
+      return
     }
 
-
-  if (!(body.status == 'public' || body.status == 'private')){
-      next({
-          name: "LoopStatusInvalid",
-          message: "A loop created through this endpoint must either be public, private, or loopBank.",
-        });
-      return
-  }
-
-  console.log("here");
-   const forkedLoop = await forkLoop(loopId, forkingUser, body.status);
-   console.log("forkedLoop", forkedLoop);
-  res.send(forkedLoop);
+    const forkedLoop = await forkLoop(loopId, forkingUser);
+    res.send(forkedLoop);
       } catch (err) {
         next(err);
       }
