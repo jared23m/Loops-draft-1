@@ -23,9 +23,6 @@ const {
   getRelativeChordsByLoopId
 } = require('./relativeChords');
 
-const {  
-  getAbsoluteChordsByLoopId
-} = require('./absoluteChords');
   
   async function dropTables() {
     try {
@@ -33,7 +30,6 @@ const {
   
       await client.query(`
         DROP TABLE IF EXISTS likes;
-        DROP TABLE IF EXISTS absolute_chords;
         DROP TABLE IF EXISTS relative_chords;
         DROP TABLE IF EXISTS notifications;
         DROP TABLE IF EXISTS follows;
@@ -78,15 +74,6 @@ const {
             id SERIAL PRIMARY KEY,
             loopId INTEGER REFERENCES loops(id),
             relativeRootId int NOT NULL,
-            quality varchar(255) NOT NULL,
-            name varchar(255) NOT NULL,
-            position int NOT NULL
-          );
-        
-          CREATE TABLE absolute_chords (
-            id SERIAL PRIMARY KEY,
-            loopId INTEGER REFERENCES loops(id),
-            absoluteRootId int NOT NULL,
             quality varchar(255) NOT NULL,
             name varchar(255) NOT NULL,
             position int NOT NULL

@@ -10,11 +10,6 @@ const {
     getRelativeChordsByLoopId
   } = require('./relativeChords');
 
-const {  
-    createAbsoluteChord,
-    getAbsoluteChordsByLoopId
-  } = require('./absoluteChords');
-
 
 
 async function createLoop({
@@ -89,30 +84,6 @@ async function createLoop({
         })
       )
 
-      let keySigIndex;
-
-        keySigNames.forEach((option, index) => {
-          if  (loop.keysig == option){
-            keySigIndex = index;
-          }
-      })
-
-      const absoluteChords = await Promise.all(
-        relativeChords.map((chord) => {
-          let absoluteRootId = chord.relativerootid + keySigIndex;
-          while (absoluteRootId >= 12){
-            absoluteRootId = absoluteRootId - 12;
-          }
-          const name = `${rootShiftArr[absoluteRootId]}${chord.quality}`;
-          return createAbsoluteChord({
-            loopId: loop.id, 
-            absoluteRootId, 
-            quality: chord.quality,
-            name,
-            position: chord.position
-        });
-        })
-      )
       return await getLoopRowById(loop.id);
     } catch (error) {
       throw error;
@@ -171,12 +142,10 @@ async function createLoop({
     try {
       const loopRow = await getLoopRowById(loopId);
       const relativeChords = await getRelativeChordsByLoopId(loopId);
-      const absoluteChords = await getAbsoluteChordsByLoopId(loopId);
 
       const returnObj = {
         ...loopRow,
-        relativeChords,
-        absoluteChords
+        relativeChords
       }
 
       return returnObj;
@@ -297,14 +266,6 @@ async function createLoop({
       await client.query(
         `
         DELETE FROM relative_chords
-        WHERE loopId = $1;
-        `,
-        [loopId]
-      )
-
-      await client.query(
-        `
-        DELETE FROM absolute_chords
         WHERE loopId = $1;
         `,
         [loopId]
