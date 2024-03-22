@@ -16,7 +16,9 @@ const {
   getLoopWithChordsById, 
   getAllPublicLoopsWithChords, 
   getLoopWithChildrenById,
-  forkLoop
+  forkLoop,
+  updateLoop,
+  getLoopIsLonely
 } = require('./loops');
 
 const {  
@@ -64,7 +66,7 @@ const {
           id SERIAL PRIMARY KEY,
           userId INTEGER REFERENCES users(id),
           parentLoopId INTEGER REFERENCES loops(id),
-          originalLoopId INTEGER,
+          originalLoopId INTEGER DEFAULT null REFERENCES loops(id),
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,
           keySig varchar(255) NOT NULL,
@@ -163,7 +165,7 @@ const {
       });
 
       await createLoop({ 
-        userId: 2,
+        userId: 1,
         parentLoopId: 1,
         status: "reply",
         keySig: "Fmaj/Dmin",
@@ -172,7 +174,7 @@ const {
       });
 
       await createLoop({ 
-        userId: 1,
+        userId: 2,
         parentLoopId: 2,
         status: "reply",
         keySig: "Emaj/C#min",
@@ -210,6 +212,9 @@ const {
 
       const forkedLoop = await forkLoop(1, 2, 'public');
       console.log("forked loop test", forkedLoop);
+
+      const loopIsLonely1 = await getLoopIsLonely(1);
+      console.log("loopIsLonely1", loopIsLonely1);
 
     } catch (error){
       console.log("Error testing db")
