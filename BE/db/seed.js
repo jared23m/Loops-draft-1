@@ -56,7 +56,8 @@ const {
           password varchar(255) NOT NULL,
           username varchar(255) UNIQUE NOT NULL,
           admin boolean DEFAULT false NOT NULL,
-          timeOut boolean DEFAULT false NOT NULL
+          timeOut boolean DEFAULT false NOT NULL,
+          isActive boolean DEFAULT true NOT NULL
         );
   
         CREATE TABLE loops (
