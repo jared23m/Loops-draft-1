@@ -107,7 +107,7 @@ async function createUser({ email, password, username, admin }) {
         `
         SELECT id, username, admin, isActive
         FROM users
-        WHERE id = $1;
+        WHERE id = $1 AND isActive = true;
         `,
         [userId]
       )
@@ -146,7 +146,8 @@ async function createUser({ email, password, username, admin }) {
         const {rows: users} = await client.query(
           `
           SELECT id, username, admin, isActive
-          FROM users;
+          FROM users
+          WHERE isActive = true;
           `
         )
 

@@ -64,6 +64,13 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserRowByUsername(username);
     let auth;
+    if (user && !user.isActive){
+      next({
+        name: "InactiveUser",
+        message: "This user is no longer active.",
+      });
+      return
+    }
     if (user) {
       auth = await bcrypt.compare(password, user.password);
     }
@@ -97,6 +104,15 @@ usersRouter.get("/:userId/", async (req, res, next) => {
   const { userId } = req.params;
   try {
     let user;
+    const userRow = await getUserRowById(userId);
+
+    if ((!req.user || !req.user.admin) && !userRow.isActive){
+      next({
+        name: "InactiveUser",
+        message: "This user is no longer active. You can only view them if you are an admin.",
+      });
+      return;
+    }
 
     if (req.user && (req.user.id == userId || req.user.admin)) {
       user = await getPrivateUserPageById(userId);
@@ -153,6 +169,14 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
     const { userId } = req.params;
     const tokenId = req.user.id;
     const { body } = req;
+
+    if (!req.user.admin && !userRow.isActive){
+      next({
+        name: "InactiveUser",
+        message: "This user is no longer active. You can only edit them if you are an admin.",
+      });
+      return;
+    }
     
     let newBody;
     if (req.user.admin && tokenId == userId){
