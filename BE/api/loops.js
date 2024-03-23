@@ -226,6 +226,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       const { loopId } = req.params;
       const { body } = req;
 
+      console.log("in endpoint 1");
+
       try {
 
           const potentialLoop = await getLoopRowById(loopId);
@@ -307,7 +309,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             return newBody.keySig == name;
            })
     
-        if (!keySigMatch){
+        if (newBody.keySig && !keySigMatch){
             next({
                 name: "KeySigInvalid",
                 message: `A loop must have one of these key signature names:
@@ -328,38 +330,43 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               return
         }
     
-        if (!newBody.relativeChordNames || newBody.relativeChordNames.length == 0 || newBody.relativeChordNames.length > 4){
-          next({
-            name: "relativeChordArrayInvalid",
-            message: `A loop must have at least 1 and no more than 4 relative chord names.`
-          });
-          return
-        }
-    
-        let chordNameInvalid;
-        let counter = 0;
-    
-        while (!chordNameInvalid && counter < newBody.relativeChordNames.length){
-          const found = relativeChordNameOptions.find((option) =>{
-            return newBody.relativeChordNames[counter].toLowerCase() == option;
-          });
-    
-          if (!found){
-            chordNameInvalid = true;
+        if (newBody.relativeChordNames){
+          if ((newBody.relativeChordNames.length == 0 || newBody.relativeChordNames.length > 4)){
+            next({
+              name: "relativeChordArrayInvalid",
+              message: `A loop must have at least 1 and no more than 4 relative chord names.`
+            });
+            return
           }
-    
-          counter = counter + 1;
+      
+          console.log("in endpoint 2");
+          let chordNameInvalid;
+          let counter = 0;
+      
+          while (!chordNameInvalid && counter < newBody.relativeChordNames.length){
+            const found = relativeChordNameOptions.find((option) =>{
+              return newBody.relativeChordNames[counter].toLowerCase() == option;
+            });
+      
+            if (!found){
+              chordNameInvalid = true;
+            }
+      
+            counter = counter + 1;
+          }
+      
+          if (chordNameInvalid){
+            next({
+              name: "relativeChordNameInvalid",
+              message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
+              either capital or lowercase. It can have an optional "dim" suffix.`
+            });
+            return
+          } 
+      
         }
-    
-        if (chordNameInvalid){
-          next({
-            name: "relativeChordNameInvalid",
-            message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
-            either capital or lowercase. It can have an optional "dim" suffix.`
-          });
-          return
-        } 
-    
+        
+        console.log("in endpoint 3");
 
             const newLoop = await updateLoop(loopId, newBody);
             res.send(newLoop);
@@ -449,8 +456,9 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
   loopsRouter.delete("/:loopId", requireUser, async (req, res, next) => {
     const { loopId } = req.params;
-    body.loopId = loopId;
+ 
     try {
+      console.log("gere");
       const aboutToDestroy = await getLoopWithChildrenById(loopId);
       const loopIsLonely = await getLoopIsLonely(loopId);
       const startLoop = await getStartLoopRowById(loopId);

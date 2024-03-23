@@ -66,7 +66,7 @@ const {
           id SERIAL PRIMARY KEY,
           userId INTEGER REFERENCES users(id),
           parentLoopId INTEGER REFERENCES loops(id),
-          originalLoopId INTEGER DEFAULT null REFERENCES loops(id),
+          originalLoopId INTEGER DEFAULT null,
           title varchar(255) DEFAULT null,
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,

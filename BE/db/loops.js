@@ -86,7 +86,7 @@ async function createLoop({
         })
       )
 
-      return await getLoopRowById(loop.id);
+      return await getLoopWithChordsById(loop.id);
     } catch (error) {
       throw error;
     }
@@ -95,6 +95,8 @@ async function createLoop({
   async function updateLoop(loopId, fields = {}) {
     const { relativeChordNames } = fields; 
     delete fields.relativeChordNames;
+
+    console.log("here");
   
     const setString = Object.keys(fields)
       .map((key, index) => `${key}=$${index + 1}`)
@@ -176,7 +178,7 @@ async function createLoop({
           })
         )
 
-      return await getLoopRowById(loopId);
+      return await getLoopWithChordsById(loopId);
     } catch (error) {
       throw error;
     }
@@ -334,6 +336,7 @@ async function createLoop({
          [loopId]
       );
 
+      console.log("childLoops", childLoops);
       if (childLoops && childLoops.length != 0){
         const deleteChildLoops = await Promise.all(
           childLoops.map((childLoop) => {
