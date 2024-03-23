@@ -1,7 +1,7 @@
 const {  
     client
   } = require('./index');
-const { getLoopWithChordsById, getStartLoopRowById, destroyLoopById } = require('./loops');
+const { getLoopWithChordsById, getStartLoopRowById, destroyLoopById, getLoopWithChordsAndStartById } = require('./loops');
 
 const { filter } = require('./index');
 
@@ -88,7 +88,7 @@ async function createUser({ email, password, username, admin }) {
 
       const loopsWithChords = await Promise.all (
         loops.map((loop) => {
-          return getLoopWithChordsById(loop.id);
+          return getLoopWithChordsAndStartById(loop.id);
         })
       )
 
@@ -104,7 +104,7 @@ async function createUser({ email, password, username, admin }) {
       
       const savedLoopsWithChords = await Promise.all(
         savedLoops.map((loop)=>{
-          return getLoopWithChordsById(loop.id)
+          return getLoopWithChordsAndStartById(loop.id)
         })
       )
 
@@ -146,7 +146,7 @@ async function createUser({ email, password, username, admin }) {
 
       const loopsWithChords = await Promise.all (
         filteredLoops.map((loop) => {
-          return getLoopWithChordsById(loop.id);
+          return getLoopWithChordsAndStartById(loop.id);
         })
       )
 

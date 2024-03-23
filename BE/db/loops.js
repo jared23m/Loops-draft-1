@@ -208,6 +208,37 @@ async function createLoop({
     }
   }
 
+  async function getLoopWithChordsAndStartById(loopId){
+    try {
+      const loopRow = await getLoopRowById(loopId);
+      const {rows: [user]} = await client.query(
+        `
+        SELECT id, username, admin, isActive
+        FROM users
+        WHERE id = $1;
+        `,
+        [loopRow.userid]
+      )
+      const relativeChords = await getRelativeChordsByLoopId(loopId);
+
+      const returnObj = {
+        ...loopRow,
+        user,
+        relativeChords
+      }
+
+      if (loopRow.status == 'reply'){
+        const startLoopRow = await getStartLoopRowById(loopId);
+        const startLoopWithChords = await getLoopWithChordsById(startLoopRow.id);
+        returnObj.startLoop = startLoopWithChords;
+      }
+
+      return returnObj;
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   async function getLoopWithChordsById(loopId){
     try {
       const loopRow = await getLoopRowById(loopId);
@@ -245,7 +276,7 @@ async function createLoop({
 
       const publicLoopsWithChords = await Promise.all(
         publicLoopIds.map((id)=>{
-          return getLoopWithChordsById(id.id);
+          return getLoopWithChordsAndStartById(id.id);
         })
 
       )
@@ -269,7 +300,7 @@ async function createLoop({
 
       const loopsWithChords = await Promise.all(
         loopIds.map((id)=>{
-          return getLoopWithChordsById(id.id);
+          return getLoopWithChordsAndStartById(id.id);
         })
 
       )
@@ -521,5 +552,6 @@ async function createLoop({
     destroyLoopById,
     forkLoop,
     getLoopIsLonely,
-    getAllLoopsWithChords
+    getAllLoopsWithChords,
+    getLoopWithChordsAndStartById
   }
