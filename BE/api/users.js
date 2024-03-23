@@ -11,7 +11,8 @@ const {
     getAllUsers,
     getAllUsersPrivate,
     destroyUserById,
-    getUserRowById
+    getUserRowById,
+    updateUser
 } = require("../db/users");
 
 const jwt = require("jsonwebtoken");
@@ -123,7 +124,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
+usersRouter.delete("/:userId", requireUser, requireAdmin, async (req, res, next) => {
   const {userId} = req.params;
   try {
     const potentialDeletedUser = await getUserRowById(userId);
@@ -143,5 +144,73 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
     throw (error);
   }
 })
+
+usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const tokenId = req.user.id;
+    const { body } = req;
+    
+    let newBody;
+    if (req.user.admin && tokenId == userId){
+      newBody = {
+        email: body.email,
+        password: body.password,
+        username: body.username,
+      }
+    } else  if (req.user.admin){
+      newBody = {
+        email: body.email,
+        password: body.password,
+        username: body.username,
+        admin: body.admin,
+        isActive: body.isActive
+      }
+    } else if (tokenId == userId){
+      newBody = {
+        email: body.email,
+        password: body.password,
+        username: body.username,
+        isActive: body.isActive,
+      }
+    } else {
+      next({
+        name: "CredentialsError",
+        message: "You cannot change this users user info because you are not the user."
+      });
+    }
+    
+    if (!newBody.email){
+      delete newBody.email;
+    }
+
+    if (!newBody.password){
+      delete newBody.password;
+    }
+
+    if (!newBody.username){
+      delete newBody.username;
+    }
+
+    if (!newBody.admin){
+      delete newBody.admin;
+    }
+
+    if (!newBody.isActive){
+      delete newBody.isActive;
+    }
+
+
+    if (newBody.password) {
+      newBody.password = await bcrypt.hash(newBody.password, 10);
+    }
+
+      const updatedUser = await updateUser(id, newBody);
+      res.send(updatedUser);
+
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = usersRouter;
