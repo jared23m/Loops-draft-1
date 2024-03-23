@@ -15,17 +15,28 @@ const {
     updateUser
 } = require("../db/users");
 
+const {
+  lettersAndNumbers
+} = require("../db/index")
+
 const jwt = require("jsonwebtoken");
 
 usersRouter.post("/register", async (req, res, next) => {
   const { email, password: unhashed, username } = req.body;
 
   try {
+    if (!lettersAndNumbers(username)){
+      next({
+        name: "UsernameInvalid",
+        message: "Usernames can only have letters and numbers.",
+      });
+      return
+    }
     const user = await getUserRowByUsername(username);
     if (user) {
       next({
         name: "UserExistsError",
-        message: "A user by that username already exists",
+        message: "A user by that username already exists.",
       });
     }
 
