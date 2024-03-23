@@ -371,7 +371,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     }
   });
 
-  loopsRouter.get("/all", async (req, res, next) => {
+  loopsRouter.get("/", async (req, res, next) => {
     try {
       if (req.user && req.user.admin){
         loopsWithChords = await getAllLoopsWithChords();

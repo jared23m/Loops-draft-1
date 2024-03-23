@@ -135,7 +135,10 @@ usersRouter.delete("/:userId", requireUser, requireAdmin, async (req, res, next)
       });
       return
     }
-    const deletedUser = await destroyUserById(userId);
+    const deletedUser = await getUserRowById(userId);
+    const deletingUser = await destroyUserById(userId);
+    delete deletedUser.email;
+    delete deletedUser.password;
     res.send({
       name: "DeleteConfirmation",
       destroyedUser: deletedUser,
@@ -205,7 +208,10 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       newBody.password = await bcrypt.hash(newBody.password, 10);
     }
 
-      const updatedUser = await updateUser(id, newBody);
+      const updatingUser = await updateUser(userId, newBody);
+      const updatedUser = await getUserRowById(userId);
+      delete updatedUser.email;
+      delete updatedUser.password;
       res.send(updatedUser);
 
   } catch (err) {
