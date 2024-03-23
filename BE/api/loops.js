@@ -418,10 +418,29 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     body.loopId = loopId;
     try {
       const aboutToDestroy = await getLoopWithChildrenById(loopId);
+      const loopIsLonely = await getLoopIsLonely(loopId);
+      const startLoop = await getStartLoopRowById(loopId);
+
       if (aboutToDestroy.userid != req.user.id){
         next({
           name: "InvalidCredentials",
            message: `Tokened user did not make this loop.`
+        });
+        return
+      }
+
+      if (startLoop.status == 'private' && startLoop.userid != req.user.id){
+        next({
+          name: "InvalidCredentials",
+           message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
+        });
+        return
+      }
+
+      if (!loopIsLonely){
+        next({
+          name: "LoopIsntLonely",
+          message: "This loop has already been replied to by people who aren't you. You cannot delete it."
         });
         return
       }
