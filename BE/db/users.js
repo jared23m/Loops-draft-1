@@ -1,7 +1,7 @@
 const {  
     client
   } = require('./index');
-const { getLoopWithChordsById, getStartLoopRowById } = require('./loops');
+const { getLoopWithChordsById, getStartLoopRowById, destroyLoopById } = require('./loops');
 
 const { filter } = require('./index');
 
@@ -70,7 +70,7 @@ async function createUser({ email, password, username, admin }) {
     try{
       const {rows: [userInfo]} = await client.query(
         `
-        SELECT id, email, username, admin
+        SELECT id, email, username, admin, isActive
         FROM users
         WHERE id = $1;
         `,
@@ -105,9 +105,9 @@ async function createUser({ email, password, username, admin }) {
     try{
       const {rows: [userInfo]} = await client.query(
         `
-        SELECT id, username, admin
+        SELECT id, username, admin, isActive
         FROM users
-        WHERE id = $1;
+        WHERE id = $1 AND isActive = true;
         `,
         [userId]
       )
@@ -145,7 +145,23 @@ async function createUser({ email, password, username, admin }) {
     try{
         const {rows: users} = await client.query(
           `
-          SELECT id, username, admin
+          SELECT id, username, admin, isActive
+          FROM users
+          WHERE isActive = true;
+          `
+        )
+
+        return users;
+    } catch (error){
+      throw (error);
+    }
+  }
+
+  async function getAllUsersPrivate(){
+    try{
+        const {rows: users} = await client.query(
+          `
+          SELECT id, email, username, admin, isActive
           FROM users;
           `
         )
@@ -155,11 +171,77 @@ async function createUser({ email, password, username, admin }) {
       throw (error);
     }
   }
+
+  async function destroyUserById(userId){
+    try{
+      const deletingUser = getUserRowById(userId);
+      const {rows: loops} = await client.query(
+        `
+        SELECT id 
+        FROM loops
+        WHERE userId = $1;
+        `,
+        [userId]
+      )
+
+      const deleteLoops = await Promise.all(
+        loops.map((loop)=>{
+          return destroyLoopById(loop.id);
+        })
+      )
+
+      await client.query(
+        `
+        DELETE FROM users
+        WHERE id = $1;
+        `,
+        [userId]
+      )
+
+      return deletingUser;
+
+    } catch (error){
+      throw (error);
+    }
+  }
+
+async function updateUser(id, fields = {}) {
+  // build the set string
+  const setString = Object.keys(fields)
+    .map((key, index) => `${key}=$${index + 1}`)
+    .join(", ");
+
+  // return early if this is called without fields
+  if (setString.length === 0) {
+    return;
+  }
+
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      UPDATE users
+      SET ${setString}
+      WHERE id=${id}
+      RETURNING *
+    `,
+      Object.values(fields)
+    );
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
   module.exports= {
     createUser,
     getUserRowByUsername,
     getUserRowById,
     getPrivateUserPageById,
     getPublicUserPageById,
-    getAllUsers
+    getAllUsers,
+    getAllUsersPrivate,
+    destroyUserById,
+    updateUser
   }

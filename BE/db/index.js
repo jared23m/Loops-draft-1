@@ -37,6 +37,10 @@ function alphabetWithSpaces(subject){
   return (/^[a-zA-Z\s]+$/.test(subject))
 }
 
+function lettersAndNumbers(subject){
+  return (/^[A-Za-z0-9]*$/.test(subject));
+}
+
 module.exports = {
     client,
     relativeRootIdOptions,
@@ -44,5 +48,6 @@ module.exports = {
     rootShiftArr,
     relativeChordNameOptions,
     filter,
-    alphabetWithSpaces
+    alphabetWithSpaces,
+    lettersAndNumbers
 }
