@@ -211,10 +211,19 @@ async function createLoop({
   async function getLoopWithChordsById(loopId){
     try {
       const loopRow = await getLoopRowById(loopId);
+      const {rows: [user]} = await client.query(
+        `
+        SELECT id, username, isActive
+        FROM users
+        WHERE id = $1;
+        `,
+        [loopRow.userid]
+      )
       const relativeChords = await getRelativeChordsByLoopId(loopId);
 
       const returnObj = {
         ...loopRow,
+        user,
         relativeChords
       }
 
