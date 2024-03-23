@@ -2,7 +2,8 @@ const {
     client,
     relativeRootIdOptions,
     keySigNames,
-    rootShiftArr
+    rootShiftArr,
+    filter
   } = require('./index');
 
 const {  
@@ -10,16 +11,13 @@ const {
     getRelativeChordsByLoopId
   } = require('./relativeChords');
 
-const {  
-    createAbsoluteChord,
-    getAbsoluteChordsByLoopId
-  } = require('./absoluteChords');
-
 
 
 async function createLoop({
     userId,
     parentLoopId,
+    originalLoopId = null,
+    title = null,
     status,
     keySig,
     timestamp,
@@ -30,11 +28,11 @@ async function createLoop({
         rows: [loop],
       } = await client.query(
         `
-        INSERT INTO loops(userId, parentLoopId, status, keySig, timestamp) 
-        VALUES($1, $2, $3, $4, $5)
+        INSERT INTO loops(userId, parentLoopId, originalLoopId, title, status, keySig, timestamp) 
+        VALUES($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;
       `,
-        [userId, parentLoopId, status, keySig, timestamp]
+        [userId, parentLoopId, originalLoopId, title, status, keySig, timestamp]
       );
 
       const relativeChords = await Promise.all(
@@ -88,53 +86,97 @@ async function createLoop({
         })
       )
 
-      let keySigIndex;
-
-        keySigNames.forEach((option, index) => {
-          if  (loop.keysig == option){
-            keySigIndex = index;
-          }
-      })
-
-      const absoluteChords = await Promise.all(
-        relativeChords.map((chord) => {
-          let absoluteRootId = chord.relativerootid + keySigIndex;
-          while (absoluteRootId >= 12){
-            absoluteRootId = absoluteRootId - 12;
-          }
-          const name = `${rootShiftArr[absoluteRootId]}${chord.quality}`;
-          return createAbsoluteChord({
-            loopId: loop.id, 
-            absoluteRootId, 
-            quality: chord.quality,
-            name,
-            position: chord.position
-        });
-        })
-      )
-      return await getLoopRowById(loop.id);
+      return await getLoopWithChordsById(loop.id);
     } catch (error) {
       throw error;
     }
   }
 
-  async function updateLoop({
-    status,
-    loopId
-  }) {
+  async function updateLoop(loopId, fields = {}) {
+    const { relativeChordNames } = fields; 
+    delete fields.relativeChordNames;
+  
+    const setString = Object.keys(fields)
+      .map((key, index) => `${key}=$${index + 1}`)
+      .join(", ");
+  
     try {
+      if (setString.length > 0) {
+        const {
+          rows: [loop],
+        } = await client.query(
+          `
+          UPDATE loops
+          SET ${setString}
+          WHERE id=${loopId}
+          RETURNING *;
+        `,
+          Object.values(fields)
+        );
+      }
+  
+      if (relativeChordNames == undefined || relativeChordNames == null) {
+        return await getLoopWithChordsById(loopId);
+      }
 
-      await client.query(
-        `
-        UPDATE loops
-        SET status = $2
-        WHERE id = $1
-      `,
-        [loopId, status]
-      );
+        await client.query(`
+        DELETE FROM relative_chords
+        WHERE loopId = $1;
+        `,
+        [loopId])
 
-      const loopRow = await getLoopRowById(loopId);
-      return loopRow;
+        const relativeChords = await Promise.all(
+          relativeChordNames.map((chord, index)=>{
+                  let numerals;
+                  if (chord[0] == "b"){
+                    const numeralsArr = chord.split('');
+                    numeralsArr.splice(0, 1);
+                    numerals = numeralsArr.join('');
+                  } else {
+                    numerals = chord;
+                  }
+                  let quality;
+                  if (numerals == numerals.toUpperCase()){
+                      quality = "maj";
+                  } else if (numerals[numerals.length - 1] == 'm'){
+                      quality = "dim";
+                  } else {
+                      quality = "min";
+                  }
+  
+                  let chordName;
+                  if (quality == 'dim'){
+                      const chordNameArr = chord.split('');
+                      chordNameArr.splice(chordNameArr.length - 3, 3);
+                      const newChordName = chordNameArr.join('');
+                      chordName = newChordName;
+                  } else {
+                      chordName = chord;
+                  }
+  
+                  let relativeRootId;
+                  let counter = 0;
+                  let done = false;
+                  while (!done && (counter < relativeRootIdOptions.length)){
+                      if (chordName.toLowerCase() == relativeRootIdOptions[counter]) {
+                          relativeRootId = counter;
+                          done = true;
+                      } 
+  
+                      counter = counter + 1;
+                  }
+  
+                  return createRelativeChord({
+                      loopId,
+                      relativeRootId, 
+                      quality, 
+                      name: chord, 
+                      position: index
+                  });
+          })
+        )
+
+      return await getLoopWithChordsById(loopId);
     } catch (error) {
       throw error;
     }
@@ -169,13 +211,20 @@ async function createLoop({
   async function getLoopWithChordsById(loopId){
     try {
       const loopRow = await getLoopRowById(loopId);
+      const {rows: [user]} = await client.query(
+        `
+        SELECT id, username, isActive
+        FROM users
+        WHERE id = $1;
+        `,
+        [loopRow.userid]
+      )
       const relativeChords = await getRelativeChordsByLoopId(loopId);
-      const absoluteChords = await getAbsoluteChordsByLoopId(loopId);
 
       const returnObj = {
         ...loopRow,
-        relativeChords,
-        absoluteChords
+        user,
+        relativeChords
       }
 
       return returnObj;
@@ -300,14 +349,6 @@ async function createLoop({
         `,
         [loopId]
       )
-
-      await client.query(
-        `
-        DELETE FROM absolute_chords
-        WHERE loopId = $1;
-        `,
-        [loopId]
-      )
       
       await client.query(
         `
@@ -324,9 +365,12 @@ async function createLoop({
     }
   }
 
-  async function forkLoop(loopId, forkingUser, status){
+  async function forkLoop(loopId, forkingUser, status, title){
     try{
       const loopWithChildren = await getLoopWithChildrenById(loopId);
+      const currentDate = new Date();
+      const timestamp = currentDate.toLocaleString();
+
       const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
         return relativeChord.name;
       })
@@ -334,16 +378,18 @@ async function createLoop({
       const loopData = {
         userId: forkingUser,
         parentLoopId: null,
+        originalLoopId: loopId,
+        title,
         status,
         keySig: loopWithChildren.keysig,
-        timestamp: loopWithChildren.timestamp,
+        timestamp,
         relativeChordNames
       }
 
       const createdLoop = await createLoop(loopData);
 
       if (loopWithChildren.childLoops) {
-        await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser);
+        await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser, timestamp);
       }
 
       return await getLoopWithChildrenById(createdLoop.id);
@@ -353,7 +399,7 @@ async function createLoop({
     }
   }
 
-  async function createForkChildren(loopId, childLoops, forkingUser){
+  async function createForkChildren(loopId, childLoops, forkingUser, timestamp){
     try{
       const childLayerDuplicates = await Promise.all(
         childLoops.map((childLoop) => {
@@ -363,9 +409,10 @@ async function createLoop({
           const loopData = {
             userId: forkingUser,
             parentLoopId: loopId,
+            originalLoopId: childLoop.id,
             status: 'reply',
             keySig: childLoop.keysig,
-            timestamp: childLoop.timestamp,
+            timestamp,
             relativeChordNames
           }
 
@@ -376,7 +423,7 @@ async function createLoop({
       const childrenOfChildren = await Promise.all(
         childLoops.map((childLoop, index) => {
           if (childLoop.childLoops){
-            return createForkChildren(childLayerDuplicates[index].id, childLoop.childLoops, forkingUser);
+            return createForkChildren(childLayerDuplicates[index].id, childLoop.childLoops, forkingUser, timestamp);
           } else {
             return null;
           }
@@ -385,6 +432,47 @@ async function createLoop({
 
       return null;
 
+    } catch (error){
+      throw (error);
+    }
+  }
+
+  async function getLoopIsLonely(loopId){
+    try{
+      const loopRow = await getLoopRowById(loopId);
+      const {rows: children} = await client.query(
+        `
+        SELECT *
+        FROM loops
+        WHERE parentLoopId = $1;
+        `,
+        [loopId]
+      )
+
+      if (!children || children.length == 0){
+        return true;
+      } else {
+        const everyChild = children.every((child) => {
+          return loopRow.userid == child.userid;
+        })
+
+        if (!everyChild){
+          return false;
+        } else {
+          const lonelyChildren = await Promise.all(
+            children.map((child) => {
+              return getLoopIsLonely(child.id);
+            })
+          )
+
+          const everyGrandchild = lonelyChildren.every((grandchild) => {
+            return grandchild;
+          })
+
+          return everyGrandchild;
+        }
+      }
+       
     } catch (error){
       throw (error);
     }
@@ -400,5 +488,6 @@ async function createLoop({
     getStartLoopRowById,
     getThrulineById,
     destroyLoopById,
-    forkLoop
+    forkLoop,
+    getLoopIsLonely
   }

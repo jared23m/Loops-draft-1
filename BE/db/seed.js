@@ -16,16 +16,15 @@ const {
   getLoopWithChordsById, 
   getAllPublicLoopsWithChords, 
   getLoopWithChildrenById,
-  forkLoop
+  forkLoop,
+  updateLoop,
+  getLoopIsLonely
 } = require('./loops');
 
 const {  
   getRelativeChordsByLoopId
 } = require('./relativeChords');
 
-const {  
-  getAbsoluteChordsByLoopId
-} = require('./absoluteChords');
   
   async function dropTables() {
     try {
@@ -33,7 +32,6 @@ const {
   
       await client.query(`
         DROP TABLE IF EXISTS likes;
-        DROP TABLE IF EXISTS absolute_chords;
         DROP TABLE IF EXISTS relative_chords;
         DROP TABLE IF EXISTS notifications;
         DROP TABLE IF EXISTS follows;
@@ -60,13 +58,16 @@ const {
           password varchar(255) NOT NULL,
           username varchar(255) UNIQUE NOT NULL,
           admin boolean DEFAULT false NOT NULL,
-          timeOut boolean DEFAULT false NOT NULL
+          timeOut boolean DEFAULT false NOT NULL,
+          isActive boolean DEFAULT true NOT NULL
         );
   
         CREATE TABLE loops (
           id SERIAL PRIMARY KEY,
           userId INTEGER REFERENCES users(id),
           parentLoopId INTEGER REFERENCES loops(id),
+          originalLoopId INTEGER DEFAULT null,
+          title varchar(255) DEFAULT null,
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,
           keySig varchar(255) NOT NULL,
@@ -77,15 +78,6 @@ const {
             id SERIAL PRIMARY KEY,
             loopId INTEGER REFERENCES loops(id),
             relativeRootId int NOT NULL,
-            quality varchar(255) NOT NULL,
-            name varchar(255) NOT NULL,
-            position int NOT NULL
-          );
-        
-          CREATE TABLE absolute_chords (
-            id SERIAL PRIMARY KEY,
-            loopId INTEGER REFERENCES loops(id),
-            absoluteRootId int NOT NULL,
             quality varchar(255) NOT NULL,
             name varchar(255) NOT NULL,
             position int NOT NULL
@@ -158,6 +150,7 @@ const {
       await createLoop({ 
         userId: 1,
         parentLoopId: null,
+        title: "I'm having fun making music",
         status: "public",
         keySig: "Gmaj/Emin",
         timestamp: timestamp,
@@ -174,7 +167,7 @@ const {
       });
 
       await createLoop({ 
-        userId: 2,
+        userId: 1,
         parentLoopId: 1,
         status: "reply",
         keySig: "Fmaj/Dmin",
@@ -183,7 +176,7 @@ const {
       });
 
       await createLoop({ 
-        userId: 1,
+        userId: 2,
         parentLoopId: 2,
         status: "reply",
         keySig: "Emaj/C#min",
@@ -219,8 +212,11 @@ const {
       const loop1WithChildren = await getLoopWithChildrenById(1);
       console.log("loop 1 with children", loop1WithChildren);
 
-      const forkedLoop = await forkLoop(1, 2, 'public');
+      const forkedLoop = await forkLoop(1, 2, 'public', 'The first forked loop');
       console.log("forked loop test", forkedLoop);
+
+      const loopIsLonely1 = await getLoopIsLonely(1);
+      console.log("loopIsLonely1", loopIsLonely1);
 
     } catch (error){
       console.log("Error testing db")
