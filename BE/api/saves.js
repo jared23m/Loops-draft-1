@@ -6,7 +6,12 @@ const {
     createSave,
     destroySave
 } = require("../db/saves");
+
 const { client } = require("../db");
+
+const {
+  getStartLoopRowById
+} = require("../db/loops");
 
 
 savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
@@ -31,20 +36,24 @@ savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
               return
 
           }
+
         const {rows: [currentlySaved]} = await client.query(
             `
             SELECT id
             FROM saves
             WHERE userId = $1 AND loopId = $2;
-            `
+            `,
+            [userId, loopId]
         )
 
-        if (!currentlySaved || currentlySaved.length == 0){
+        if (currentlySaved){
+          console.log("out");
             const destroyedSave = await destroySave(currentlySaved.id);
-            return destroyedSave;
+            res.send(destroyedSave);
         } else {
+          console.log("in");
             const createdSave = await createSave(userId, loopId);
-            return createdSave;
+            res.send(createdSave);
         }
 
     } catch (err) {

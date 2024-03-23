@@ -318,6 +318,7 @@ async function createLoop({
 
   async function getStartLoopRowById(loopId){
     try {
+      console.log("in startloop func");
       const loop = await getLoopRowById(loopId);
       if (!loop.parentloopid){
         return loop;

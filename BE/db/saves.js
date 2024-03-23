@@ -27,11 +27,11 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
 
        if (reply){
         return {
-            message: `This reply from the start loop "${startLoopRow.title}" was liked by ${user.username}.`
+            message: `This reply from the start loop "${startLoopRow.title}" was saved by ${user.username}.`
         }
        } else {
         return {
-            message: `This loop "${startLoopRow.title}" was liked by ${user.username}.`
+            message: `This loop "${startLoopRow.title}" was saved by ${user.username}.`
         }
        }
 
@@ -43,6 +43,8 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
 
   async function destroySave(saveId){
     try {
+
+        console.log('here now');
         const {rows: [save]} = await client.query(
             `
             SELECT userId, loopId
@@ -91,5 +93,5 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
   
   module.exports = {
     createSave,
-    destroySave,
+    destroySave
   }
