@@ -20,7 +20,7 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
         await client.query(
             `
             INSERT INTO saves(userId, loopId) 
-            VALUES($1, $2)
+            VALUES($1, $2);
              `,
              [userId, loopId]
         )
@@ -68,7 +68,7 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
         await client.query(
             `
             DELETE FROM saves
-            WHERE id = $1
+            WHERE id = $1;
              `,
              [saveId]
         )

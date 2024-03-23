@@ -3,8 +3,10 @@ const savesRouter = express.Router();
 const { requireUser, requireAdmin } = require("./utils");
 
 const {
-    createSave
+    createSave,
+    destroySave
 } = require("../db/saves");
+const { client } = require("../db");
 
 
 savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
@@ -29,9 +31,15 @@ savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
               return
 
           }
-        const currentlySaved = await getCurrentlySaved(userId, loopId);
+        const {rows: [currentlySaved]} = await client.query(
+            `
+            SELECT id
+            FROM saves
+            WHERE userId = $1 AND loopId = $2;
+            `
+        )
 
-        if (currentlySaved){
+        if (!currentlySaved || currentlySaved.length == 0){
             const destroyedSave = await destroySave(currentlySaved.id);
             return destroyedSave;
         } else {
