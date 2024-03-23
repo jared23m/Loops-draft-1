@@ -287,6 +287,14 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
            return
            }
 
+           if(body.title && (!alphabetWithSpaces(body.title))){
+            next({
+              name: "TitleError",
+              message: "Your title must only contain letters of the alphabet and spaces",
+            });
+          return
+          }
+
            if (!loopIsLonely){
             next({
               name: "LoopIsntLonely",
