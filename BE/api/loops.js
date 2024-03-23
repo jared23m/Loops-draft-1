@@ -226,8 +226,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       const { loopId } = req.params;
       const { body } = req;
 
-      console.log("in endpoint 1");
-
       try {
 
           const potentialLoop = await getLoopRowById(loopId);
@@ -339,7 +337,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             return
           }
       
-          console.log("in endpoint 2");
           let chordNameInvalid;
           let counter = 0;
       
@@ -365,8 +362,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           } 
       
         }
-        
-        console.log("in endpoint 3");
 
             const newLoop = await updateLoop(loopId, newBody);
             res.send(newLoop);
@@ -458,7 +453,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { loopId } = req.params;
  
     try {
-      console.log("gere");
       const aboutToDestroy = await getLoopWithChildrenById(loopId);
       const loopIsLonely = await getLoopIsLonely(loopId);
       const startLoop = await getStartLoopRowById(loopId);
