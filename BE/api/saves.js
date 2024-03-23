@@ -47,11 +47,9 @@ savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
         )
 
         if (currentlySaved){
-          console.log("out");
             const destroyedSave = await destroySave(currentlySaved.id);
             res.send(destroyedSave);
         } else {
-          console.log("in");
             const createdSave = await createSave(userId, loopId);
             res.send(createdSave);
         }

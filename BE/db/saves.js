@@ -44,7 +44,6 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
   async function destroySave(saveId){
     try {
 
-        console.log('here now');
         const {rows: [save]} = await client.query(
             `
             SELECT userId, loopId

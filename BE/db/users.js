@@ -101,8 +101,7 @@ async function createUser({ email, password, username, admin }) {
         `,
         [userId]
       )
-
-      console.log("savedLoops", savedLoops);
+      
       const savedLoopsWithChords = await Promise.all(
         savedLoops.map((loop)=>{
           return getLoopWithChordsById(loop.id)

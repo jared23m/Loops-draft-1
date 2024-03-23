@@ -75,7 +75,6 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserRowByUsername(username);
     let auth;
-    console.log(user);
 
     if (user && !user.isactive){
       next({
