@@ -11,7 +11,8 @@ const {
     getLoopWithChildrenById,
     getThrulineById,
     destroyLoopById,
-    forkLoop
+    forkLoop,
+    getLoopIsLonely
 } = require("../db/loops");
 
 const {
@@ -210,34 +211,126 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           const startLoop = await getStartLoopRowById(loopId);
           const loopIsLonely = await getLoopIsLonely(loopId);
 
+          const newBody = {
+            status: body.status,
+            relativeChordNames: body.relativeChordNames,
+            keySig: body.keySig
+          }
+
+          if (!newBody.status){
+            delete newBody.status
+          }
+
+          if (!newBody.relativeChordNames){
+            delete newBody.relativeChordNames
+          }
+
+          if (!newBody.keySig){
+            delete newBody.keySig
+          }
+
+
+
+
           if (potentialLoop.userid != userId){
             next({
               name: "InvalidCredentials",
               message: `Tokened user did not make this loop.`
             });
             return
-          } else if (potentialLoop.status == 'reply'){
+          } else if (newBody.status && potentialLoop.status == "loopBank") {
             next({
-              name: "LoopIsAReplyError",
-              message: "You cannot edit the status of a loop that is a reply to another loop."
+              name: "LoopBankError",
+              message: `You cannot change the status of a loopBank loop.`
             });
             return
-          } else if (potentialLoop.status == 'loopBank'){
+          } else if (startLoop.status == 'private' && startLoop.userid != userId){
             next({
-              name: "LoopIsALoopBankError",
-              message: "You cannot edit the status of a loop that is a loopBank loop."
+              name: "InvalidCredentials",
+              message: `This loop's start loop is currently private and not your own. You cannot edit this.`
             });
             return
-          } else if (!(body.status == 'public' || body.status == 'private')){
+          }else if (newBody.status && potentialLoop.status == 'reply'){
             next({
                 name: "LoopStatusInvalid",
-                message: "You can only edit this loop to become public or private."
+                message: "You cannot change the status of a reply loop."
               });
+            return
+           } else if (newBody.status && !(newBody.status == 'public' || newBody.status == 'private')){
+            next({
+              name: "LoopStatusInvalid",
+              message: "Loop status must be public or private."
+            });
+           return
+           }
+
+           if (!loopIsLonely){
+            next({
+              name: "LoopIsntLonely",
+              message: "This loop has already been replied to by people who aren't you. You cannot edit it."
+            });
             return
            }
 
-            const loop = { ...body, loopId};
-            const newLoop = await updateLoop(loop);
+           const keySigMatch = keySigNames.find((name) => {
+            return newBody.keySig == name;
+           })
+    
+        if (!keySigMatch){
+            next({
+                name: "KeySigInvalid",
+                message: `A loop must have one of these key signature names:
+                        "Cmaj/Amin',  
+                        "Dbmaj/Bbmin", 
+                        "Dmaj/Bmin",
+                        "Ebmaj/Cmin", 
+                        "Emaj/C#min", 
+                        "Fmaj/Dmin", 
+                        "Gbmaj/Ebmin", 
+                        "Gmaj/Emin",
+                        "Abmaj/Fmin",
+                        "Amaj/F#min",
+                        "Bbmaj/Gmin",
+                        "Bmaj/G#min"
+                        `
+              });
+              return
+        }
+    
+        if (!newBody.relativeChordNames || newBody.relativeChordNames.length == 0 || newBody.relativeChordNames.length > 4){
+          next({
+            name: "relativeChordArrayInvalid",
+            message: `A loop must have at least 1 and no more than 4 relative chord names.`
+          });
+          return
+        }
+    
+        let chordNameInvalid;
+        let counter = 0;
+    
+        while (!chordNameInvalid && counter < newBody.relativeChordNames.length){
+          const found = relativeChordNameOptions.find((option) =>{
+            return newBody.relativeChordNames[counter].toLowerCase() == option;
+          });
+    
+          if (!found){
+            chordNameInvalid = true;
+          }
+    
+          counter = counter + 1;
+        }
+    
+        if (chordNameInvalid){
+          next({
+            name: "relativeChordNameInvalid",
+            message: `A chord name must either be flat (b in front) or neutral (neither b or # in front). I (i) and IV (iv) cannot be flat. It must be a roman numeral 1-7, 
+            either capital or lowercase. It can have an optional "dim" suffix.`
+          });
+          return
+        } 
+    
+
+            const newLoop = await updateLoop(loopId, newBody);
             res.send(newLoop);
     } catch (err) {
       next(err);
