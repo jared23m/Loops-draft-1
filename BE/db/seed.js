@@ -31,11 +31,8 @@ const {
       console.log("Starting to drop tables...");
   
       await client.query(`
-        DROP TABLE IF EXISTS likes;
+        DROP TABLE IF EXISTS saves;
         DROP TABLE IF EXISTS relative_chords;
-        DROP TABLE IF EXISTS notifications;
-        DROP TABLE IF EXISTS follows;
-        DROP TABLE IF EXISTS requests_to_follow;
         DROP TABLE IF EXISTS loops;
         DROP TABLE IF EXISTS users;
       `);
@@ -82,31 +79,12 @@ const {
             position int NOT NULL
           );
 
-          CREATE TABLE likes (
+          CREATE TABLE saves (
             id SERIAL PRIMARY KEY,
             userId INTEGER REFERENCES users(id),
             loopId INTEGER REFERENCES loops(id)
           );
 
-          CREATE TABLE follows (
-            id SERIAL PRIMARY KEY,
-            followingUserId INTEGER REFERENCES users(id),
-            followedUserId INTEGER REFERENCES users(id)          
-            );
-
-          CREATE TABLE requests_to_follow (
-            id SERIAL PRIMARY KEY,
-            followingUserId INTEGER REFERENCES users(id),
-            followedUserId INTEGER REFERENCES users(id)
-          );
-
-          CREATE TABLE notifications (
-            id SERIAL PRIMARY KEY,
-            userId INTEGER REFERENCES users(id),
-            loopId INTEGER REFERENCES loops(id),
-            timestamp TIMESTAMP NOT NULL,
-            fresh boolean DEFAULT true NOT NULL
-          );
       `);
   
       console.log("Finished building tables!");

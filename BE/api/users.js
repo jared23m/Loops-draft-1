@@ -75,7 +75,9 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserRowByUsername(username);
     let auth;
-    if (user && !user.isActive){
+    console.log(user);
+
+    if (user && !user.isactive){
       next({
         name: "InactiveUser",
         message: "This user is no longer active.",
@@ -117,7 +119,7 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     let user;
     const userRow = await getUserRowById(userId);
 
-    if ((!req.user || !req.user.admin) && !userRow.isActive){
+    if ((!req.user || !req.user.admin) && !userRow.isactive){
       next({
         name: "InactiveUser",
         message: "This user is no longer active. You can only view them if you are an admin.",
@@ -181,7 +183,7 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
     const tokenId = req.user.id;
     const { body } = req;
 
-    if (!req.user.admin && !userRow.isActive){
+    if (!req.user.admin && !userRow.isactive){
       next({
         name: "InactiveUser",
         message: "This user is no longer active. You can only edit them if you are an admin.",

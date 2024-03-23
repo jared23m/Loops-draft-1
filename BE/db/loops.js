@@ -318,6 +318,7 @@ async function createLoop({
 
   async function getStartLoopRowById(loopId){
     try {
+      console.log("in startloop func");
       const loop = await getLoopRowById(loopId);
       if (!loop.parentloopid){
         return loop;
@@ -368,6 +369,14 @@ async function createLoop({
       await client.query(
         `
         DELETE FROM relative_chords
+        WHERE loopId = $1;
+        `,
+        [loopId]
+      )
+
+      await client.query(
+        `
+        DELETE FROM saves
         WHERE loopId = $1;
         `,
         [loopId]

@@ -47,6 +47,9 @@ apiRouter.use("/users", usersRouter);
 const loopsRouter = require("./loops");
 apiRouter.use("/loops", loopsRouter);
 
+const savesRouter = require("./saves");
+apiRouter.use("/saves", savesRouter);
+
 apiRouter.use((error, req, res, next) => {
   res.send(error);
 });
