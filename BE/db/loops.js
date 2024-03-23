@@ -213,7 +213,7 @@ async function createLoop({
       const loopRow = await getLoopRowById(loopId);
       const {rows: [user]} = await client.query(
         `
-        SELECT id, username, isActive
+        SELECT id, username, admin, isActive
         FROM users
         WHERE id = $1;
         `,
@@ -257,6 +257,29 @@ async function createLoop({
     }
   }
 
+
+  async function getAllLoopsWithChords(){
+    try {
+      const {rows: loopIds} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        `
+      );
+
+      const loopsWithChords = await Promise.all(
+        loopIds.map((id)=>{
+          return getLoopWithChordsById(id.id);
+        })
+
+      )
+
+      return loopsWithChords;
+
+    } catch (error){
+      throw (error);
+    }
+  }
   async function getLoopWithChildrenById(loopId){
     try {
       const loop = await getLoopWithChordsById(loopId);
@@ -489,5 +512,6 @@ async function createLoop({
     getThrulineById,
     destroyLoopById,
     forkLoop,
-    getLoopIsLonely
+    getLoopIsLonely,
+    getAllLoopsWithChords
   }

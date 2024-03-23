@@ -12,7 +12,8 @@ const {
     getThrulineById,
     destroyLoopById,
     forkLoop,
-    getLoopIsLonely
+    getLoopIsLonely,
+    getAllLoopsWithChords
 } = require("../db/loops");
 
 const {
@@ -370,10 +371,14 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     }
   });
 
-  loopsRouter.get("/public", async (req, res, next) => {
+  loopsRouter.get("/all", async (req, res, next) => {
     try {
-      const publicLoopsWithChords = await getAllPublicLoopsWithChords();
-      res.send(publicLoopsWithChords);
+      if (req.user && req.user.admin){
+        loopsWithChords = await getAllLoopsWithChords();
+      } else {
+        loopsWithChords = await getAllPublicLoopsWithChords();
+      }
+      res.send(loopsWithChords);
     } catch (error){
       throw (error);
     }
@@ -401,7 +406,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           message: "You cannot get this loop from this endpoint because it is a reply loop."
         });
         return
-      } else if (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid){
+      } else if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
         next({
           name: "LoopStatusError",
           message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
@@ -432,7 +437,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           message: "You cannot get this loop from this endpoint because it is a loopBank loop."
         });
         return
-      } else if (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid){
+      } else if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
         next({
           name: "LoopStatusError",
           message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
@@ -457,7 +462,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       const loopIsLonely = await getLoopIsLonely(loopId);
       const startLoop = await getStartLoopRowById(loopId);
 
-      if (aboutToDestroy.userid != req.user.id){
+      if (!req.user.admin && (aboutToDestroy.userid != req.user.id)){
         next({
           name: "InvalidCredentials",
            message: `Tokened user did not make this loop.`
@@ -465,7 +470,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         return
       }
 
-      if (startLoop.status == 'private' && startLoop.userid != req.user.id){
+      if (!req.user.admin && (startLoop.status == 'private' && startLoop.userid != req.user.id)){
         next({
           name: "InvalidCredentials",
            message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
@@ -473,7 +478,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         return
       }
 
-      if (!loopIsLonely){
+      if (!req.user.admin && !loopIsLonely){
         next({
           name: "LoopIsntLonely",
           message: "This loop has already been replied to by people who aren't you. You cannot delete it."
