@@ -92,10 +92,28 @@ async function createUser({ email, password, username, admin }) {
         })
       )
 
+      const {rows: savedLoops} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        JOIN saves ON saves.loopId = loop.id
+        WHERE saves.userId = $1;
+        `,
+        [userId]
+      )
+
+      const savedLoopsWithChords = await Promise.all(
+        savedLoops.map((loop)=>{
+          return getLoopWithChordsById(loop.id)
+        })
+      )
+
       return {
         ...userInfo,
-        loops: loopsWithChords
+        loops: loopsWithChords,
+        savedLoops: savedLoopsWithChords
       }
+      
     } catch (error){
       throw (error);
     }
