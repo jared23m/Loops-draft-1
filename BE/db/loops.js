@@ -17,6 +17,7 @@ async function createLoop({
     userId,
     parentLoopId,
     originalLoopId = null,
+    title = null,
     status,
     keySig,
     timestamp,
@@ -27,11 +28,11 @@ async function createLoop({
         rows: [loop],
       } = await client.query(
         `
-        INSERT INTO loops(userId, parentLoopId, originalLoopId, status, keySig, timestamp) 
-        VALUES($1, $2, $3, $4, $5, $6)
+        INSERT INTO loops(userId, parentLoopId, originalLoopId, title, status, keySig, timestamp) 
+        VALUES($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;
       `,
-        [userId, parentLoopId, originalLoopId, status, keySig, timestamp]
+        [userId, parentLoopId, originalLoopId, title, status, keySig, timestamp]
       );
 
       const relativeChords = await Promise.all(
@@ -355,9 +356,12 @@ async function createLoop({
     }
   }
 
-  async function forkLoop(loopId, forkingUser, status){
+  async function forkLoop(loopId, forkingUser, status, title){
     try{
       const loopWithChildren = await getLoopWithChildrenById(loopId);
+      const currentDate = new Date();
+      const timestamp = currentDate.toLocaleString();
+
       const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
         return relativeChord.name;
       })
@@ -366,16 +370,17 @@ async function createLoop({
         userId: forkingUser,
         parentLoopId: null,
         originalLoopId: loopId,
+        title,
         status,
         keySig: loopWithChildren.keysig,
-        timestamp: loopWithChildren.timestamp,
+        timestamp,
         relativeChordNames
       }
 
       const createdLoop = await createLoop(loopData);
 
       if (loopWithChildren.childLoops) {
-        await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser);
+        await createForkChildren(createdLoop.id, loopWithChildren.childLoops, forkingUser, timestamp);
       }
 
       return await getLoopWithChildrenById(createdLoop.id);
@@ -385,7 +390,7 @@ async function createLoop({
     }
   }
 
-  async function createForkChildren(loopId, childLoops, forkingUser){
+  async function createForkChildren(loopId, childLoops, forkingUser, timestamp){
     try{
       const childLayerDuplicates = await Promise.all(
         childLoops.map((childLoop) => {
@@ -398,7 +403,7 @@ async function createLoop({
             originalLoopId: childLoop.id,
             status: 'reply',
             keySig: childLoop.keysig,
-            timestamp: childLoop.timestamp,
+            timestamp,
             relativeChordNames
           }
 
@@ -409,7 +414,7 @@ async function createLoop({
       const childrenOfChildren = await Promise.all(
         childLoops.map((childLoop, index) => {
           if (childLoop.childLoops){
-            return createForkChildren(childLayerDuplicates[index].id, childLoop.childLoops, forkingUser);
+            return createForkChildren(childLayerDuplicates[index].id, childLoop.childLoops, forkingUser, timestamp);
           } else {
             return null;
           }

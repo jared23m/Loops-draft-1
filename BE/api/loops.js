@@ -17,7 +17,8 @@ const {
 
 const {
   keySigNames,
-  relativeChordNameOptions
+  relativeChordNameOptions,
+  alphabetWithSpaces
 } = require("../db/index");
 
 loopsRouter.post("/", requireUser, async (req, res, next) => {
@@ -26,6 +27,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     if (!body.parentLoopId){
         body.parentLoopId = null;
+    }
+
+    if(!body.title){
+      next({
+        name: "TitleError",
+        message: "You must have a title.",
+      });
+    return
+    }
+
+    if(!alphabetWithSpaces(body.title)){
+      next({
+        name: "TitleError",
+        message: "Your title must only contain letters of the alphabet and spaces",
+      });
+    return
     }
 
     if (!(body.status == 'public' || body.status == 'private' || body.status == 'loopBank')){
@@ -111,6 +128,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { body } = req;
     try {
     const loopInQuestion = await getStartLoopRowById(loopId);
+
+    if (body.title){
+      delete body.title;
+    }
   
     if (loopInQuestion.status == 'loopBank'){
       next({
@@ -214,7 +235,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           const newBody = {
             status: body.status,
             relativeChordNames: body.relativeChordNames,
-            keySig: body.keySig
+            keySig: body.keySig,
+            title: body.title
           }
 
           if (!newBody.status){
@@ -227,6 +249,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
           if (!newBody.keySig){
             delete newBody.keySig
+          }
+
+          if (!newBody.title){
+            delete newBody.title
           }
 
           if (potentialLoop.userid != userId){
@@ -247,10 +273,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               message: `This loop's start loop is currently private and not your own. You cannot edit this.`
             });
             return
-          }else if (newBody.status && potentialLoop.status == 'reply'){
+          }else if ((newBody.status || newBody.title) && potentialLoop.status == 'reply'){
             next({
                 name: "LoopStatusInvalid",
-                message: "You cannot change the status of a reply loop."
+                message: "You cannot change the status or title of a reply loop."
               });
             return
            } else if (newBody.status && !(newBody.status == 'public' || newBody.status == 'private')){
@@ -463,6 +489,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     try {
     
       const loopInQuestion = await getStartLoopRowById(loopId);
+
+      if(!body.title){
+        next({
+          name: "TitleError",
+          message: "You must have a title.",
+        });
+      return
+      }
+  
+      if(!alphabetWithSpaces(body.title)){
+        next({
+          name: "TitleError",
+          message: "Your title must only contain letters of the alphabet and spaces",
+        });
+      return
+      }
   
     if (loopInQuestion.status == 'loopBank'){
       next({
@@ -486,7 +528,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       return
     }
 
-    const forkedLoop = await forkLoop(loopId, forkingUser, body.status);
+    const forkedLoop = await forkLoop(loopId, forkingUser, body.status, body.title);
     res.send(forkedLoop);
       } catch (err) {
         next(err);

@@ -33,11 +33,16 @@ async function filter(arr, callback) {
   return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
 }
 
+function alphabetWithSpaces(subject){
+  return (/^[a-zA-Z\s]+$/.test(subject))
+}
+
 module.exports = {
     client,
     relativeRootIdOptions,
     keySigNames,
     rootShiftArr,
     relativeChordNameOptions,
-    filter
+    filter,
+    alphabetWithSpaces
 }

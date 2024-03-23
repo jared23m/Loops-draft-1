@@ -67,6 +67,7 @@ const {
           userId INTEGER REFERENCES users(id),
           parentLoopId INTEGER REFERENCES loops(id),
           originalLoopId INTEGER DEFAULT null REFERENCES loops(id),
+          title varchar(255) DEFAULT null,
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,
           keySig varchar(255) NOT NULL,
@@ -149,6 +150,7 @@ const {
       await createLoop({ 
         userId: 1,
         parentLoopId: null,
+        title: "I'm having fun making music",
         status: "public",
         keySig: "Gmaj/Emin",
         timestamp: timestamp,
@@ -210,7 +212,7 @@ const {
       const loop1WithChildren = await getLoopWithChildrenById(1);
       console.log("loop 1 with children", loop1WithChildren);
 
-      const forkedLoop = await forkLoop(1, 2, 'public');
+      const forkedLoop = await forkLoop(1, 2, 'public', 'The first forked loop');
       console.log("forked loop test", forkedLoop);
 
       const loopIsLonely1 = await getLoopIsLonely(1);
