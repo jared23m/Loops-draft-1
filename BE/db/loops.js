@@ -99,8 +99,6 @@ async function createLoop({
       .map((key, index) => `${key}=$${index + 1}`)
       .join(", ");
   
-      console.log(setString);
-      console.log(Object.values(fields));
     try {
       if (setString.length > 0) {
         const {
@@ -115,8 +113,6 @@ async function createLoop({
           Object.values(fields)
         );
       }
-
-      console.log("here now");
   
       if (relativeChordNames == undefined || relativeChordNames == null) {
         return await getLoopWithChordsById(loopId);

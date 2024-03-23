@@ -229,9 +229,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             delete newBody.keySig
           }
 
-
-
-
           if (potentialLoop.userid != userId){
             next({
               name: "InvalidCredentials",
