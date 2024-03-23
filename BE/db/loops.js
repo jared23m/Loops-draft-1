@@ -372,6 +372,14 @@ async function createLoop({
         `,
         [loopId]
       )
+
+      await client.query(
+        `
+        DELETE FROM saves
+        WHERE loopId = $1;
+        `,
+        [loopId]
+      )
       
       await client.query(
         `
