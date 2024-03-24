@@ -364,7 +364,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       
         }
 
-            const newLoop = await updateLoop(loopId, newBody);
+            const newLoop = await updateLoop(loopId, newBody, req.user.id);
             res.send(newLoop);
     } catch (err) {
       next(err);
@@ -374,7 +374,9 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
   loopsRouter.get("/", async (req, res, next) => {
     try {
       if (req.user && req.user.admin){
-        loopsWithChords = await getAllLoopsWithChords();
+        loopsWithChords = await getAllLoopsWithChords(req.user.id);
+      } else if (req.user) {
+        loopsWithChords = await getAllPublicLoopsWithChords(req.user.id);
       } else {
         loopsWithChords = await getAllPublicLoopsWithChords();
       }
@@ -413,8 +415,12 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         });
         return
       }
-
-      const loop = await getLoopWithChildrenById(loopId);
+      let loop;
+      if (req.user){
+        loop = await getLoopWithChildrenById(loopId, req.user.id);
+      } else {
+        loop = await getLoopWithChildrenById(loopId);
+      }
       res.send(loop);
     } catch (err) {
       next(err);
@@ -444,8 +450,13 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         });
         return
       } 
-
-      const thruline = await getThrulineById(loopId);
+      let thruline;
+      if (req.user){
+        thruline = await getThrulineById(loopId, req.user.id);
+      } else {
+        thruline = await getThrulineById(loopId);
+      }
+      
       const flattedThruline = thruline.flat(Infinity);
 
       res.send(flattedThruline);
@@ -458,7 +469,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { loopId } = req.params;
  
     try {
-      const aboutToDestroy = await getLoopWithChildrenById(loopId);
+      const aboutToDestroy = await getLoopWithChildrenById(loopId, req.user.id);
       const loopIsLonely = await getLoopIsLonely(loopId);
       const startLoop = await getStartLoopRowById(loopId);
 
