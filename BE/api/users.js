@@ -127,7 +127,9 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     if (req.user && (req.user.id == userId || req.user.admin)) {
-      user = await getPrivateUserPageById(userId);
+      user = await getPrivateUserPageById(userId, req.user.id);
+    } else if (req.user) {
+      user = await getPublicUserPageById(userId, req.user.id);
     } else {
       user = await getPublicUserPageById(userId);
     }

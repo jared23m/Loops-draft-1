@@ -66,7 +66,7 @@ async function createUser({ email, password, username, admin }) {
     }
   }
 
-  async function getPrivateUserPageById(userId){
+  async function getPrivateUserPageById(userId, reqUserId=null){
     try{
       const {rows: [userInfo]} = await client.query(
         `
@@ -88,7 +88,7 @@ async function createUser({ email, password, username, admin }) {
 
       const loopsWithChords = await Promise.all (
         loops.map((loop) => {
-          return getLoopWithChordsAndStartById(loop.id);
+          return getLoopWithChordsAndStartById(loop.id, reqUserId);
         })
       )
 
@@ -104,7 +104,7 @@ async function createUser({ email, password, username, admin }) {
       
       const savedLoopsWithChords = await Promise.all(
         savedLoops.map((loop)=>{
-          return getLoopWithChordsAndStartById(loop.id)
+          return getLoopWithChordsAndStartById(loop.id, reqUserId)
         })
       )
 
@@ -119,7 +119,7 @@ async function createUser({ email, password, username, admin }) {
     }
   }
 
-  async function getPublicUserPageById(userId){
+  async function getPublicUserPageById(userId, reqUserId=null){
     try{
       const {rows: [userInfo]} = await client.query(
         `
@@ -146,7 +146,7 @@ async function createUser({ email, password, username, admin }) {
 
       const loopsWithChords = await Promise.all (
         filteredLoops.map((loop) => {
-          return getLoopWithChordsAndStartById(loop.id);
+          return getLoopWithChordsAndStartById(loop.id, reqUserId);
         })
       )
 
