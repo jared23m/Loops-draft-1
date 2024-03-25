@@ -28,7 +28,7 @@ export default function AllLoops(props){
 
     return (
         <>
-        {error ?
+        {error || allLoops.length == 0 ?
             <p>{error}</p>
         :
             <>
