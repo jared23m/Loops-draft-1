@@ -1,33 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
+import {useState} from 'react'
+import {Route, Routes} from 'react-router-dom'
+import CreateLoop from './components/CreateLoop'
+import EditLoop from './components/EditLoop'
+import Login from './components/Login'
+import Register from './components/Register'
+import SingleUser from './components/SingleUser'
+import AllUsers from './components/AllUsers'
+import SingleLoop from './components/SingleLoop'
+import AllLoops from './components/AllLoops'
+import Thruline from './components/Thruline'
+import NavBar from './components/NavBar'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [token, setToken] = useState(null);
+  const [accountId, setAccountId] = useState(null);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <NavBar accountId={accountId}/>
+    <Routes>
+    <Route
+      path="/"
+      element={<CreateLoop/>}
+      ></Route>
+    <Route
+      path="/edit/:loopId"
+      element={<EditLoop/>}
+      ></Route>
+    <Route
+      path="/login"
+      element={<Login/>}
+      ></Route>
+    <Route
+      path="/register"
+      element={<Register/>}
+      ></Route>
+    <Route
+      path="/users/:userId"
+      element={<SingleUser/>}
+      ></Route>
+    <Route
+      path="/users"
+      element={<AllUsers/>}
+      ></Route>
+    <Route
+      path="/loops/:loopId"
+      element={<SingleLoop/>}
+      ></Route>
+     <Route
+      path="/loops"
+      element={<AllLoops/>}
+      ></Route>
+    <Route
+      path="/thruline/:loopId"
+      element={<Thruline/>}
+      ></Route>
+    </Routes>
     </>
   )
 }
