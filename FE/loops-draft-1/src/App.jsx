@@ -17,6 +17,8 @@ function App() {
 
   const [token, setToken] = useState(null);
   const [accountId, setAccountId] = useState(null);
+  const [accountUsername, setAccountUsername] = useState(null);
+  const [admin, setAdmin] = useState(false);
 
   return (
     <>
@@ -32,7 +34,11 @@ function App() {
       ></Route>
     <Route
       path="/login"
-      element={<Login/>}
+      element={<Login 
+                setToken={setToken}
+                setAccountId={setAccountId}
+                setAccountUsername={setAccountUsername}
+                setAdmin={setAdmin}/>}
       ></Route>
     <Route
       path="/register"
