@@ -236,6 +236,40 @@ async function createLoop({
         [loopRow.userid]
       )
       const relativeChords = await getRelativeChordsByLoopId(loopId);
+      let returnObj = {
+        ...loopRow,
+        user,
+        relativeChords
+      }
+
+      if (loopRow.parentloopid){
+        const {rows: [parentUser]} = await client.query(
+          `
+          SELECT users.id, users.username
+          FROM users
+          JOIN loops ON loops.userId = users.id
+          WHERE loops.id = $1;
+          `,
+          [loopRow.parentloopid]
+        )
+
+        returnObj.parentUser = parentUser;
+      }
+
+      if (loopRow.originalloopid){
+        const {rows: [originalUser]} = await client.query(
+          `
+          SELECT users.id, users.username
+          FROM users
+          JOIN loops ON loops.userId = users.id
+          WHERE loops.id = $1;
+          `,
+          [loopRow.originalloopid]
+        )
+
+        returnObj.originalUser = originalUser;
+      }
+
       if (userId){
         const {rows: [currentlySaved]} = await client.query(
           `
@@ -253,20 +287,12 @@ async function createLoop({
       } else {
         saved = true;
       }
-      return {
-        ...loopRow,
-        user,
-        relativeChords,
-        saved
-      }
-      } else {
-        
-        return {
-          ...loopRow,
-          user,
-          relativeChords
-        }
-      }
+
+      returnObj.saved = saved;
+
+      } 
+
+      return returnObj;
 
     } catch (error) {
       throw (error);
@@ -275,13 +301,17 @@ async function createLoop({
 
   async function getAllPublicLoopsWithChords(reqUserId = null){
     try {
-      const {rows: publicLoopIds} = await client.query(
+      const {rows: loopIds} = await client.query(
         `
         SELECT id
         FROM loops
-        WHERE status='public'
         `
       );
+
+      const publicLoopIds = await filter(loopIds, async (loopId) =>{
+        const startLoop = await getStartLoopRowById(loopId.id);
+        return (startLoop.status == 'public');
+    })
 
       const publicLoopsWithChords = await Promise.all(
         publicLoopIds.map((id)=>{
