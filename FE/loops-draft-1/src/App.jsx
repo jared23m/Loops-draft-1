@@ -52,7 +52,7 @@ function App() {
       ></Route>
      <Route
       path="/loops"
-      element={<AllLoops/>}
+      element={<AllLoops token={token}/>}
       ></Route>
     <Route
       path="/thruline/:loopId"
