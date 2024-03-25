@@ -58,6 +58,7 @@ usersRouter.post("/register", async (req, res, next) => {
       token,
       admin,
       username,
+      accountId: newUser.id
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -100,6 +101,7 @@ usersRouter.post("/login", async (req, res, next) => {
         token,
         admin,
         username,
+        accountId: user.id
       });
     } else {
       next({

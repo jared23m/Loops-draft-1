@@ -195,6 +195,9 @@ const {
       const loopIsLonely1 = await getLoopIsLonely(1);
       console.log("loopIsLonely1", loopIsLonely1);
 
+      const publicLoopsWithChords = await getAllPublicLoopsWithChords();
+      console.log("publicLoops", publicLoopsWithChords);
+
     } catch (error){
       console.log("Error testing db")
       throw error;
