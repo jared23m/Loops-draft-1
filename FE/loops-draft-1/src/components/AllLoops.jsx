@@ -29,7 +29,7 @@ export default function AllLoops(props){
         :
             <>
             {allLoops.map((loop)=>{
-                return <LoopCard key={loop.id} loop={loop}/>
+                return <LoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} />
              })}
             </>
         }

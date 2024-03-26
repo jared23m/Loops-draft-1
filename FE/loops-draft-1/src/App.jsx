@@ -59,11 +59,11 @@ function App() {
       ></Route>
     <Route
       path="/loops/:loopId"
-      element={<SingleLoop/>}
+      element={<SingleLoop token={token} admin={admin} accountId={accountId}/>}
       ></Route>
      <Route
       path="/loops"
-      element={<AllLoops token={token}/>}
+      element={<AllLoops token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     <Route
       path="/thruline/:loopId"

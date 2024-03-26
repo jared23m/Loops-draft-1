@@ -1,7 +1,10 @@
 
 import {Link} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoopCard(props){
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -41,10 +44,20 @@ export default function LoopCard(props){
             })}
             <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
-            <button>Reply to Loop</button>
-            <button>Edit Loop</button>
-            <button>Delete Loop</button>
-            <button>Fork from Loop</button>
+            {props.token ?
+                <>
+                    <button>Reply to Loop</button>
+                    <button>Fork from Loop</button>
+                    {props.accountId == props.loop.userid && <button>Edit Loop</button>}
+                    {(props.admin || (props.accountId == props.loop.userid)) && <button>Delete Loop</button>}
+                </> 
+            :
+                <>
+                    <button onClick={()=> navigate('/login')}>Log In</button>
+                    <button onClick={()=> navigate('/register')}>Sign Up</button>
+                </>
+            }
+           
         </>
         }
         </>

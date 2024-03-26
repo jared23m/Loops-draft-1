@@ -107,7 +107,7 @@ export default function SingleLoop(props){
     function renderLoopWithChildren(loop){
         return (
             <div>
-            <LoopCard loop={loop}/>
+            <LoopCard loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} />
              {loop.childLoops &&
                 <>
                     {loop.repliesOpen == true &&
