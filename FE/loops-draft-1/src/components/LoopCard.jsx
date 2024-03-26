@@ -1,10 +1,38 @@
 
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import {useState} from 'react'
+import { fetchLoopDelete } from '../api';
 
 export default function LoopCard(props){
 
     const navigate = useNavigate();
+    const [replyIsOpen, setReplyIsOpen] = useState(false);
+    const [areYouSureIsOpen, setAreYouSureIsOpen] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
+
+    function renderReplyWindow(loopId){
+        return(
+            <>
+                <button onClick={()=>navigate(`/loopBank/${loopId}`)}>Choose from loop bank</button>
+                <button onClick={()=>navigate(`/${loopId}`)}>Create from scratch</button>
+            </>
+
+        )
+    }
+
+
+    async function handleLoopDelete(token, loopId){
+        const potentialSubmit = await fetchLoopDelete(token, loopId);
+        if (!potentialSubmit){
+            setDeleteError({message: "Failed to fetch."});
+        } else if (potentialSubmit.message && potentialSubmit.message == "DeleteConfirmation") {
+            props.setRefresh(props.refresh + 1);
+        } else {
+            setDeleteError(potentialSubmit);
+        }
+  
+    }
 
     return (
         <>
@@ -28,7 +56,7 @@ export default function LoopCard(props){
                 <Link to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
             </>
             }
-            {props.loop.originalloopid && 
+            {(props.loop.originalloopid && props.loop.originalUser) && 
             <>
                 <p>Forked from:</p> 
                 <Link to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
@@ -46,10 +74,28 @@ export default function LoopCard(props){
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
             {props.token ?
                 <>
-                    <button>Reply to Loop</button>
-                    <button>Fork from Loop</button>
+                    {!replyIsOpen ?
+                        <button onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
+                    :
+                        renderReplyWindow(props.loop.id)
+                    }
+                    <button onClick={()=>navigate(`/fork/${props.loop.id}`)}>Fork from Loop</button>
                     {props.accountId == props.loop.userid && <button>Edit Loop</button>}
-                    {(props.admin || (props.accountId == props.loop.userid)) && <button>Delete Loop</button>}
+                    {(props.admin || (props.accountId == props.loop.userid)) && 
+                        <>  
+                            {areYouSureIsOpen ?
+                                <>
+                                    <p>Are you sure you want to delete this loop?</p>
+                                    <button onClick={()=>handleLoopDelete(props.token, props.loop.id)}>Yes</button>
+                                    <button onClick={()=> setAreYouSureIsOpen(false)}>No</button>
+                                </>
+                            :
+                                <button onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
+                            }
+                            {deleteError && <p>{deleteError.message}</p>}
+                        </>
+                        
+                    }
                 </> 
             :
                 <>

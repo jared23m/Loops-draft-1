@@ -7,6 +7,7 @@ export default function SingleLoop(props){
 
     const [error, setError] = useState("Loading...");
     const [singleLoop, setSingleLoop] = useState({});
+    const [refresh, setRefresh] = useState(0);
     const {loopId} = useParams();
 
     useEffect(()=>{
@@ -23,7 +24,7 @@ export default function SingleLoop(props){
             }
         }
        singleLoopGet(props.token, loopId);
-    }, []);
+    }, [refresh]);
 
     function setRepliesToClosed(loop){
        let loopWithChildren = loop;
@@ -107,7 +108,7 @@ export default function SingleLoop(props){
     function renderLoopWithChildren(loop){
         return (
             <div>
-            <LoopCard loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} />
+            <LoopCard loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              {loop.childLoops &&
                 <>
                     {loop.repliesOpen == true &&

@@ -499,7 +499,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       
       const destroyedLoop = await destroyLoopById(loopId);
       res.send({
-        name: "DeleteConfirmation",
+        message: "DeleteConfirmation",
         destroyedLoop: aboutToDestroy,
       });
     } catch (err) {

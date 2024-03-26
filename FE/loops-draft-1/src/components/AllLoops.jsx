@@ -6,6 +6,7 @@ export default function AllLoops(props){
 
     const [error, setError] = useState(null);
     const [allLoops, setAllLoops] = useState([]);
+    const [refresh, setRefresh] = useState(0);
 
     useEffect(()=>{
         async function allLoopsGet(token){
@@ -19,7 +20,11 @@ export default function AllLoops(props){
             }
         }
         allLoopsGet(props.token);
-    }, []);
+    }, [refresh]);
+
+    useEffect(()=>{
+        console.log(allLoops);
+    }, [allLoops]);
 
 
     return (
@@ -29,7 +34,7 @@ export default function AllLoops(props){
         :
             <>
             {allLoops.map((loop)=>{
-                return <LoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} />
+                return <LoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              })}
             </>
         }
