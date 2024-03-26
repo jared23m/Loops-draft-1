@@ -2,20 +2,35 @@
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import {useState} from 'react'
-import { fetchLoopDelete } from '../api';
+import { fetchLoopDelete, fetchSaveLoopPost} from '../api';
+
 
 export default function LoopCard(props){
 
     const navigate = useNavigate();
     const [replyIsOpen, setReplyIsOpen] = useState(false);
     const [areYouSureIsOpen, setAreYouSureIsOpen] = useState(false);
+    const [editMenuOpen, setEditMenuOpen] = useState(false);
     const [deleteError, setDeleteError] = useState(null);
+    const [saveError, setSaveError] = useState(null);
 
     function renderReplyWindow(loopId){
         return(
             <>
                 <button onClick={()=>navigate(`/loopBank/${loopId}`)}>Choose from loop bank</button>
                 <button onClick={()=>navigate(`/${loopId}`)}>Create from scratch</button>
+                <button onClick={()=> setReplyIsOpen(false)}>Cancel</button>
+            </>
+
+        )
+    }
+
+    function renderEditMenu(loopId){
+        return(
+            <>
+                <button onClick={()=>navigate(`/edit/loopBank/${loopId}`)}>Replace from loop bank</button>
+                <button onClick={()=>navigate(`/edit/${loopId}`)}>Edit in edit page</button>
+                <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
 
         )
@@ -34,17 +49,32 @@ export default function LoopCard(props){
   
     }
 
+    async function handleSaveLoop(token, loopId){
+        const potentialSubmit = await fetchSaveLoopPost(token, loopId);
+        if (!potentialSubmit){
+            setSaveError({message: "Failed to fetch."});
+        } else if (potentialSubmit.message && (potentialSubmit.message == "Loop saved." || potentialSubmit.message == "Loop unsaved.")) {
+            props.setRefresh(props.refresh + 1);
+        } else {
+            setSaveError(potentialSubmit);
+        }
+  
+    }
+
+
+
     return (
         <>
         {props.loop &&
         <>
             {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
             {props.loop.saved == true &&
-                <button>Unsave Loop</button>
+                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
             }
             {props.loop.saved == false &&
-                <button>Save Loop</button>
+                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
             }
+            {saveError && <p>{saveError.message}</p>}
             <p>@ {props.loop.timestamp}</p>
             <p>Created by:</p>
             <Link to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
@@ -80,7 +110,16 @@ export default function LoopCard(props){
                         renderReplyWindow(props.loop.id)
                     }
                     <button onClick={()=>navigate(`/fork/${props.loop.id}`)}>Fork from Loop</button>
-                    {props.accountId == props.loop.userid && <button onClick={() => navigate(`/edit/${props.loop.id}`)}>Edit Loop</button>}
+                    {props.accountId == props.loop.userid && 
+                    <>
+                        {editMenuOpen ?
+                            renderEditMenu(props.loop.id)
+                        :
+                            <button onClick={() => setEditMenuOpen(true)}>Edit Loop</button>
+                        }
+                    </>
+                    }
+                    
                     {(props.admin || (props.accountId == props.loop.userid) && props.loop.isLonely) && 
                         <>  
                             {areYouSureIsOpen ?
