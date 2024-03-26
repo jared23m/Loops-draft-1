@@ -235,11 +235,13 @@ async function createLoop({
         `,
         [loopRow.userid]
       )
+      const isLonely = await getLoopIsLonely(loopId);
       const relativeChords = await getRelativeChordsByLoopId(loopId);
       let returnObj = {
         ...loopRow,
         user,
-        relativeChords
+        relativeChords,
+        isLonely
       }
 
       if (loopRow.parentloopid){

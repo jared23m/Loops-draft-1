@@ -81,7 +81,7 @@ export default function LoopCard(props){
                     }
                     <button onClick={()=>navigate(`/fork/${props.loop.id}`)}>Fork from Loop</button>
                     {props.accountId == props.loop.userid && <button onClick={() => navigate(`/edit/${props.loop.id}`)}>Edit Loop</button>}
-                    {(props.admin || (props.accountId == props.loop.userid)) && 
+                    {(props.admin || (props.accountId == props.loop.userid) && props.loop.isLonely) && 
                         <>  
                             {areYouSureIsOpen ?
                                 <>

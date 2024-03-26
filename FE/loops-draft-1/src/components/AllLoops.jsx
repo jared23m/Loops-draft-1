@@ -22,10 +22,6 @@ export default function AllLoops(props){
         allLoopsGet(props.token);
     }, [refresh]);
 
-    useEffect(()=>{
-        console.log(allLoops);
-    }, [allLoops]);
-
 
     return (
         <>
