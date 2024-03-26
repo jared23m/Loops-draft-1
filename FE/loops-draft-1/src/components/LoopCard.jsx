@@ -28,7 +28,7 @@ export default function LoopCard(props){
             {props.loop.originalloopid && 
             <>
                 <p>Forked from:</p> 
-                <Link to={`/loops/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
+                <Link to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
                 <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
             </>
             }
