@@ -1,6 +1,6 @@
 
 import './App.css'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Route, Routes} from 'react-router-dom'
 import CreateLoop from './components/CreateLoop'
 import EditLoop from './components/EditLoop'
@@ -19,6 +19,10 @@ function App() {
   const [accountId, setAccountId] = useState(null);
   const [accountUsername, setAccountUsername] = useState(null);
   const [admin, setAdmin] = useState(false);
+
+  useEffect(()=>{
+    console.log(accountId);
+  }, [accountId]);
 
   return (
     <>
@@ -42,7 +46,11 @@ function App() {
       ></Route>
     <Route
       path="/register"
-      element={<Register/>}
+      element={<Register
+                setToken={setToken}
+                setAccountId={setAccountId}
+                setAccountUsername={setAccountUsername}
+                 setAdmin={setAdmin}/>}
       ></Route>
     <Route
       path="/users/:userId"
