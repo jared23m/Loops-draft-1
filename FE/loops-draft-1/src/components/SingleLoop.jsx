@@ -12,7 +12,6 @@ export default function SingleLoop(props){
     useEffect(()=>{
         async function singleLoopGet(token, loopId){
             const potentialSingleLoop = await fetchSingleLoopGet(token, loopId);
-            console.log(potentialSingleLoop);
             if (potentialSingleLoop && potentialSingleLoop.message){
                 setError(potentialSingleLoop);
             } else if (potentialSingleLoop){
@@ -25,10 +24,6 @@ export default function SingleLoop(props){
         }
        singleLoopGet(props.token, loopId);
     }, []);
-
-    useEffect(()=>{
-        console.log("singleLoop", singleLoop);
-    }, [singleLoop]);
 
     function setRepliesToClosed(loop){
        let loopWithChildren = loop;

@@ -10,7 +10,6 @@ export default function AllLoops(props){
     useEffect(()=>{
         async function allLoopsGet(token){
             const potentialAllLoops = await fetchAllLoopsGet(token);
-            console.log(potentialAllLoops);
             if (potentialAllLoops && potentialAllLoops.message){
                 setError(potentialAllLoops);
             } else if (potentialAllLoops){
@@ -22,9 +21,6 @@ export default function AllLoops(props){
         allLoopsGet(props.token);
     }, []);
 
-    useEffect(()=>{
-        console.log("allLoops", allLoops);
-    }, [allLoops]);
 
     return (
         <>

@@ -10,7 +10,6 @@ export default function AllUsers(props){
     useEffect(()=>{
         async function allUsersGet(token){
             const potentialAllUsers = await fetchAllUsersGet(token);
-            console.log(potentialAllUsers);
             if (potentialAllUsers && potentialAllUsers.message){
                 setError(potentialAllUsers);
             } else if (potentialAllUsers){
@@ -21,10 +20,6 @@ export default function AllUsers(props){
         }
         allUsersGet(props.token);
     }, []);
-
-    useEffect(()=>{
-        console.log("allUsers", allUsers);
-    }, [allUsers]);
 
     return (
         <>
