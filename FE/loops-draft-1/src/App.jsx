@@ -20,13 +20,10 @@ function App() {
   const [accountUsername, setAccountUsername] = useState(null);
   const [admin, setAdmin] = useState(false);
 
-  useEffect(()=>{
-    console.log(accountId);
-  }, [accountId]);
-
   return (
     <>
     <NavBar accountId={accountId}/>
+    <p></p>
     <Routes>
     <Route
       path="/"

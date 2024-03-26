@@ -7,7 +7,7 @@ export default function LoopCard(props){
         <>
         {props.loop &&
         <>
-            {props.loop.title && <p>{props.loop.title}</p>}
+            {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
             {props.loop.saved == true &&
                 <button>Unsave Loop</button>
             }
