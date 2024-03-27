@@ -11,7 +11,20 @@ export const keySigNames = ["Cmaj/Amin",
 "Bbmaj/Gmin",
 "Bmaj/G#min"]
 
-const rootShiftArr = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+const rootShiftArr = [
+["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"],
+["Db", "Ebb", "Eb", "Fb", "F", "Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "C"],
+["D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B", "C", "C#"],
+["Eb", "Fb", "F", "Gb", "G", "Ab", "Bbb", "Bb", "Cb", "C", "Db", "D"],
+["E", "F", "F#", "G", "G#", "A", "Bb", "B", "C", "C#", "D", "D#"],
+["F", "Gb", "G", "Ab", "A", "Bb", "Cb", "C", "Db", "D", "Eb", "E"],
+["Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "F"],
+["G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "F#"],
+["Ab", "Bbb", "Bb", "Cb", "C", "Db", "Ebb", "Eb", "Fb", "F", "Gb", "G"],
+["A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"],
+["Bb", "Cb", "C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab", "A"],
+["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#"],
+]
 
 export function translateToAbsolute(relativeChords, keySig){
 
@@ -23,15 +36,13 @@ export function translateToAbsolute(relativeChords, keySig){
         }
     });
 
+    const rootShiftSubArray = rootShiftArr[keySigIndex];
+
     const absoluteChords = relativeChords.map((chord) => {
-          let absoluteRootId = chord.relativerootid + keySigIndex;
-          while (absoluteRootId >= 12){
-            absoluteRootId = absoluteRootId - 12;
-          }
-          const name = `${rootShiftArr[absoluteRootId]}${chord.quality}`;
+
+          const name = `${rootShiftSubArray[chord.relativerootid]}${chord.quality}`;
 
           return {
-            absoluteRootId,
             quality: chord.quality,
             name,
             position: chord.position
