@@ -34,7 +34,7 @@ export default function LoopCard(props){
         return(
             <>
                 <button onClick={()=>navigate(`/edit/loopBank/${loopId}`)}>Replace from loop bank</button>
-                <button onClick={()=>navigate(`/edit/${loopId}`)}>Edit in edit page</button>
+                <button onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
                 <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
 
@@ -122,6 +122,13 @@ export default function LoopCard(props){
         {props.loop &&
         <>
             {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
+            <p>Key Signature: {props.loop.keysig}</p>
+            {props.loop.relativeChords.map((chord) => {
+                return <div key={chord.id}>
+                    <p>{chord.name}</p>
+                </div>
+            })}
             <p>@ {props.loop.timestamp}</p>
             {props.loop.saved == true &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
@@ -147,14 +154,6 @@ export default function LoopCard(props){
                 <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
             </>
             }
-            <p>Key Signature: {props.loop.keysig}</p>
-            <p>Chords:</p>
-            {props.loop.relativeChords.map((chord) => {
-                return <div key={chord.id}>
-                    <p>{chord.name}</p>
-                </div>
-            })}
-            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
             <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
             {props.token ?
@@ -198,7 +197,9 @@ export default function LoopCard(props){
                 </> 
             :
                 <>
+                    <p>To Reply: </p>
                     <button onClick={()=> navigate('/login')}>Log In</button>
+                    <p>or</p>
                     <button onClick={()=> navigate('/register')}>Sign Up</button>
                 </>
             }

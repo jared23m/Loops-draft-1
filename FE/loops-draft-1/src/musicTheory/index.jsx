@@ -1,4 +1,4 @@
-const keySigNames = ["Cmaj/Amin", 
+export const keySigNames = ["Cmaj/Amin", 
 "Dbmaj/Bbmin", 
 "Dmaj/Bmin", 
 "Ebmaj/Cmin", 

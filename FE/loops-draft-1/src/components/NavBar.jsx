@@ -5,7 +5,7 @@ export default function NavBar(props){
 
     return (
     <>
-        <Link to="/">Create Loop</Link>
+        <Link to="/edit/new">Create Loop</Link>
         <Link to="/loops">Loops</Link>
         <Link to="/users">Users</Link>
         {props.accountId ? 
