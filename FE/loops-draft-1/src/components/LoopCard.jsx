@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import { fetchLoopDelete, fetchSaveLoopPost, fetchForkLoopPost} from '../api';
+import { renderAbsoluteChords } from '../musicTheory';
 
 
 export default function LoopCard(props){
@@ -153,6 +154,7 @@ export default function LoopCard(props){
                     <p>{chord.name}</p>
                 </div>
             })}
+            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
             <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
             {props.token ?

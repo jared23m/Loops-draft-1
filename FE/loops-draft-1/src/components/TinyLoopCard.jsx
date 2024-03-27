@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import {useState} from 'react'
 import { fetchLoopDelete, fetchSaveLoopPost} from '../api';
 import LoopCard from './LoopCard';
+import {renderAbsoluteChords} from '../musicTheory/index'
 
 
 export default function TinyLoopCard(props){
@@ -32,6 +33,7 @@ export default function TinyLoopCard(props){
                                     <p>{chord.name}</p>
                                 </div>
                      })}
+                    {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
                     <button onClick={()=>setOpen(true)}>Open Details</button>
                 </>
                 }
