@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchThrulineGet } from "../api"
-import {keySigNames} from '../musicTheory'
+import {keySigNames, relativeRootIdOptions} from '../musicTheory'
 
 export default function EditLoop(props){
     
@@ -16,6 +16,7 @@ export default function EditLoop(props){
     const [error, setError] = useState({message: "Loading..."});
     const {loopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(false);
+    const [relativeChordInfo, setRelativeChordInfo] = useState([]);
 
 
     useEffect(()=>{
@@ -58,6 +59,34 @@ export default function EditLoop(props){
 
     useEffect(()=>{
         console.log('stagedLoop', stagedLoop);
+        const potentialChordInfo = stagedLoop.relativeChordNames.map((chordName)=>{
+            let returnObj = {
+                quality: null,
+                relativeRootId: null
+            }
+            let name = chordName;
+            if (name[name.length-1] == 'm'){
+                returnObj.quality = 'dim';
+                let nameArr = name.split('');
+                nameArr.splice(name.length-3, 3);
+                name = nameArr.join('');
+            } else if (name == name.toLowerCase()){
+                returnObj.quality = 'min';
+            } else {
+                returnObj.quality = 'maj';
+            }
+
+            const upperCase = name.toUpperCase();
+            if(upperCase[0] == "B"){
+                upperCase[0] == 'b';
+            }
+            
+            returnObj.relativeRootId = upperCase;
+
+            return returnObj;
+        })
+
+        setRelativeChordInfo(potentialChordInfo);
     }, [stagedLoop])
 
     return (
@@ -116,6 +145,35 @@ export default function EditLoop(props){
                             return <option key={name} value={name}>{name}</option>
                         })}
                     </select>
+                </label>
+                <label className='editChords'>
+                Chords:
+                    {relativeChordInfo.map((chordInfo, index)=>{
+                        return (
+                            <div>
+                                    <div key={index}>
+                                        <select value={chordInfo.relativeRootId} onChange={(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        let currentChordNames = stagedLoop.relativeChordNames;
+                                        currentChordNames[index] = e.target.value;
+                                        setStagedLoop({...currentStagedLoop, relativeChordNames: currentChordNames});
+                                        }}>
+                                            {relativeRootIdOptions.map((name) => {
+                                                return <option key={name} value={name}>{name}</option>
+                                            })}
+                                        </select> 
+                                    {stagedLoop.relativeChordNames.length > 1 && 
+                                        <button>-</button>
+                                    }
+                                    </div>
+                                    
+                                    {stagedLoop.relativeChordNames.length < 4 && 
+                                        <button>+</button>
+                                    }
+                            </div>
+                        )
+                    })}
+                    
                 </label>
             </div>
                 <button className="editButton" id='submit'>Submit</button>

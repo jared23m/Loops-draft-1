@@ -26,6 +26,8 @@ const rootShiftArr = [
 ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#"],
 ]
 
+export const relativeRootIdOptions = ["I", "bII", "II", "bIII", "III", "IV", "bV",  "V", "bVI", "VI", "bVII", "VII"];
+
 export function translateToAbsolute(relativeChords, keySig){
 
     let keySigIndex;
