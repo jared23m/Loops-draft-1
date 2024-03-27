@@ -51,7 +51,7 @@ function App() {
       ></Route>
     <Route
       path="/users/:userId"
-      element={<SingleUser/>}
+      element={<SingleUser token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     <Route
       path="/users"
