@@ -1,8 +1,8 @@
 
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import {useState} from 'react'
-import { fetchLoopDelete, fetchSaveLoopPost} from '../api';
+import {useEffect, useState} from 'react'
+import { fetchLoopDelete, fetchSaveLoopPost, fetchForkLoopPost} from '../api';
 
 
 export default function LoopCard(props){
@@ -11,8 +11,12 @@ export default function LoopCard(props){
     const [replyIsOpen, setReplyIsOpen] = useState(false);
     const [areYouSureIsOpen, setAreYouSureIsOpen] = useState(false);
     const [editMenuOpen, setEditMenuOpen] = useState(false);
+    const [forkMenuOpen, setForkMenuOpen] = useState(false);
+    const [forkData, setForkData] = useState({title: "My Fork", status: "public"});
+
     const [deleteError, setDeleteError] = useState({message: null});
     const [saveError, setSaveError] = useState({message: null});
+    const [forkError, setForkError] = useState({message: null});
 
     function renderReplyWindow(loopId){
         return(
@@ -36,6 +40,55 @@ export default function LoopCard(props){
         )
     }
 
+    
+    function renderForkMenu(loopId){
+        return(
+            <>
+            <form className="forkForm" onSubmit={(event)=>handleForkSubmit(event, loopId)}>
+            <div className='forkEntries'>
+                <label className='forkTitle'>
+                Title: <input className='forkInput' type= 'text' value= {forkData.title} onChange= {(e) => {
+                        const currentForkData = forkData;
+                        setForkData({...currentForkData, title: e.target.value});
+                        }}/>
+                </label>
+                <label className='forkStatus'>
+                 Status: 
+                        <select value={forkData.status} onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>
+                        <option value="public" onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>Public</option>
+                        <option value="private" onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>Private</option>
+                        </select>
+                </label>
+            </div>
+                <button className="forkButton" id='submit'>Submit</button>
+            </form>
+                <button onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+            </>
+
+        )
+    }
+
+    async function handleForkSubmit(event, loopId){
+        event.preventDefault();
+        const potentialSubmit = await fetchForkLoopPost(forkData, props.token, loopId);
+        if (!potentialSubmit){
+            setForkError({message: "Failed to fetch."});
+        } else if (potentialSubmit && potentialSubmit.id) {
+            navigate(`/loops/${potentialSubmit.id}`);
+        } else {
+            setForkError(potentialSubmit);
+        }
+  
+    }
 
     async function handleLoopDelete(token, loopId){
         const potentialSubmit = await fetchLoopDelete(token, loopId);
@@ -109,7 +162,12 @@ export default function LoopCard(props){
                     :
                         renderReplyWindow(props.loop.id)
                     }
-                    <button onClick={()=>navigate(`/fork/${props.loop.id}`)}>Fork from Loop</button>
+                    {!forkMenuOpen ?
+                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
+                    :
+                        renderForkMenu(props.loop.id)
+                    }
+                    {forkError.message && <p>{forkError.message}</p>}
                     {props.accountId == props.loop.userid && 
                     <>
                         {editMenuOpen ?
