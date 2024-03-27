@@ -457,7 +457,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         thruline = await getThrulineById(loopId);
       }
       
-      const flattedThruline = thruline.flat(Infinity);
+      console.log('thrulineBE', thruline);
+      const flattedThruline = thruline.flat(Infinity).reverse();
 
       res.send(flattedThruline);
     } catch (error){

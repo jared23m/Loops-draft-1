@@ -411,7 +411,7 @@ async function createLoop({
           thruline
         ]
       } else {
-        return singleLoop;
+        return [singleLoop];
       }
     } catch (error) {
       throw (error);

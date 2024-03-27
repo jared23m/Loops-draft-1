@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-    <NavBar accountId={accountId}/>
+    <NavBar accountId={accountId} setToken={setToken} setAccountId={setAccountId} setAccountUsername={setAccountUsername} setAdmin={setAdmin}/>
     <p></p>
     <Routes>
     <Route
@@ -67,7 +67,7 @@ function App() {
       ></Route>
     <Route
       path="/thruline/:loopId"
-      element={<Thruline/>}
+      element={<Thruline token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     </Routes>
     </>
