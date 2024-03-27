@@ -7,7 +7,9 @@ export default function SingleLoop(props){
 
     const [error, setError] = useState("Loading...");
     const [singleLoop, setSingleLoop] = useState({});
+    const [refresh, setRefresh] = useState(0);
     const {loopId} = useParams();
+    const [repliesOpen, setRepliesOpen] = useState(null);
 
     useEffect(()=>{
         async function singleLoopGet(token, loopId){
@@ -17,13 +19,46 @@ export default function SingleLoop(props){
             } else if (potentialSingleLoop){
                 setSingleLoop(potentialSingleLoop);
                 createReplyKey(potentialSingleLoop);
+                if(repliesOpen){
+                    transferRepliesOpen(repliesOpen, potentialSingleLoop);
+                }
                 setError(null);
             } else {
-                setError("Unable to fetch data.")
+                setError({message: "Unable to fetch data."})
             }
         }
        singleLoopGet(props.token, loopId);
-    }, []);
+    }, [refresh]);
+
+    function openPreviousReplies(loop, nextParentLoop){
+        let loopWithChildren = loop;
+        let loopTree = nextParentLoop;
+        if (loopTree.id == loopWithChildren.id){
+            if (loopWithChildren.repliesOpen == true){
+                loopTree.repliesOpen = true;
+            }
+            if (loopWithChildren.repliesOpen == false){
+                loopTree.repliesOpen = false;
+            }
+        } else if (loopTree.childLoops) {
+            const newChildren = loopTree.childLoops.map((childLoop)=> {
+                return openPreviousReplies(loop, childLoop);
+               })
+    
+               loopTree = {
+                ...loopTree,
+                childLoops: newChildren
+               }
+        }
+
+        return loopTree;
+    }
+
+    function transferRepliesOpen(loop, startLoop){
+        const newLoop = openPreviousReplies(loop, startLoop);
+        setSingleLoop(newLoop);
+    }
+
 
     function setRepliesToClosed(loop){
        let loopWithChildren = loop;
@@ -69,6 +104,7 @@ export default function SingleLoop(props){
     function handleOpenReply(loop){
         const newLoop = openReply(loop, singleLoop);
         setSingleLoop({...newLoop});
+        setRepliesOpen({...newLoop});
     }
 
     function closeReply(loop, nextParentLoop){
@@ -102,12 +138,13 @@ export default function SingleLoop(props){
     function handleCloseReply(loop){
         const newLoop = closeReply(loop, singleLoop);
         setSingleLoop({...newLoop});
+        setRepliesOpen({...newLoop});
     }
 
     function renderLoopWithChildren(loop){
         return (
             <div>
-            <LoopCard loop={loop}/>
+            <LoopCard loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              {loop.childLoops &&
                 <>
                     {loop.repliesOpen == true &&
@@ -132,7 +169,7 @@ export default function SingleLoop(props){
     return (
         <>
         {error ?
-            <p>{error}</p>
+            <p>{error.message}</p>
         :
             <>
             {renderLoopWithChildren(singleLoop)}

@@ -457,7 +457,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         thruline = await getThrulineById(loopId);
       }
       
-      const flattedThruline = thruline.flat(Infinity);
+      console.log('thrulineBE', thruline);
+      const flattedThruline = thruline.flat(Infinity).reverse();
 
       res.send(flattedThruline);
     } catch (error){
@@ -499,7 +500,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       
       const destroyedLoop = await destroyLoopById(loopId);
       res.send({
-        name: "DeleteConfirmation",
+        message: "DeleteConfirmation",
         destroyedLoop: aboutToDestroy,
       });
     } catch (err) {

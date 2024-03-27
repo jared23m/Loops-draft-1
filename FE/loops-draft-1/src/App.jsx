@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-    <NavBar accountId={accountId}/>
+    <NavBar accountId={accountId} setToken={setToken} setAccountId={setAccountId} setAccountUsername={setAccountUsername} setAdmin={setAdmin}/>
     <p></p>
     <Routes>
     <Route
@@ -59,15 +59,15 @@ function App() {
       ></Route>
     <Route
       path="/loops/:loopId"
-      element={<SingleLoop/>}
+      element={<SingleLoop token={token} admin={admin} accountId={accountId}/>}
       ></Route>
      <Route
       path="/loops"
-      element={<AllLoops token={token}/>}
+      element={<AllLoops token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     <Route
       path="/thruline/:loopId"
-      element={<Thruline/>}
+      element={<Thruline token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     </Routes>
     </>
