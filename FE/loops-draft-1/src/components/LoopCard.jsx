@@ -68,6 +68,7 @@ export default function LoopCard(props){
         {props.loop &&
         <>
             {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            <p>@ {props.loop.timestamp}</p>
             {props.loop.saved == true &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
             }
@@ -75,7 +76,6 @@ export default function LoopCard(props){
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
             }
             {saveError && <p>{saveError.message}</p>}
-            <p>@ {props.loop.timestamp}</p>
             <p>Created by:</p>
             <Link to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
             {props.loop.status != 'reply' && <p>Status: {props.loop.status}</p>}

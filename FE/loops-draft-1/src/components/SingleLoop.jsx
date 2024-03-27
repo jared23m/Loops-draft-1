@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import {useParams} from 'react-router-dom'
 import { fetchSingleLoopGet } from "../api"
-import LoopCard from "./LoopCard"
+import TinyLoopCard from "./TinyLoopCard";
 
 export default function SingleLoop(props){
 
@@ -144,7 +144,12 @@ export default function SingleLoop(props){
     function renderLoopWithChildren(loop){
         return (
             <div>
-            <LoopCard loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
+            <TinyLoopCard loop={loop} 
+            token={props.token} 
+            admin={props.admin} 
+            accountId={props.accountId} 
+            refresh={refresh} 
+            setRefresh={setRefresh}/>
              {loop.childLoops &&
                 <>
                     {loop.repliesOpen == true &&

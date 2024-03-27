@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchAllLoopsGet } from "../api"
-import LoopCard from "./LoopCard"
+import TinyLoopCard from "./TinyLoopCard";
 
 export default function AllLoops(props){
 
@@ -30,7 +30,7 @@ export default function AllLoops(props){
         :
             <>
             {allLoops.map((loop)=>{
-                return <LoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
+                return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              })}
             </>
         }

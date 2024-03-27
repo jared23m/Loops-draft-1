@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { fetchThrulineGet } from "../api"
-import LoopCard from "./LoopCard"
+import TinyLoopCard from "./TinyLoopCard"
 import { useParams } from "react-router-dom";
 
 export default function Thruline(props){
@@ -40,7 +40,7 @@ export default function Thruline(props){
         :
             <>
             {thruline.map((loop)=>{
-                return <LoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
+                return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              })}
             </>
         }
