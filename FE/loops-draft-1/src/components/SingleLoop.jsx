@@ -5,7 +5,7 @@ import TinyLoopCard from "./TinyLoopCard";
 
 export default function SingleLoop(props){
 
-    const [error, setError] = useState("Loading...");
+    const [error, setError] = useState({message:"Loading..."});
     const [singleLoop, setSingleLoop] = useState({});
     const [refresh, setRefresh] = useState(0);
     const {loopId} = useParams();
@@ -22,7 +22,7 @@ export default function SingleLoop(props){
                 if(repliesOpen){
                     transferRepliesOpen(repliesOpen, potentialSingleLoop);
                 }
-                setError(null);
+                setError({message:null});
             } else {
                 setError({message: "Unable to fetch data."})
             }
@@ -173,7 +173,7 @@ export default function SingleLoop(props){
 
     return (
         <>
-        {error ?
+        {error.message ?
             <p>{error.message}</p>
         :
             <>

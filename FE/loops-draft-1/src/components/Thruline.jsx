@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 export default function Thruline(props){
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({message: "Loading..."});
     const [thruline, setThruline] = useState([]);
     const [refresh, setRefresh] = useState(0);
 
@@ -15,13 +15,11 @@ export default function Thruline(props){
         async function thrulineGet(token, loopId){
             const potentialThruline = await fetchThrulineGet(token, loopId);
             if (potentialThruline && potentialThruline.message){
-                console.log('a');
                 setError(potentialThruline);
             } else if (potentialThruline){
-                console.log('b');
                 setThruline(potentialThruline);
+                setError({message: null});
             } else {
-                console.log('c');
                 setError({message: "Unable to fetch data."})
             }
         }
@@ -35,7 +33,7 @@ export default function Thruline(props){
 
     return (
         <>
-        {error ?
+        {error.message ?
             <p>{error.message}</p>
         :
             <>

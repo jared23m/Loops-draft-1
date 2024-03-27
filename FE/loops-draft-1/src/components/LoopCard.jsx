@@ -11,8 +11,8 @@ export default function LoopCard(props){
     const [replyIsOpen, setReplyIsOpen] = useState(false);
     const [areYouSureIsOpen, setAreYouSureIsOpen] = useState(false);
     const [editMenuOpen, setEditMenuOpen] = useState(false);
-    const [deleteError, setDeleteError] = useState(null);
-    const [saveError, setSaveError] = useState(null);
+    const [deleteError, setDeleteError] = useState({message: null});
+    const [saveError, setSaveError] = useState({message: null});
 
     function renderReplyWindow(loopId){
         return(
@@ -75,7 +75,7 @@ export default function LoopCard(props){
             {props.loop.saved == false &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
             }
-            {saveError && <p>{saveError.message}</p>}
+            {saveError.message && <p>{saveError.message}</p>}
             <p>Created by:</p>
             <Link to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
             {props.loop.status != 'reply' && <p>Status: {props.loop.status}</p>}
@@ -131,7 +131,7 @@ export default function LoopCard(props){
                             :
                                 <button onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
                             }
-                            {deleteError && <p>{deleteError.message}</p>}
+                            {deleteError.message && <p>{deleteError.message}</p>}
                         </>
                         
                     }

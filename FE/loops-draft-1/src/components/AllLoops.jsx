@@ -4,7 +4,7 @@ import TinyLoopCard from "./TinyLoopCard";
 
 export default function AllLoops(props){
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({message: "Loading..."});
     const [allLoops, setAllLoops] = useState([]);
     const [refresh, setRefresh] = useState(0);
 
@@ -15,8 +15,9 @@ export default function AllLoops(props){
                 setError(potentialAllLoops);
             } else if (potentialAllLoops){
                 setAllLoops(potentialAllLoops);
+                setError({message: null});
             } else {
-                setError("Unable to fetch data.")
+                setError({message: "Unable to fetch data."})
             }
         }
         allLoopsGet(props.token);
@@ -25,8 +26,8 @@ export default function AllLoops(props){
 
     return (
         <>
-        {error || allLoops.length == 0 ?
-            <p>{error}</p>
+        {error.message ?
+            <p>{error.message}</p>
         :
             <>
             {allLoops.map((loop)=>{

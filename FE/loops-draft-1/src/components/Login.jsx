@@ -7,7 +7,7 @@ export default function Login(props){
         username: '',
         password: ''
     });
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({message: null});
     const navigate = useNavigate();
 
     async function handleLoginSubmit(event){
@@ -45,7 +45,7 @@ export default function Login(props){
                 </label>
             </div>
                 <button className="logInButton" id='submit'>Submit</button>
-                {error && <p className='logInErrMess'>{error.message}</p>}
+                {error.message && <p className='logInErrMess'>{error.message}</p>}
         </form>
     </div>
     )

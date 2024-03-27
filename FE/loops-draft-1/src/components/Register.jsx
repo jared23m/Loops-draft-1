@@ -8,7 +8,7 @@ export default function Register(props){
         email: '',
         password: '',
     });
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({message: null});
     const navigate = useNavigate();
 
     async function handleRegisterSubmit(event){
@@ -52,7 +52,7 @@ export default function Register(props){
                 </label>
             </div>
                 <button className="registerButton" id='submit'>Submit</button>
-                {error && <p className='registerErrMess'>{error.message}</p>}
+                {error.message && <p className='registerErrMess'>{error.message}</p>}
         </form>
     </div>
     )

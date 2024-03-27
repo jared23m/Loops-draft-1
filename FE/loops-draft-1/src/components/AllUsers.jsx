@@ -4,7 +4,7 @@ import UserCard from "./UserCard"
 
 export default function AllUsers(props){
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({message: "Loading..."});
     const [allUsers, setAllUsers] = useState([]);
 
     useEffect(()=>{
@@ -14,8 +14,9 @@ export default function AllUsers(props){
                 setError(potentialAllUsers);
             } else if (potentialAllUsers){
                 setAllUsers(potentialAllUsers);
+                setError({message: null});
             } else {
-                setError("Unable to fetch data.")
+                setError({message: "Unable to fetch data."})
             }
         }
         allUsersGet(props.token);
@@ -23,8 +24,8 @@ export default function AllUsers(props){
 
     return (
         <>
-        {error || allUsers.length == 0 ?
-            <p>{error}</p>
+        {error.message ?
+            <p>{error.message}</p>
         :
             <>
             {allUsers.map((user)=>{
