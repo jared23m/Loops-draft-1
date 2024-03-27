@@ -24,7 +24,7 @@ export default function SingleLoop(props){
                 }
                 setError(null);
             } else {
-                setError("Unable to fetch data.")
+                setError({message: "Unable to fetch data."})
             }
         }
        singleLoopGet(props.token, loopId);
@@ -169,7 +169,7 @@ export default function SingleLoop(props){
     return (
         <>
         {error ?
-            <p>{error}</p>
+            <p>{error.message}</p>
         :
             <>
             {renderLoopWithChildren(singleLoop)}
