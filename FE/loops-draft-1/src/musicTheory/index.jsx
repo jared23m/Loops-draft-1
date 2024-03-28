@@ -11,7 +11,7 @@ export const keySigNames = ["Cmaj/Amin",
 "Bbmaj/Gmin",
 "Bmaj/G#min"]
 
-const rootShiftArr = [
+export const rootShiftArr = [
 ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"],
 ["Db", "Ebb", "Eb", "Fb", "F", "Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "C"],
 ["D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B", "C", "C#"],
@@ -27,6 +27,28 @@ const rootShiftArr = [
 ]
 
 export const relativeRootIdOptions = ["I", "bII", "II", "bIII", "III", "IV", "bV",  "V", "bVI", "VI", "bVII", "VII"];
+
+export function translateToAbsolute2(potentialChordInfo, keySig){
+
+    let keySigIndex;
+
+    keySigNames.forEach((name, index) =>{
+        if(name == keySig){
+            keySigIndex = index;
+        }
+    });
+
+    const rootShiftSubArray = rootShiftArr[keySigIndex];
+
+    const absoluteChords = potentialChordInfo.map((chord) => {
+
+          const name = `${rootShiftSubArray[chord.indexRootId]}${chord.quality}`;
+
+          return name;
+        })
+
+    return absoluteChords;
+}
 
 export function translateToAbsolute(relativeChords, keySig){
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchThrulineGet } from "../api"
-import {keySigNames, relativeRootIdOptions} from '../musicTheory'
+import {keySigNames, relativeRootIdOptions, translateToAbsolute, rootShiftArr, translateToAbsolute2} from '../musicTheory'
 
 export default function EditLoop(props){
     
@@ -12,7 +12,8 @@ export default function EditLoop(props){
         status: "public",
         keySig: "Cmaj/Amin",
         relativeChordNames: ["I", "V", "vi", "IV"],
-        relativeChordInfo: getChordInfo(["I", "V", "vi", "IV"])
+        relativeChordInfo: getChordInfo(["I", "V", "vi", "IV"]),
+        absoluteChordNames: ["C", "G", "A", "F"]
     }); 
     const [error, setError] = useState({message: "Loading..."});
     const {loopId, mode} = useParams();
@@ -40,6 +41,7 @@ export default function EditLoop(props){
                         return chord.name
                     })
                     const chordInfo = getChordInfo(relativeChordNames);
+                    const absoluteChordNames = translateToAbsolute2(chordInfo, updatingLoop.keysig)
         
                     setStagedLoop({
                         ...currentStagedLoop, 
@@ -47,7 +49,8 @@ export default function EditLoop(props){
                         status: updatingLoop.status,
                         keySig: updatingLoop.keysig,
                         relativeChordNames,
-                        chordInfo
+                        relativeChordInfo: chordInfo,
+                        absoluteChordNames
                     });
                 } else {
                     setError({message: "Unable to fetch data."})
@@ -64,6 +67,7 @@ export default function EditLoop(props){
             let returnObj = {
                 quality: null,
                 relativeRootId: null,
+                indexRootId: null,
                 position: index
             }
             let name = chordName;
@@ -79,14 +83,20 @@ export default function EditLoop(props){
             }
 
             const upperCase = name.toUpperCase();
-            if(upperCase[0] == "B"){
-                upperCase[0] == 'b';
+            const upperCaseArr = upperCase.split('');
+            if(upperCaseArr[0] == "B"){
+                upperCaseArr[0] = 'b';
             }
+            const finalSymbol = upperCaseArr.join('');
 
-            returnObj.relativeRootId = upperCase;
+            returnObj.relativeRootId = finalSymbol;
+            returnObj.indexRootId = relativeRootIdOptions.findIndex((option) => {
+                    return finalSymbol == option;
+            });
 
             return returnObj;
         })
+
 
         return potentialChordInfo;
     }
@@ -98,11 +108,12 @@ export default function EditLoop(props){
         const newRCNames = [...RCNames];
         newRCNames.splice(index, 1);
         const newChordInfo = getChordInfo(newRCNames);
-        console.log('newChordInfo', newChordInfo);
+        const newAbsoluteChordNames = translateToAbsolute2(newChordInfo, stagedLoop.keySig);
         setStagedLoop({
             ...currentLoop,
             relativeChordNames: newRCNames,
-            relativeChordInfo: newChordInfo
+            relativeChordInfo: newChordInfo,
+            absoluteChordNames: newAbsoluteChordNames
         });
     }
 
@@ -112,10 +123,12 @@ export default function EditLoop(props){
         const newRCNames = [...RCNames];
         newRCNames.push('I');
         const newChordInfo = getChordInfo(newRCNames);
+        const newAbsoluteChordNames = translateToAbsolute2(newChordInfo, stagedLoop.keySig);
         setStagedLoop({
             ...currentLoop,
             relativeChordNames: newRCNames,
-            relativeChordInfo: newChordInfo
+            relativeChordInfo: newChordInfo,
+            absoluteChordNames: newAbsoluteChordNames
         });
     }
 
@@ -127,9 +140,21 @@ export default function EditLoop(props){
             <>
             {keyIsChanging ?
                 <>
-                    <button onClick={()=>setKeyIsChanging(false)}>Keep Relative Chords</button>
+                    <button  onClick={()=>{
+                            const currentStagedLoop = stagedLoop;
+                            let currentChordNames = stagedLoop.relativeChordNames;
+                            const newChordInfo = getChordInfo(currentChordNames);
+                            const newAbsoluteChordNames = translateToAbsolute2(newChordInfo, currentStagedLoop.keySig);
+                            setStagedLoop({...currentStagedLoop, 
+                                relativeChordNames: currentChordNames,
+                                relativeChordInfo: newChordInfo,
+                                absoluteChordNames: newAbsoluteChordNames});
+                            setKeyIsChanging(false);
+                            }}>Keep Relative Chords</button>
                     <button>Keep Absolute Chords</button>
                 </>
+
+   
             :
             <form className="editForm" onSubmit={(event)=>handleEditSubmit(event, loopId)}>
             <div className='editEntries'>
@@ -168,7 +193,9 @@ export default function EditLoop(props){
                 Key Signature: 
                     <select value={stagedLoop.keySig} onChange={(e) => {
                     const currentStagedLoop = stagedLoop;
-                    setStagedLoop({...currentStagedLoop, keySig: e.target.value});
+                    setStagedLoop({...currentStagedLoop,
+                         keySig: e.target.value,
+                            });
                     setKeyIsChanging(true);
                     }}>
                         {keySigNames.map((name) => {
@@ -186,14 +213,17 @@ export default function EditLoop(props){
                                         let currentChordNames = stagedLoop.relativeChordNames;
                                         currentChordNames[index] = e.target.value;
                                         const newChordInfo = getChordInfo(currentChordNames);
+                                        const newAbsoluteChordNames = translateToAbsolute2(newChordInfo, stagedLoop.keySig);
                                         setStagedLoop({...currentStagedLoop, 
                                             relativeChordNames: currentChordNames,
-                                            relativeChordInfo: newChordInfo});
+                                            relativeChordInfo: newChordInfo,
+                                            absoluteChordNames: newAbsoluteChordNames});
                                         }}>
                                             {relativeRootIdOptions.map((name, i) => {
                                                 return <option key={i} value={name}>{name}</option>
                                             })}
                                         </select> 
+                                        <p>{stagedLoop.absoluteChordNames[index]}</p>
                                     {stagedLoop.relativeChordNames.length > 1 && 
                                         <button type='button' onClick={()=>handleMinus(index)}>-</button>
                                     }
