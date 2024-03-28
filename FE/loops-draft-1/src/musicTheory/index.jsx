@@ -28,6 +28,8 @@ export const rootShiftArr = [
 
 export const relativeRootIdOptions = ["I", "bII", "II", "bIII", "III", "IV", "bV",  "V", "bVI", "VI", "bVII", "VII"];
 
+export const qualityOptions= ['maj', 'min', 'dim'];
+
 export function translateToAbsolute2(potentialChordInfo, keySig){
 
     let keySigIndex;

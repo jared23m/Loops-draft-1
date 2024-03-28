@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchThrulineGet } from "../api"
-import {keySigNames, relativeRootIdOptions, translateToAbsolute, rootShiftArr, translateToAbsolute2} from '../musicTheory'
+import {keySigNames, relativeRootIdOptions, rootShiftArr, qualityOptions} from '../musicTheory'
 
 export default function EditLoop(props){
     
@@ -61,7 +61,6 @@ export default function EditLoop(props){
                     const chords = relativeChordNames.map((relativeChordName) =>{
                         return getChordFromName(relativeChordName, updatingLoop.keysig);
                     })
-                    console.log('chords',chords);
                     setStagedLoop({
                         ...currentStagedLoop,
                         title: updatingLoop.title,
@@ -78,10 +77,6 @@ export default function EditLoop(props){
             setError({message: null});
         }
     }, [])
-
-    useEffect(()=>{
-        console.log(stagedLoop);
-    }, [stagedLoop]);
 
     function getChordFromName(relativeChordName, keySig){
         const relativeRootSymbol = getRelativeFromName(relativeChordName);
@@ -298,23 +293,38 @@ export default function EditLoop(props){
                         return (
                                     <div key={index}>
                                         <select value={chord.relativeRootSymbol} onChange={(e) => {
-                                        const currentStagedLoop = stagedLoop;
-                                        let currentChords = stagedLoop.chords;
-                                        let currentChordAtIndex = currentChords[index];
-                                        let updatedAbsolute = getAbsoluteFromRelative(e.target.value, currentStagedLoop.keySig);
-                                        currentChords[index] = {
-                                            ...currentChordAtIndex,
-                                            relativeRootSymbol: e.target.value,
-                                            absoluteRootSymbol: updatedAbsolute
-                                        }
-                                        setStagedLoop({...currentStagedLoop, 
-                                            chords: currentChords});
-                                        }}>
-                                            {relativeRootIdOptions.map((name, i) => {
-                                                return <option key={i} value={name}>{name}</option>
-                                            })}
+                                                const currentStagedLoop = stagedLoop;
+                                                let currentChords = stagedLoop.chords;
+                                                let currentChordAtIndex = currentChords[index];
+                                                let updatedAbsolute = getAbsoluteFromRelative(e.target.value, currentStagedLoop.keySig);
+                                                currentChords[index] = {
+                                                    ...currentChordAtIndex,
+                                                    relativeRootSymbol: e.target.value,
+                                                    absoluteRootSymbol: updatedAbsolute
+                                                }
+                                                setStagedLoop({...currentStagedLoop, 
+                                                    chords: currentChords});
+                                                }}>
+                                                    {relativeRootIdOptions.map((name, i) => {
+                                                        return <option key={i} value={name}>{name}</option>
+                                                    })}
                                         </select> 
                                         <p>{stagedLoop.chords[index].absoluteRootSymbol}</p>
+                                        <select value={chord.quality} onChange={(e) => {
+                                                const currentStagedLoop = stagedLoop;
+                                                let currentChords = stagedLoop.chords;
+                                                let currentChordAtIndex = currentChords[index];
+                                                currentChords[index] = {
+                                                    ...currentChordAtIndex,
+                                                quality: e.target.value
+                                                }
+                                                setStagedLoop({...currentStagedLoop, 
+                                                    chords: currentChords});
+                                                }}>
+                                                    {qualityOptions.map((name, i) => {
+                                                        return <option key={i} value={name}>{name}</option>
+                                                    })}
+                                        </select> 
                                     {stagedLoop.chords.length > 1 && 
                                         <button type='button' onClick={()=>handleMinus(index)}>-</button>
                                     }
