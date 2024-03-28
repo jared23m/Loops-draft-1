@@ -1,8 +1,9 @@
 
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import {useState} from 'react'
-import { fetchLoopDelete, fetchSaveLoopPost} from '../api';
+import {useEffect, useState} from 'react'
+import { fetchLoopDelete, fetchSaveLoopPost, fetchForkLoopPost} from '../api';
+import { renderAbsoluteChords } from '../musicTheory';
 
 
 export default function LoopCard(props){
@@ -11,8 +12,12 @@ export default function LoopCard(props){
     const [replyIsOpen, setReplyIsOpen] = useState(false);
     const [areYouSureIsOpen, setAreYouSureIsOpen] = useState(false);
     const [editMenuOpen, setEditMenuOpen] = useState(false);
+    const [forkMenuOpen, setForkMenuOpen] = useState(false);
+    const [forkData, setForkData] = useState({title: "My Fork", status: "public"});
+
     const [deleteError, setDeleteError] = useState({message: null});
     const [saveError, setSaveError] = useState({message: null});
+    const [forkError, setForkError] = useState({message: null});
 
     function renderReplyWindow(loopId){
         return(
@@ -29,13 +34,62 @@ export default function LoopCard(props){
         return(
             <>
                 <button onClick={()=>navigate(`/edit/loopBank/${loopId}`)}>Replace from loop bank</button>
-                <button onClick={()=>navigate(`/edit/${loopId}`)}>Edit in edit page</button>
+                <button onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
                 <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
 
         )
     }
 
+    
+    function renderForkMenu(loopId){
+        return(
+            <>
+            <form className="forkForm" onSubmit={(event)=>handleForkSubmit(event, loopId)}>
+            <div className='forkEntries'>
+                <label className='forkTitle'>
+                Title: <input className='forkInput' type= 'text' value= {forkData.title} onChange= {(e) => {
+                        const currentForkData = forkData;
+                        setForkData({...currentForkData, title: e.target.value});
+                        }}/>
+                </label>
+                <label className='forkStatus'>
+                 Status: 
+                        <select value={forkData.status} onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>
+                        <option value="public" onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>Public</option>
+                        <option value="private" onChange={(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, status: e.target.value});
+                        }}>Private</option>
+                        </select>
+                </label>
+            </div>
+                <button className="forkButton" id='submit'>Submit</button>
+            </form>
+                <button onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+            </>
+
+        )
+    }
+
+    async function handleForkSubmit(event, loopId){
+        event.preventDefault();
+        const potentialSubmit = await fetchForkLoopPost(forkData, props.token, loopId);
+        if (!potentialSubmit){
+            setForkError({message: "Failed to fetch."});
+        } else if (potentialSubmit && potentialSubmit.id) {
+            navigate(`/loops/${potentialSubmit.id}`);
+        } else {
+            setForkError(potentialSubmit);
+        }
+  
+    }
 
     async function handleLoopDelete(token, loopId){
         const potentialSubmit = await fetchLoopDelete(token, loopId);
@@ -68,6 +122,13 @@ export default function LoopCard(props){
         {props.loop &&
         <>
             {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
+            <p>Key Signature: {props.loop.keysig}</p>
+            {props.loop.relativeChords.map((chord) => {
+                return <div key={chord.id}>
+                    <p>{chord.name}</p>
+                </div>
+            })}
             <p>@ {props.loop.timestamp}</p>
             {props.loop.saved == true &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
@@ -93,13 +154,6 @@ export default function LoopCard(props){
                 <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
             </>
             }
-            <p>Key Signature: {props.loop.keysig}</p>
-            <p>Chords:</p>
-            {props.loop.relativeChords.map((chord) => {
-                return <div key={chord.id}>
-                    <p>{chord.name}</p>
-                </div>
-            })}
             <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
             {props.token ?
@@ -109,7 +163,12 @@ export default function LoopCard(props){
                     :
                         renderReplyWindow(props.loop.id)
                     }
-                    <button onClick={()=>navigate(`/fork/${props.loop.id}`)}>Fork from Loop</button>
+                    {!forkMenuOpen ?
+                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
+                    :
+                        renderForkMenu(props.loop.id)
+                    }
+                    {forkError.message && <p>{forkError.message}</p>}
                     {props.accountId == props.loop.userid && 
                     <>
                         {editMenuOpen ?
@@ -138,7 +197,9 @@ export default function LoopCard(props){
                 </> 
             :
                 <>
+                    <p>To Reply: </p>
                     <button onClick={()=> navigate('/login')}>Log In</button>
+                    <p>or</p>
                     <button onClick={()=> navigate('/register')}>Sign Up</button>
                 </>
             }

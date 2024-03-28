@@ -2,7 +2,6 @@
 import './App.css'
 import {useEffect, useState} from 'react'
 import {Route, Routes} from 'react-router-dom'
-import CreateLoop from './components/CreateLoop'
 import EditLoop from './components/EditLoop'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -26,12 +25,8 @@ function App() {
     <p></p>
     <Routes>
     <Route
-      path="/"
-      element={<CreateLoop/>}
-      ></Route>
-    <Route
-      path="/edit/:loopId"
-      element={<EditLoop/>}
+      path="/edit/:mode/:loopId"
+      element={<EditLoop token={token}/>}
       ></Route>
     <Route
       path="/login"
