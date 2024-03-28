@@ -42,7 +42,7 @@ export function translateToAbsolute2(potentialChordInfo, keySig){
 
     const absoluteChords = potentialChordInfo.map((chord) => {
 
-          const name = `${rootShiftSubArray[chord.indexRootId]}${chord.quality}`;
+          const name = `${rootShiftSubArray[chord.indexRootId]}`;
 
           return name;
         })
