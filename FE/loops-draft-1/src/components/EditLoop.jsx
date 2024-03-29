@@ -187,6 +187,17 @@ export default function EditLoop(props){
         return chordName;
     }
 
+    function getKeySigIndex(keySig){
+        let keySigIndex;
+
+        keySigNames.forEach((name, index) =>{
+            if(name == keySig){
+                keySigIndex = index;
+            }
+        });
+
+        return keySigIndex;
+    }
     function handleMinus(index){
 
         const currentLoop = stagedLoop;
@@ -309,7 +320,23 @@ export default function EditLoop(props){
                                                         return <option key={i} value={name}>{name}</option>
                                                     })}
                                         </select> 
-                                        <p>{stagedLoop.chords[index].absoluteRootSymbol}</p>
+                                        <select value={chord.absoluteRootSymbol} onChange={(e) => {
+                                                const currentStagedLoop = stagedLoop;
+                                                let currentChords = stagedLoop.chords;
+                                                let currentChordAtIndex = currentChords[index];
+                                                let updatedRelative = getRelativeFromAbsolute(e.target.value, currentStagedLoop.keySig);
+                                                currentChords[index] = {
+                                                    ...currentChordAtIndex,
+                                                    relativeRootSymbol: updatedRelative,
+                                                    absoluteRootSymbol: e.target.value
+                                                }
+                                                setStagedLoop({...currentStagedLoop, 
+                                                    chords: currentChords});
+                                                }}>
+                                                    {rootShiftArr[getKeySigIndex(stagedLoop.keySig)].map((name, i) => {
+                                                        return <option key={i} value={name}>{name}</option>
+                                                    })}
+                                        </select> 
                                         <select value={chord.quality} onChange={(e) => {
                                                 const currentStagedLoop = stagedLoop;
                                                 let currentChords = stagedLoop.chords;
