@@ -35,7 +35,7 @@ export default function EditLoop(props){
     }); 
     const [error, setError] = useState({message: "Loading..."});
     const {loopId, mode} = useParams();
-    const [keyIsChanging, setKeyIsChanging] = useState(false);
+    const [keyIsChanging, setKeyIsChanging] = useState(null);
 
 
     useEffect(()=>{
@@ -152,7 +152,47 @@ export default function EditLoop(props){
         return absoluteRootSymbol;
     }
 
-    function getRelativeFromAbsolute(absoluteRootSymbol, keySig){
+    function getRelativeFromAbsolute(absoluteRootSymbol, previousKeySig, keySig){
+        let keySigIndex;
+
+        keySigNames.forEach((name, index) =>{
+            if(name == keySig){
+                keySigIndex = index;
+            }
+        });
+
+        let previousKeySigIndex;
+
+        keySigNames.forEach((name, index) =>{
+            if(name == previousKeySig){
+                previousKeySigIndex = index;
+            }
+        });
+
+
+        const correctChordBank = rootShiftArr[previousKeySigIndex];
+        let offSet = 12 - (keySigIndex - previousKeySigIndex);
+
+        while(offSet <= 0){
+            offSet = offSet - 12;
+        }
+
+        let rootIndex = correctChordBank.findIndex((chordName) =>{
+            return absoluteRootSymbol == chordName;
+        })
+
+        rootIndex = rootIndex + offSet;
+
+        while (rootIndex >= 12){
+            rootIndex = rootIndex - 12;
+        }
+
+        const relativeRootSymbol = relativeRootIdOptions[rootIndex];
+
+        return relativeRootSymbol;
+    }
+
+    function getRelativeFromAbsolute2(absoluteRootSymbol, keySig){
         let keySigIndex;
 
         keySigNames.forEach((name, index) =>{
@@ -163,7 +203,7 @@ export default function EditLoop(props){
 
         const correctChordBank = rootShiftArr[keySigIndex];
 
-        const rootIndex = correctChordBank.findIndex((chordName) =>{
+        let rootIndex = correctChordBank.findIndex((chordName) =>{
             return absoluteRootSymbol == chordName;
         })
 
@@ -244,9 +284,24 @@ export default function EditLoop(props){
                             });
                             setStagedLoop({...currentStagedLoop, 
                                 chords: currentChords});
-                            setKeyIsChanging(false);
+                            setKeyIsChanging(null);
                             }}>Keep Relative Chords</button>
-                    <button>Keep Absolute Chords</button>
+                    <button onClick={()=>{
+                            const currentStagedLoop = stagedLoop;
+                            let currentChords = stagedLoop.chords;
+                            currentChords.forEach((chord, index) => {
+                                const updatedRelative = getRelativeFromAbsolute(chord.absoluteRootSymbol, keyIsChanging, currentStagedLoop.keySig);
+                                const updatedAbsolute= getAbsoluteFromRelative(updatedRelative, currentStagedLoop.keySig);
+                                currentChords[index] = {
+                                    ...chord,
+                                    relativeRootSymbol: updatedRelative,
+                                    absoluteRootSymbol: updatedAbsolute
+                                }
+                            });
+                            setStagedLoop({...currentStagedLoop, 
+                                chords: currentChords});
+                            setKeyIsChanging(null);
+                    }}>Keep Absolute Chords</button>
                 </>
 
    
@@ -291,7 +346,7 @@ export default function EditLoop(props){
                     setStagedLoop({...currentStagedLoop,
                          keySig: e.target.value,
                             });
-                    setKeyIsChanging(true);
+                    setKeyIsChanging(currentStagedLoop.keySig);
                     }}>
                         {keySigNames.map((name) => {
                             return <option key={name} value={name}>{name}</option>
@@ -324,7 +379,7 @@ export default function EditLoop(props){
                                                 const currentStagedLoop = stagedLoop;
                                                 let currentChords = stagedLoop.chords;
                                                 let currentChordAtIndex = currentChords[index];
-                                                let updatedRelative = getRelativeFromAbsolute(e.target.value, currentStagedLoop.keySig);
+                                                let updatedRelative = getRelativeFromAbsolute2(e.target.value, currentStagedLoop.keySig);
                                                 currentChords[index] = {
                                                     ...currentChordAtIndex,
                                                     relativeRootSymbol: updatedRelative,
