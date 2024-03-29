@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchThrulineGet } from "../api"
 import {keySigNames, relativeRootIdOptions, rootShiftArr, qualityOptions} from '../musicTheory'
+import { useNavigate } from "react-router-dom"
+import {fetchLoopPatch, fetchStartLoopPost, fetchReplyLoopPost} from '../api'
 
 export default function EditLoop(props){
     
@@ -36,7 +38,8 @@ export default function EditLoop(props){
     const [error, setError] = useState({message: "Loading..."});
     const {loopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(null);
-
+    const [submitError, setSubmitError] = useState({message: null});
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const currentStagedLoop = stagedLoop;
@@ -92,6 +95,98 @@ export default function EditLoop(props){
         }
 
         return chord;
+
+    }
+
+    function handleAllSubmit(event){
+        event.preventDefault();
+        if (mode == 'new' || mode == 'copy'){
+            handleNewSubmit(props.token, stagedLoop);
+        } else if (mode == 'update'){
+            handleUpdateSubmit(props.token, stagedLoop, loopId);
+        } else if (mode == 'replyTo'){
+            handleReplyToSubmit(props.token, stagedLoop, loopId)
+        }
+    }
+
+    async function handleNewSubmit(token, stagedLoop){
+
+        const relativeChordNames = stagedLoop.chords.map((chord)=>{
+            return getNameFromChord(chord);
+        })
+
+        const startLoopData = {
+            title: stagedLoop.title,
+            status: stagedLoop.status,
+            keySig: stagedLoop.keySig,
+            relativeChordNames
+        }
+
+        const potentialSubmit = await fetchStartLoopPost(startLoopData, token);
+        if (!potentialSubmit){
+            setSubmitError({message: "Failed to fetch."});
+        } else if (!potentialSubmit.message) {
+            setSubmitError({message: null});
+            if (stagedLoop.status == 'loopBank'){
+                navigate(`/users/${props.accountId}`);
+            } else {
+                navigate(`/loops/${potentialSubmit.id}`)
+            }
+        } else {
+            setSubmitError(potentialSubmit);
+        }
+
+    }
+
+    async function handleUpdateSubmit(token, stagedLoop, loopId){
+
+        const relativeChordNames = stagedLoop.chords.map((chord)=>{
+            return getNameFromChord(chord);
+        })
+
+        let patchLoopData = {
+            title: null,
+            status: null,
+            keySig: stagedLoop.keySig,
+            relativeChordNames
+        }
+
+        const potentialSubmit = await fetchLoopPatch(patchLoopData, token, loopId, mode);
+        if (!potentialSubmit){
+            setSubmitError({message: "Failed to fetch."});
+        } else if (!potentialSubmit.message) {
+            setSubmitError({message: null});
+            if (stagedLoop.status == 'loopBank'){
+                navigate(`/users/${props.accountId}`);
+            } else {
+                navigate(`/thruline/${potentialSubmit.id}`)
+            }
+        } else {
+            setSubmitError(potentialSubmit);
+        }
+
+    }
+
+    async function handleReplyToSubmit(token, stagedLoop, loopId){
+
+        const relativeChordNames = stagedLoop.chords.map((chord)=>{
+            return getNameFromChord(chord);
+        })
+
+        const replyLoopData = {
+            keySig: stagedLoop.keySig,
+            relativeChordNames
+        }
+
+        const potentialSubmit = await fetchReplyLoopPost(replyLoopData, token, loopId);
+        if (!potentialSubmit){
+            setSubmitError({message: "Failed to fetch."});
+        } else if (!potentialSubmit.message) {
+            setSubmitError({message: null});
+            navigate(`/thruline/${potentialSubmit.id}`)
+        } else {
+            setSubmitError(potentialSubmit);
+        }
 
     }
 
@@ -423,7 +518,19 @@ export default function EditLoop(props){
                     <button type='button' onClick={()=>handlePlus()}>+</button>
                 }
             </div>
-                <button className="editButton" id='submit'>Submit</button>
+                {props.token ? 
+                    <>
+                        <button className="submitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
+                        {submitError.message && <p>{submitError.message}</p>}
+                    </>
+                    :
+                    <>
+                        <p>To Submit: </p>
+                        <button type='button' onClick={()=> navigate('/login')}>Log In</button>
+                        <p>or</p>
+                        <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+                    </>
+                }
             </form>
             }
             </>
