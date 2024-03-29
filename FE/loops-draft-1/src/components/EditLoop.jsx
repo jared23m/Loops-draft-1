@@ -1,4 +1,4 @@
-// props.mode (replyTo, update, start)
+// props.mode (replyTo, update, copy, new)
 
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -47,7 +47,7 @@ export default function EditLoop(props){
                 title: null,
                 status: null
             });
-        } else if (mode == 'update'){
+        } else if (mode == 'update' || mode == 'copy'){
             async function thrulineGet(token, loopId){
                 const potentialThruline = await fetchThrulineGet(token, loopId);
                 if (potentialThruline && potentialThruline.message){
@@ -61,6 +61,11 @@ export default function EditLoop(props){
                     const chords = relativeChordNames.map((relativeChordName) =>{
                         return getChordFromName(relativeChordName, updatingLoop.keysig);
                     })
+
+                    if (!updatingLoop.title){
+                        updatingLoop.title == "My Loop";
+                    }
+
                     setStagedLoop({
                         ...currentStagedLoop,
                         title: updatingLoop.title,
@@ -308,7 +313,7 @@ export default function EditLoop(props){
             :
             <form className="editForm" onSubmit={(event)=>handleEditSubmit(event, loopId)}>
             <div className='editEntries'>
-                {mode == 'replyTo' &&
+                {(mode == 'new' || mode == 'copy') &&
                     <>
                             <label className='editTitle'>
                             Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {

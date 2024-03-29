@@ -29,6 +29,10 @@ function App() {
       element={<EditLoop token={token}/>}
       ></Route>
     <Route
+      path="/edit/:mode/"
+      element={<EditLoop token={token}/>}
+      ></Route>
+    <Route
       path="/login"
       element={<Login 
                 setToken={setToken}
