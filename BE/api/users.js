@@ -120,7 +120,6 @@ usersRouter.post("/login", async (req, res, next) => {
 
 usersRouter.get("/loopBank", requireUser, async (req, res, next) => {
   try {
-    console.log("here");
     const userId = req.user.id;
     const isActive = req.user.isactive;
     const admin = req.user.admin;

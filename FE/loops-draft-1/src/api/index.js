@@ -125,6 +125,23 @@ export async function fetchUserDelete(token, userId){
     }
 }
 
+export async function fetchLoopBankGet(token){
+    try{
+        const response = await fetch(`${API_URL}users/loopBank`, 
+        { 
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        return error;
+    }
+}
+
 //LOOPS
 
 export async function fetchAllLoopsGet(token){

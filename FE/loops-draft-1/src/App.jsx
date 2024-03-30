@@ -11,6 +11,7 @@ import SingleLoop from './components/SingleLoop'
 import AllLoops from './components/AllLoops'
 import Thruline from './components/Thruline'
 import NavBar from './components/NavBar'
+import LoopBank from './components/LoopBank'
 
 function App() {
 
@@ -33,6 +34,10 @@ function App() {
       element={<EditLoop token={token} accountId={accountId}/>}
       ></Route>
     <Route
+      path="/edit/:mode/:loopId/:secondaryLoopId"
+      element={<EditLoop token={token} accountId={accountId}/>}
+    ></Route>
+    <Route
       path="/login"
       element={<Login 
                 setToken={setToken}
@@ -47,6 +52,14 @@ function App() {
                 setAccountId={setAccountId}
                 setAccountUsername={setAccountUsername}
                  setAdmin={setAdmin}/>}
+      ></Route>
+      <Route
+      path="/loopBankGrab/:mode/:secondaryLoopId"
+      element={<LoopBank token={token} admin={admin} accountId={accountId}/>}
+      ></Route>
+       <Route
+      path="/loopBankGrab/:mode/"
+      element={<LoopBank token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     <Route
       path="/users/:userId"

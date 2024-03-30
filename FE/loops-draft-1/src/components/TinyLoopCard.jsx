@@ -32,6 +32,17 @@ export default function TinyLoopCard(props){
                     <button onClick={()=>setOpen(true)}>Open Details</button>
                 </>
                 }
+                <>
+                        {props.parentComp == 'update' &&
+                            <Link to={`/edit/updateFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                        } 
+                        {props.parentComp == 'replyTo' &&
+                            <Link to={`/edit/replyFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                        } 
+                        {props.parentComp == 'new' &&
+                            <Link to={`/edit/newFromLoopBank/${props.loop.id}`}>Select Loop</Link>
+                        } 
+                </>
             </>
             }
         </>

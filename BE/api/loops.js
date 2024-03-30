@@ -437,13 +437,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     try{
       const loopInQuestion = await getStartLoopRowById(loopId);
-      if (loopInQuestion.status == 'loopBank'){
-        next({
-          name: "LoopStatusError",
-          message: "You cannot get this loop from this endpoint because it is a loopBank loop."
-        });
-        return
-      } else if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
+      if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
         next({
           name: "LoopStatusError",
           message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."

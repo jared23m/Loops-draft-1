@@ -22,7 +22,7 @@ export default function LoopCard(props){
     function renderReplyWindow(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBank/replyTo${loopId}`)}>Choose from loop bank</button>
+                <button onClick={()=>navigate(`/loopBankGrab/replyTo/${loopId}`)}>Choose from loop bank</button>
                 <button onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
                 <button onClick={()=> setReplyIsOpen(false)}>Cancel</button>
             </>
@@ -33,7 +33,7 @@ export default function LoopCard(props){
     function renderEditMenu(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/edit/loopBank/${loopId}`)}>Replace from loop bank</button>
+                <button onClick={()=>navigate(`/loopBankGrab/update/${loopId}`)}>Replace from loop bank</button>
                 <button onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
                 <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
@@ -154,22 +154,11 @@ export default function LoopCard(props){
                 <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
             </>
             }
-            <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>
+            {props.loop.status != 'loopBank' && <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
             {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
             {props.token ?
                 <>
-                    {!replyIsOpen ?
-                        <button onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
-                    :
-                        renderReplyWindow(props.loop.id)
-                    }
                     <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
-                    {!forkMenuOpen ?
-                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
-                    :
-                        renderForkMenu(props.loop.id)
-                    }
-                    {forkError.message && <p>{forkError.message}</p>}
                     {props.accountId == props.loop.userid && 
                     <>
                         {editMenuOpen ?
@@ -179,7 +168,6 @@ export default function LoopCard(props){
                         }
                     </>
                     }
-                    
                     {(props.admin || (props.accountId == props.loop.userid) && props.loop.isLonely) && 
                         <>  
                             {areYouSureIsOpen ?
@@ -194,6 +182,21 @@ export default function LoopCard(props){
                             {deleteError.message && <p>{deleteError.message}</p>}
                         </>
                         
+                    }
+                    {props.loop.status != 'loopBank' &&
+                    <>
+                        {!replyIsOpen ?
+                        <button onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
+                    :
+                        renderReplyWindow(props.loop.id)
+                    }
+                    {!forkMenuOpen ?
+                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
+                    :
+                        renderForkMenu(props.loop.id)
+                    }
+                    {forkError.message && <p>{forkError.message}</p>}
+                    </>
                     }
                 </> 
             :

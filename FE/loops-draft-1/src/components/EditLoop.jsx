@@ -1,4 +1,4 @@
-// props.mode (replyTo, update, copy, new)
+// replyTo, update, copy, new, replyFromLoopBank, updateFromLoopBank, newFromLoopBank
 
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -36,10 +36,59 @@ export default function EditLoop(props){
             }],
     }); 
     const [error, setError] = useState({message: "Loading..."});
-    const {loopId, mode} = useParams();
+    const {loopId, secondaryLoopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(null);
     const [submitError, setSubmitError] = useState({message: null});
     const navigate = useNavigate();
+
+    async function thrulineGet(token, loopId, secondaryLoopId){
+        const potentialThruline = await fetchThrulineGet(token, loopId);
+        const currentStagedLoop = stagedLoop;
+        if (potentialThruline && potentialThruline.message){
+            setError(potentialThruline);
+        } else if (potentialThruline){
+            setError({message: null});
+            const updatingLoop = potentialThruline[potentialThruline.length - 1];
+            const relativeChordNames = updatingLoop.relativeChords.map((chord)=>{
+                return chord.name
+            })
+            const chords = relativeChordNames.map((relativeChordName) =>{
+                return getChordFromName(relativeChordName, updatingLoop.keysig);
+            })
+
+            if (!updatingLoop.title){
+                updatingLoop.title == "My Loop";
+            }
+
+            let status;
+            let title;
+
+            if (mode == 'updateFromLoopBank'){
+                const potentialThruline2 = await fetchThrulineGet(token, secondaryLoopId);
+                if (potentialThruline2 && potentialThruline2.message){
+                    setError(potentialThruline2);
+                } else if (potentialThruline2){
+                    setError({message: null});
+                    const updatingLoop2 = potentialThruline2[potentialThruline2.length - 1];
+                    status = updatingLoop2.status;
+                    title = updatingLoop2.title;
+                }
+            } else {
+                status = updatingLoop.status;
+                title = updatingLoop.title;
+            }
+
+            setStagedLoop({
+                ...currentStagedLoop,
+                title,
+                status,
+                keySig: updatingLoop.keysig,
+                chords
+            })
+        } else {
+            setError({message: "Unable to fetch data."})
+        }
+    }
 
     useEffect(()=>{
         const currentStagedLoop = stagedLoop;
@@ -50,39 +99,12 @@ export default function EditLoop(props){
                 title: null,
                 status: null
             });
-        } else if (mode == 'update' || mode == 'copy'){
-            async function thrulineGet(token, loopId){
-                const potentialThruline = await fetchThrulineGet(token, loopId);
-                if (potentialThruline && potentialThruline.message){
-                    setError(potentialThruline);
-                } else if (potentialThruline){
-                    setError({message: null});
-                    const updatingLoop = potentialThruline[potentialThruline.length - 1];
-                    const relativeChordNames = updatingLoop.relativeChords.map((chord)=>{
-                        return chord.name
-                    })
-                    const chords = relativeChordNames.map((relativeChordName) =>{
-                        return getChordFromName(relativeChordName, updatingLoop.keysig);
-                    })
-
-                    if (!updatingLoop.title){
-                        updatingLoop.title == "My Loop";
-                    }
-
-                    setStagedLoop({
-                        ...currentStagedLoop,
-                        title: updatingLoop.title,
-                        status: updatingLoop.status,
-                        keySig: updatingLoop.keysig,
-                        chords
-                    })
-                } else {
-                    setError({message: "Unable to fetch data."})
-                }
-            }
-            thrulineGet(props.token, loopId);
-        } else {
+        } else if (mode == 'new'){
             setError({message: null});
+        } else if (mode == 'updateFromLoopBank'){
+            thrulineGet(props.token, loopId, secondaryLoopId)
+        } else {
+            thrulineGet(props.token, loopId);
         }
     }, [])
 
@@ -100,13 +122,18 @@ export default function EditLoop(props){
 
     function handleAllSubmit(event){
         event.preventDefault();
-        if (mode == 'new' || mode == 'copy'){
+        if (mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank'){
             handleNewSubmit(props.token, stagedLoop);
         } else if (mode == 'update'){
             handleUpdateSubmit(props.token, stagedLoop, loopId);
+        } else if (mode == 'updateFromLoopBank'){
+            handleUpdateSubmit(props.token, stagedLoop, secondaryLoopId);
         } else if (mode == 'replyTo'){
-            handleReplyToSubmit(props.token, stagedLoop, loopId)
+            handleReplyToSubmit(props.token, stagedLoop, loopId);
+        } else if (mode == 'replyFromLoopBank'){
+            handleReplyToSubmit(props.token, stagedLoop, secondaryLoopId);
         }
+       
     }
 
     async function handleNewSubmit(token, stagedLoop){
@@ -406,9 +433,9 @@ export default function EditLoop(props){
 
    
             :
-            <form className="editForm" onSubmit={(event)=>handleEditSubmit(event, loopId)}>
+            <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
             <div className='editEntries'>
-                {(mode == 'new' || mode == 'copy') &&
+                {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                     <>
                             <label className='editTitle'>
                             Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {
