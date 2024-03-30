@@ -22,8 +22,8 @@ export default function LoopCard(props){
     function renderReplyWindow(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBank/${loopId}`)}>Choose from loop bank</button>
-                <button onClick={()=>navigate(`/${loopId}`)}>Create from scratch</button>
+                <button onClick={()=>navigate(`/loopBank/replyTo${loopId}`)}>Choose from loop bank</button>
+                <button onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
                 <button onClick={()=> setReplyIsOpen(false)}>Cancel</button>
             </>
 
@@ -163,6 +163,7 @@ export default function LoopCard(props){
                     :
                         renderReplyWindow(props.loop.id)
                     }
+                    <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
                     {!forkMenuOpen ?
                         <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
                     :

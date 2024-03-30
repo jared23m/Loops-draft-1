@@ -26,7 +26,11 @@ function App() {
     <Routes>
     <Route
       path="/edit/:mode/:loopId"
-      element={<EditLoop token={token}/>}
+      element={<EditLoop token={token} accountId={accountId}/>}
+      ></Route>
+    <Route
+      path="/edit/:mode/"
+      element={<EditLoop token={token} accountId={accountId}/>}
       ></Route>
     <Route
       path="/login"

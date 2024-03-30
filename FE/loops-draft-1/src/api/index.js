@@ -255,20 +255,25 @@ export async function fetchForkLoopPost(forkLoopData, token, forkedFromLoopId){
     }
 }
 
-export async function fetchLoopPatch(patchLoopData, token, loopId){
+export async function fetchLoopPatch(patchLoopData, token, loopId, mode){
     try{
+            let body = JSON.stringify({
+                title: patchLoopData.title,
+                status: patchLoopData.status,
+                keySig: patchLoopData.keySig,
+                relativeChordNames: patchLoopData.relativeChordNames
+            })
+            if (mode=='reply'){
+                delete patchLoopData.title;
+                delete patchLoopData.status;
+            }
             const response = await fetch(`${API_URL}loops/${loopId}`, {
                 method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    title: patchLoopData.title,
-                    status: patchLoopData.status,
-                    keySig: patchLoopData.keySig,
-                    relativeChordNames: patchLoopData.relativeChordNames
-                })
+                body
             });
             const json = await response.json();
             return json;
