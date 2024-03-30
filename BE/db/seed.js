@@ -18,7 +18,8 @@ const {
   getLoopWithChildrenById,
   forkLoop,
   updateLoop,
-  getLoopIsLonely
+  getLoopIsLonely,
+   getLoopBankByUser
 } = require('./loops');
 
 const {  
@@ -154,8 +155,9 @@ const {
 
       await createLoop({ 
         userId: 2,
-        parentLoopId: 2,
-        status: "reply",
+        title: "something",
+        parentLoopId: null,
+        status: "loopBank",
         keySig: "Emaj/C#min",
         timestamp: timestamp,
         relativeChordNames: ["I", "V", "vi", "IV"]
@@ -197,6 +199,9 @@ const {
 
       const publicLoopsWithChords = await getAllPublicLoopsWithChords();
       console.log("publicLoops", publicLoopsWithChords);
+
+      const loopBank = await getLoopBankByUser(2);
+      console.log('loopBank', loopBank)
 
     } catch (error){
       console.log("Error testing db")

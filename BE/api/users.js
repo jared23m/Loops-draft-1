@@ -12,12 +12,16 @@ const {
     getAllUsersPrivate,
     destroyUserById,
     getUserRowById,
-    updateUser
+    updateUser,
 } = require("../db/users");
 
 const {
   lettersAndNumbers
 } = require("../db/index")
+
+const {
+  getLoopBankByUser
+} = require("../db/loops")
 
 const jwt = require("jsonwebtoken");
 
@@ -109,6 +113,28 @@ usersRouter.post("/login", async (req, res, next) => {
         message: "Invalid username or password",
       });
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.get("/loopBank", requireUser, async (req, res, next) => {
+  try {
+    console.log("here");
+    const userId = req.user.id;
+    const isActive = req.user.isactive;
+    const admin = req.user.admin;
+    if (!admin && !isActive){
+      next({
+        name: "InactiveUser",
+        message: "This user is no longer active. You can only view them if you are an admin.",
+      });
+      return;
+    }
+
+    const loopBank = await getLoopBankByUser(userId);
+
+    res.send(loopBank);
   } catch (err) {
     next(err);
   }

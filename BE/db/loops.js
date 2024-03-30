@@ -581,6 +581,31 @@ async function createLoop({
     }
   }
 
+  async function getLoopBankByUser(userId){
+    try {
+      const {rows: loopIds} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE userId = $1
+        AND status = 'loopBank';
+        `,
+        [userId]
+      )
+
+      const loopsWithChords = await Promise.all(
+        loopIds.map((loopId)=>{
+          return getLoopWithChordsById(loopId.id, userId);
+        })
+      )
+
+      return loopsWithChords;
+
+    } catch (error){
+      throw error;
+    }
+  }
+
   module.exports = {
     createLoop,
     updateLoop,
@@ -594,5 +619,6 @@ async function createLoop({
     forkLoop,
     getLoopIsLonely,
     getAllLoopsWithChords,
-    getLoopWithChordsAndStartById
+    getLoopWithChordsAndStartById,
+    getLoopBankByUser
   }
