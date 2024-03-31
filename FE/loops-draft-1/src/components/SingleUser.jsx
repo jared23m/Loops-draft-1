@@ -15,10 +15,12 @@ export default function SingleUser(props){
         username: '',
         email: '',
         password: '',
+        confirmPassword: '',
         admin: null,
         isActive: null
     });
     const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
+    const [notAMatch, setNotAMatch] = useState(false);
 
     useEffect(()=>{
         async function singleUserGet(token, userId){
@@ -59,6 +61,14 @@ export default function SingleUser(props){
         }
     }, [updateProfile])
 
+    useEffect(()=>{
+        if (updateData.password == updateData.confirmPassword){
+            setNotAMatch(false);
+        } else {
+            setNotAMatch(true);
+        }
+    }, [updateData])
+
     async function handleUpdateProfileSubmit(event){
         event.preventDefault();
         const currentUpdateData = updateData;
@@ -77,6 +87,7 @@ export default function SingleUser(props){
         if (currentUpdateData.isActive == null){
             delete currentUpdateData.isActive;
         }
+        delete currentUpdateData.confirmPassword;
 
         const potentialSubmit = await fetchUserPatch(currentUpdateData, props.token, userId);
         if (!potentialSubmit){
@@ -126,6 +137,12 @@ export default function SingleUser(props){
                                         setUpdateData({...currentUpdateData, password: e.target.value});
                                         }}/>
                                 </label>
+                                <label className='updateConfirmPassword'>
+                                Confirm New Password: <input className='updateProfileInput' type= 'password' value= {updateData.confirmPassword} onChange= {(e) => {
+                                        const currentUpdateData = updateData;
+                                        setUpdateData({...currentUpdateData, confirmPassword: e.target.value});
+                                        }}/>
+                                </label>
                                 {(props.admin && singleUser.id != props.accountId) &&
                                 <label className='updateAdmin'>
                                 Admin: 
@@ -163,6 +180,7 @@ export default function SingleUser(props){
                                  </label>
                                 }
                             </div>
+                                {notAMatch && <p>Password and Confirm Password must match.</p>}
                                 <button className="updateProfileButton" id='submit'>Submit</button>
                                 <button onClick={()=>setUpdateProfile(false)}>Cancel</button>
                                 {updateSubmitError.message && <p className='updateProfileErrMess'>{updateSubmitError.message}</p>}
