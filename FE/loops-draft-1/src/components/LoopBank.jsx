@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import {useParams} from 'react-router-dom'
+import {useParams ,useNavigate} from 'react-router-dom'
 import { fetchLoopBankGet} from "../api"
 import TinyLoopCard from "./TinyLoopCard";
 
@@ -10,6 +10,7 @@ export default function LoopBank(props){
     const [refresh, setRefresh] = useState(0);
 
     const {mode, secondaryLoopId} = useParams();
+    const navigate = useNavigate();
 
 
     useEffect(()=>{
@@ -30,16 +31,28 @@ export default function LoopBank(props){
 
     return (
         <>
-        {error.message ?
-            <p>{error.message}</p>
-        :
+            {!props.token ?
             <>
-            {loopBank.map((loop)=>{
-                return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
-                        parentComp={mode} secondaryLoopId={secondaryLoopId}/>
-             })}
+                <p>You cannot access this page without being logged in.</p>
+                <button type='button' onClick={()=> navigate('/login')}>Log In</button>
+                <p>or</p>
+                <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
             </>
-        }
+            :
+                <>
+                {error.message ?
+                    <p>{error.message}</p>
+                :
+                    <>
+                    {loopBank.map((loop)=>{
+                        return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
+                                parentComp={mode} secondaryLoopId={secondaryLoopId}/>
+                    })}
+                    </>
+                }
+                </>
+            }
         </>
+        
     )
 }

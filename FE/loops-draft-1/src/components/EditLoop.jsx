@@ -393,177 +393,188 @@ export default function EditLoop(props){
 
     return (
         <>
-            {error.message ?
-                <p>{error.message}</p>
-            :
+            {(!props.token && mode != 'new') ?
             <>
-            {keyIsChanging ?
-                <>
-                    <button  onClick={()=>{
-                            const currentStagedLoop = stagedLoop;
-                            let currentChords = stagedLoop.chords;
-                            currentChords.forEach((chord, index) => {
-                                const updatedAbsolute = getAbsoluteFromRelative(chord.relativeRootSymbol, currentStagedLoop.keySig);
-                                currentChords[index] = {
-                                    ...chord,
-                                    absoluteRootSymbol: updatedAbsolute
-                                }
-                            });
-                            setStagedLoop({...currentStagedLoop, 
-                                chords: currentChords});
-                            setKeyIsChanging(null);
-                            }}>Keep Relative Chords</button>
-                    <button onClick={()=>{
-                            const currentStagedLoop = stagedLoop;
-                            let currentChords = stagedLoop.chords;
-                            currentChords.forEach((chord, index) => {
-                                const updatedRelative = getRelativeFromAbsolute(chord.absoluteRootSymbol, keyIsChanging, currentStagedLoop.keySig);
-                                const updatedAbsolute= getAbsoluteFromRelative(updatedRelative, currentStagedLoop.keySig);
-                                currentChords[index] = {
-                                    ...chord,
-                                    relativeRootSymbol: updatedRelative,
-                                    absoluteRootSymbol: updatedAbsolute
-                                }
-                            });
-                            setStagedLoop({...currentStagedLoop, 
-                                chords: currentChords});
-                            setKeyIsChanging(null);
-                    }}>Keep Absolute Chords</button>
-                </>
-
-   
+                <p>You cannot access this page without being logged in.</p>
+                <button type='button' onClick={()=> navigate('/login')}>Log In</button>
+                <p>or</p>
+                <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+            </>
             :
-            <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
-            {(mode == 'new' && props.token) && <Link to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
-            <div className='editEntries'>
-                {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                     <>
-                            <label className='editTitle'>
-                            Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {
-                            const currentStagedLoop = stagedLoop;
-                            setStagedLoop({...currentStagedLoop, title: e.target.value});
-                            }}/>
-                            </label>
-                            <label className='editStatus'>
-                            Status: 
-                            <select value={stagedLoop.status} onChange={(e) => {
-                                const currentStagedLoop = stagedLoop;
-                                setStagedLoop({...currentStagedLoop, status: e.target.value});
-                            }}>
-                            <option value="public" onChange={(e) => {
-                                const currentStagedLoop = stagedLoop;
-                                setStagedLoop({...currentStagedLoop, status: e.target.value});
-                            }}>Public</option>
-                            <option value="private" onChange={(e) => {
-                                const currentStagedLoop = stagedLoop;
-                                setStagedLoop({...currentStagedLoop, status: e.target.value});
-                            }}>Private</option>
-    
-                            <option value="loopBank" onChange={(e) => {
-                                const currentStagedLoop = stagedLoop;
-                                setStagedLoop({...currentStagedLoop, status: e.target.value});
-                            }}>LoopBank</option>
-                            </select>
-                    </label>
-                    </>
-                }
-                <label className='editKeySig'>
-                Key Signature: 
-                    <select value={stagedLoop.keySig} onChange={(e) => {
-                    const currentStagedLoop = stagedLoop;
-                    setStagedLoop({...currentStagedLoop,
-                         keySig: e.target.value,
-                            });
-                    setKeyIsChanging(currentStagedLoop.keySig);
-                    }}>
-                        {keySigNames.map((name) => {
-                            return <option key={name} value={name}>{name}</option>
-                        })}
-                    </select>
-                </label>
-                <label className='editChords'>
-                Chords:
-                    {stagedLoop.chords.map((chord, index)=>{
-                        return (
-                                    <div key={index}>
-                                        <select value={chord.relativeRootSymbol} onChange={(e) => {
-                                                const currentStagedLoop = stagedLoop;
-                                                let currentChords = stagedLoop.chords;
-                                                let currentChordAtIndex = currentChords[index];
-                                                let updatedAbsolute = getAbsoluteFromRelative(e.target.value, currentStagedLoop.keySig);
-                                                currentChords[index] = {
-                                                    ...currentChordAtIndex,
-                                                    relativeRootSymbol: e.target.value,
-                                                    absoluteRootSymbol: updatedAbsolute
-                                                }
-                                                setStagedLoop({...currentStagedLoop, 
-                                                    chords: currentChords});
-                                                }}>
-                                                    {relativeRootIdOptions.map((name, i) => {
-                                                        return <option key={i} value={name}>{name}</option>
-                                                    })}
-                                        </select> 
-                                        <select value={chord.absoluteRootSymbol} onChange={(e) => {
-                                                const currentStagedLoop = stagedLoop;
-                                                let currentChords = stagedLoop.chords;
-                                                let currentChordAtIndex = currentChords[index];
-                                                let updatedRelative = getRelativeFromAbsolute2(e.target.value, currentStagedLoop.keySig);
-                                                currentChords[index] = {
-                                                    ...currentChordAtIndex,
-                                                    relativeRootSymbol: updatedRelative,
-                                                    absoluteRootSymbol: e.target.value
-                                                }
-                                                setStagedLoop({...currentStagedLoop, 
-                                                    chords: currentChords});
-                                                }}>
-                                                    {rootShiftArr[getKeySigIndex(stagedLoop.keySig)].map((name, i) => {
-                                                        return <option key={i} value={name}>{name}</option>
-                                                    })}
-                                        </select> 
-                                        <select value={chord.quality} onChange={(e) => {
-                                                const currentStagedLoop = stagedLoop;
-                                                let currentChords = stagedLoop.chords;
-                                                let currentChordAtIndex = currentChords[index];
-                                                currentChords[index] = {
-                                                    ...currentChordAtIndex,
-                                                quality: e.target.value
-                                                }
-                                                setStagedLoop({...currentStagedLoop, 
-                                                    chords: currentChords});
-                                                }}>
-                                                    {qualityOptions.map((name, i) => {
-                                                        return <option key={i} value={name}>{name}</option>
-                                                    })}
-                                        </select> 
-                                    {stagedLoop.chords.length > 1 && 
-                                        <button type='button' onClick={()=>handleMinus(index)}>-</button>
-                                    }
-                                    </div>
-                        )
-                    })}
-                </label>
-                {stagedLoop.chords.length < 4 && 
-                    <button type='button' onClick={()=>handlePlus()}>+</button>
-                }
-            </div>
-                {props.token ? 
-                    <>
-                        <button className="submitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
-                        {submitError.message && <p>{submitError.message}</p>}
-                    </>
+                    {error.message ?
+                        <p>{error.message}</p>
                     :
                     <>
-                        <p>To Submit: </p>
-                        <button type='button' onClick={()=> navigate('/login')}>Log In</button>
-                        <p>or</p>
-                        <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
-                    </>
-                }
-            </form>
-            }
-            </>
+                    {keyIsChanging ?
+                        <>
+                            <button  onClick={()=>{
+                                    const currentStagedLoop = stagedLoop;
+                                    let currentChords = stagedLoop.chords;
+                                    currentChords.forEach((chord, index) => {
+                                        const updatedAbsolute = getAbsoluteFromRelative(chord.relativeRootSymbol, currentStagedLoop.keySig);
+                                        currentChords[index] = {
+                                            ...chord,
+                                            absoluteRootSymbol: updatedAbsolute
+                                        }
+                                    });
+                                    setStagedLoop({...currentStagedLoop, 
+                                        chords: currentChords});
+                                    setKeyIsChanging(null);
+                                    }}>Keep Relative Chords</button>
+                            <button onClick={()=>{
+                                    const currentStagedLoop = stagedLoop;
+                                    let currentChords = stagedLoop.chords;
+                                    currentChords.forEach((chord, index) => {
+                                        const updatedRelative = getRelativeFromAbsolute(chord.absoluteRootSymbol, keyIsChanging, currentStagedLoop.keySig);
+                                        const updatedAbsolute= getAbsoluteFromRelative(updatedRelative, currentStagedLoop.keySig);
+                                        currentChords[index] = {
+                                            ...chord,
+                                            relativeRootSymbol: updatedRelative,
+                                            absoluteRootSymbol: updatedAbsolute
+                                        }
+                                    });
+                                    setStagedLoop({...currentStagedLoop, 
+                                        chords: currentChords});
+                                    setKeyIsChanging(null);
+                            }}>Keep Absolute Chords</button>
+                        </>
+
+        
+                    :
+                    <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
+                    {(mode == 'new' && props.token) && <Link to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
+                    <div className='editEntries'>
+                        {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
+                            <>
+                                    <label className='editTitle'>
+                                    Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {
+                                    const currentStagedLoop = stagedLoop;
+                                    setStagedLoop({...currentStagedLoop, title: e.target.value});
+                                    }}/>
+                                    </label>
+                                    <label className='editStatus'>
+                                    Status: 
+                                    <select value={stagedLoop.status} onChange={(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                    }}>
+                                    <option value="public" onChange={(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                    }}>Public</option>
+                                    <option value="private" onChange={(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                    }}>Private</option>
             
-             }
+                                    <option value="loopBank" onChange={(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                    }}>LoopBank</option>
+                                    </select>
+                            </label>
+                            </>
+                        }
+                        <label className='editKeySig'>
+                        Key Signature: 
+                            <select value={stagedLoop.keySig} onChange={(e) => {
+                            const currentStagedLoop = stagedLoop;
+                            setStagedLoop({...currentStagedLoop,
+                                keySig: e.target.value,
+                                    });
+                            setKeyIsChanging(currentStagedLoop.keySig);
+                            }}>
+                                {keySigNames.map((name) => {
+                                    return <option key={name} value={name}>{name}</option>
+                                })}
+                            </select>
+                        </label>
+                        <label className='editChords'>
+                        Chords:
+                            {stagedLoop.chords.map((chord, index)=>{
+                                return (
+                                            <div key={index}>
+                                                <select value={chord.relativeRootSymbol} onChange={(e) => {
+                                                        const currentStagedLoop = stagedLoop;
+                                                        let currentChords = stagedLoop.chords;
+                                                        let currentChordAtIndex = currentChords[index];
+                                                        let updatedAbsolute = getAbsoluteFromRelative(e.target.value, currentStagedLoop.keySig);
+                                                        currentChords[index] = {
+                                                            ...currentChordAtIndex,
+                                                            relativeRootSymbol: e.target.value,
+                                                            absoluteRootSymbol: updatedAbsolute
+                                                        }
+                                                        setStagedLoop({...currentStagedLoop, 
+                                                            chords: currentChords});
+                                                        }}>
+                                                            {relativeRootIdOptions.map((name, i) => {
+                                                                return <option key={i} value={name}>{name}</option>
+                                                            })}
+                                                </select> 
+                                                <select value={chord.absoluteRootSymbol} onChange={(e) => {
+                                                        const currentStagedLoop = stagedLoop;
+                                                        let currentChords = stagedLoop.chords;
+                                                        let currentChordAtIndex = currentChords[index];
+                                                        let updatedRelative = getRelativeFromAbsolute2(e.target.value, currentStagedLoop.keySig);
+                                                        currentChords[index] = {
+                                                            ...currentChordAtIndex,
+                                                            relativeRootSymbol: updatedRelative,
+                                                            absoluteRootSymbol: e.target.value
+                                                        }
+                                                        setStagedLoop({...currentStagedLoop, 
+                                                            chords: currentChords});
+                                                        }}>
+                                                            {rootShiftArr[getKeySigIndex(stagedLoop.keySig)].map((name, i) => {
+                                                                return <option key={i} value={name}>{name}</option>
+                                                            })}
+                                                </select> 
+                                                <select value={chord.quality} onChange={(e) => {
+                                                        const currentStagedLoop = stagedLoop;
+                                                        let currentChords = stagedLoop.chords;
+                                                        let currentChordAtIndex = currentChords[index];
+                                                        currentChords[index] = {
+                                                            ...currentChordAtIndex,
+                                                        quality: e.target.value
+                                                        }
+                                                        setStagedLoop({...currentStagedLoop, 
+                                                            chords: currentChords});
+                                                        }}>
+                                                            {qualityOptions.map((name, i) => {
+                                                                return <option key={i} value={name}>{name}</option>
+                                                            })}
+                                                </select> 
+                                            {stagedLoop.chords.length > 1 && 
+                                                <button type='button' onClick={()=>handleMinus(index)}>-</button>
+                                            }
+                                            </div>
+                                )
+                            })}
+                        </label>
+                        {stagedLoop.chords.length < 4 && 
+                            <button type='button' onClick={()=>handlePlus()}>+</button>
+                        }
+                    </div>
+                        {props.token ? 
+                            <>
+                                <button className="submitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
+                                {submitError.message && <p>{submitError.message}</p>}
+                            </>
+                            :
+                            <>
+                                <p>To Submit: </p>
+                                <button type='button' onClick={()=> navigate('/login')}>Log In</button>
+                                <p>or</p>
+                                <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+                            </>
+                        }
+                    </form>
+                    }
+                    </>
+                    
+                    }
+                </>
+            }
         </>
     )
 }
