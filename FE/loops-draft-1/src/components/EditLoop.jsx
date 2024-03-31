@@ -1,7 +1,7 @@
 // replyTo, update, copy, new, replyFromLoopBank, updateFromLoopBank, newFromLoopBank
 
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { fetchThrulineGet } from "../api"
 import {keySigNames, relativeRootIdOptions, rootShiftArr, qualityOptions} from '../musicTheory'
 import { useNavigate } from "react-router-dom"
@@ -434,6 +434,7 @@ export default function EditLoop(props){
    
             :
             <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
+            {(mode == 'new' && props.token) && <Link to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
             <div className='editEntries'>
                 {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                     <>
