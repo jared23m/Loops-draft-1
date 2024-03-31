@@ -28,7 +28,7 @@ export default function SingleLoop(props){
             }
         }
        singleLoopGet(props.token, loopId);
-    }, [refresh]);
+    }, [refresh, loopId]);
 
     function openPreviousReplies(loop, nextParentLoop){
         let loopWithChildren = loop;

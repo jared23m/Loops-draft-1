@@ -33,7 +33,7 @@ export default function SingleUser(props){
             }
         }
         singleUserGet(props.token, userId);
-    }, [refresh]);
+    }, [refresh, userId]);
 
     useEffect(()=>{
         if (singleUser){
