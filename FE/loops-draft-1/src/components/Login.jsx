@@ -28,25 +28,40 @@ export default function Login(props){
     }
 
     return (
-    <div className='Login'>
-     <form className="logInForm" onSubmit= {handleLoginSubmit}>
-            <div className='logInEntries'>
-                <label className='logInUsername'>
-                Username: <input className='logInInput' type= 'text' value= {loginData.username} onChange= {(e) => {
-                        const currentLoginData = loginData;
-                        setLoginData({...currentLoginData, username: e.target.value});
-                        }}/>
-                </label>
-                <label className='logInPassword'>
-                 Password: <input className='logInInput' type= 'password' value= {loginData.password} onChange= {(e) => {
-                        const currentLoginData = loginData;
-                        setLoginData({...currentLoginData, password: e.target.value});
-                        }}/>
-                </label>
+        <>
+            {props.token ?
+            <>
+                <p>You cannot access this page while being logged in.</p>
+                <button onClick={()=>{
+                props.setToken(null);
+                props.setAccountId(null);
+                props.setAccountUsername(null);
+                props.setAdmin(false);
+                navigate('/');
+                }}>Log Out</button>
+            </>
+            :
+            <div className='Login'>
+            <form className="logInForm" onSubmit= {handleLoginSubmit}>
+                <div className='logInEntries'>
+                    <label className='logInUsername'>
+                    Username: <input className='logInInput' type= 'text' value= {loginData.username} onChange= {(e) => {
+                            const currentLoginData = loginData;
+                            setLoginData({...currentLoginData, username: e.target.value});
+                            }}/>
+                    </label>
+                    <label className='logInPassword'>
+                     Password: <input className='logInInput' type= 'password' value= {loginData.password} onChange= {(e) => {
+                            const currentLoginData = loginData;
+                            setLoginData({...currentLoginData, password: e.target.value});
+                            }}/>
+                    </label>
+                </div>
+                    <button className="logInButton" id='submit'>Submit</button>
+                    {error.message && <p className='logInErrMess'>{error.message}</p>}
+            </form>
             </div>
-                <button className="logInButton" id='submit'>Submit</button>
-                {error.message && <p className='logInErrMess'>{error.message}</p>}
-        </form>
-    </div>
+            }
+        </>
     )
 }

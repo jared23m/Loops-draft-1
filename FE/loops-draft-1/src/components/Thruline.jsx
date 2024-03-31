@@ -24,7 +24,7 @@ export default function Thruline(props){
             }
         }
         thrulineGet(props.token, loopId);
-    }, [refresh]);
+    }, [refresh, loopId]);
 
 
     return (

@@ -40,6 +40,7 @@ function App() {
     <Route
       path="/login"
       element={<Login 
+                token = {token}
                 setToken={setToken}
                 setAccountId={setAccountId}
                 setAccountUsername={setAccountUsername}
@@ -48,6 +49,7 @@ function App() {
     <Route
       path="/register"
       element={<Register
+                token = {token}
                 setToken={setToken}
                 setAccountId={setAccountId}
                 setAccountUsername={setAccountUsername}

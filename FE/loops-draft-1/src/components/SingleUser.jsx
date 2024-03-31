@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { fetchSingleUserGet } from "../api"
+import { fetchSingleUserGet , fetchUserPatch} from "../api"
 import TinyLoopCard from "./TinyLoopCard"
 
 export default function SingleUser(props){
@@ -10,6 +10,17 @@ export default function SingleUser(props){
     const [visibleLoops, setVisibleLoops] = useState([]);
     const [refresh, setRefresh] = useState(0);
     const {userId} = useParams();
+    const [updateProfile, setUpdateProfile] = useState(false);
+    const [updateData, setUpdateData] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        admin: null,
+        isActive: null
+    });
+    const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
+    const [notAMatch, setNotAMatch] = useState(false);
 
     useEffect(()=>{
         async function singleUserGet(token, userId){
@@ -24,13 +35,71 @@ export default function SingleUser(props){
             }
         }
         singleUserGet(props.token, userId);
-    }, [refresh]);
+    }, [refresh, userId]);
 
     useEffect(()=>{
         if (singleUser){
             setVisibleLoops(singleUser.loops);
         }
     }, [singleUser]);
+
+    useEffect(()=>{
+        if (updateProfile){
+            let currentUpdateData = updateData;
+            currentUpdateData.username = singleUser.username;
+            currentUpdateData.email = singleUser.email;
+            if (props.admin && singleUser.id != props.accountId){
+                currentUpdateData.admin = singleUser.admin;
+            }
+            if ((props.admin && singleUser.id != props.accountId) || !props.admin){
+                currentUpdateData.isActive = true;
+            }
+
+            setUpdateData({
+                ...currentUpdateData
+            })
+        }
+    }, [updateProfile])
+
+    useEffect(()=>{
+        if (updateData.password == updateData.confirmPassword){
+            setNotAMatch(false);
+        } else {
+            setNotAMatch(true);
+        }
+    }, [updateData])
+
+    async function handleUpdateProfileSubmit(event){
+        event.preventDefault();
+        const currentUpdateData = updateData;
+        if (!currentUpdateData.username || updateData.username == ''){
+            delete currentUpdateData.username;
+        }
+        if (!currentUpdateData.email || updateData.email == ''){
+            delete currentUpdateData.email;
+        }
+        if (!currentUpdateData.password || updateData.password == ''){
+            delete currentUpdateData.password;
+        }
+        if (currentUpdateData.admin == null){
+            delete currentUpdateData.admin;
+        }
+        if (currentUpdateData.isActive == null){
+            delete currentUpdateData.isActive;
+        }
+        delete currentUpdateData.confirmPassword;
+
+        const potentialSubmit = await fetchUserPatch(currentUpdateData, props.token, userId);
+        if (!potentialSubmit){
+            setUpdateSubmitError({message: "Failed to fetch."});
+        } else if (!potentialSubmit.message) {
+            setUpdateProfile(false);
+            setRefresh(refresh + 1);
+        } else {
+            setUpdateSubmitError(potentialSubmit);
+        }
+  
+    }
 
     return (
         <>
@@ -43,7 +112,87 @@ export default function SingleUser(props){
                     <p>Status: Admin</p>
                 :
                     <p>Status: User</p>
-            }       
+            }      
+            {(singleUser.id == props.accountId || props.admin) &&
+            <>
+                    {updateProfile ?
+                            <>
+                            <form className="updateProfileForm" onSubmit= {handleUpdateProfileSubmit}>
+                            <div className='updateProfileEntries'>
+                                <label className='updateUsername'>
+                                Username: <input className='updateProfileInput' type= 'text' value= {updateData.username} onChange= {(e) => {
+                                        const currentUpdateData = updateData;
+                                        setUpdateData({...currentUpdateData, username: e.target.value});
+                                        }}/>
+                                </label>
+                                <label className='updateUsername'>
+                                Email: <input className='updateProfileInput' type= 'email' value= {updateData.email} onChange= {(e) => {
+                                        const currentUpdateData = updateData;
+                                        setUpdateData({...currentUpdateData, username: e.target.value});
+                                        }}/>
+                                </label>
+                                <label className='updatePassword'>
+                                New Password: <input className='updateProfileInput' type= 'password' value= {updateData.password} onChange= {(e) => {
+                                        const currentUpdateData = updateData;
+                                        setUpdateData({...currentUpdateData, password: e.target.value});
+                                        }}/>
+                                </label>
+                                <label className='updateConfirmPassword'>
+                                Confirm New Password: <input className='updateProfileInput' type= 'password' value= {updateData.confirmPassword} onChange= {(e) => {
+                                        const currentUpdateData = updateData;
+                                        setUpdateData({...currentUpdateData, confirmPassword: e.target.value});
+                                        }}/>
+                                </label>
+                                {(props.admin && singleUser.id != props.accountId) &&
+                                <label className='updateAdmin'>
+                                Admin: 
+                                        <select value={updateData.admin} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, admin: e.target.value});
+                                        }}>
+                                        <option value={true} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, admin: e.target.value});
+                                        }}>True</option>
+                                        <option value={false} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, admin: e.target.value});
+                                        }}>False</option>
+                                        </select>
+                                 </label>
+                                }
+                                {((props.admin && singleUser.id != props.accountId) || !props.admin) &&
+                                <label className='updateIsActive'>
+                                Delete account forever: 
+                                        <select value={updateData.isActive} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, isActive: e.target.value});
+                                        }}>
+                                        <option value={true} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, isActive: e.target.value});
+                                        }}>False</option>
+                                        <option value={false} onChange={(e) => {
+                                            const currentUpdateData = updateData;
+                                            setUpdateData({...currentUpdateData, isActive: e.target.value});
+                                        }}>True</option>
+                                        </select>
+                                 </label>
+                                }
+                            </div>
+                                {notAMatch && <p>Password and Confirm Password must match.</p>}
+                                <button className="updateProfileButton" id='submit'>Submit</button>
+                                <button onClick={()=>setUpdateProfile(false)}>Cancel</button>
+                                {updateSubmitError.message && <p className='updateProfileErrMess'>{updateSubmitError.message}</p>}
+                            </form>
+                            </>
+                            :
+                            <>
+                                <button onClick={()=>setUpdateProfile(true)}>Update Profile</button>
+                            </>
+                            }
+            </>
+            } 
             <>
                 {visibleLoops &&
                 <>
