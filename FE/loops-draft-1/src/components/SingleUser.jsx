@@ -194,11 +194,15 @@ export default function SingleUser(props){
             </>
             } 
             <>
-                {visibleLoops &&
+                {(visibleLoops && visibleLoops.length > 0) ?
                 <>
                     {visibleLoops.map((loop)=>{
                     return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
                     })}
+                </>
+                :
+                <>
+                    <p>No loops to display.</p>
                 </>
                 }
             </>   

@@ -8,6 +8,7 @@ export default function LoopBank(props){
     const [error, setError] = useState({message: "Loading..."});
     const [loopBank, setLoopBank] = useState([]);
     const [refresh, setRefresh] = useState(0);
+    const [visibleLoops, setVisibleLoops] = useState([]);
 
     const {mode, secondaryLoopId} = useParams();
     const navigate = useNavigate();
@@ -28,6 +29,12 @@ export default function LoopBank(props){
         loopBankGet(props.token);
     }, [refresh]);
 
+    useEffect(()=>{
+        if (loopBank){
+            setVisibleLoops(loopBank);
+        }
+    }, [loopBank]);
+
 
     return (
         <>
@@ -43,12 +50,20 @@ export default function LoopBank(props){
                 {error.message ?
                     <p>{error.message}</p>
                 :
-                    <>
-                    {loopBank.map((loop)=>{
-                        return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
-                                parentComp={mode} secondaryLoopId={secondaryLoopId}/>
-                    })}
-                    </>
+                <>
+                {(visibleLoops && visibleLoops.length > 0) ?
+                        <>
+                        {visibleLoops.map((loop)=>{
+                            return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
+                                    parentComp={mode} secondaryLoopId={secondaryLoopId}/>
+                        })}
+                        </>
+                :
+                <>
+                    <p>No loops to display.</p>
+                </>
+                }
+                </>
                 }
                 </>
             }
