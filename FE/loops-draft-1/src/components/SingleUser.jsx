@@ -22,6 +22,7 @@ export default function SingleUser(props){
     const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
     const [notAMatch, setNotAMatch] = useState(false);
     const [searchData, setSearchData] = useState({
+        query: '',
         startLoops: true,
         replyLoops: true,
         forkedLoops: true
@@ -39,7 +40,20 @@ export default function SingleUser(props){
             if (potentialSingleUser && potentialSingleUser.message){
                 setError(potentialSingleUser);
             } else if (potentialSingleUser){
-                setSingleUser(potentialSingleUser);
+                let initializeLoops = potentialSingleUser.loops;
+                initializeLoops.reverse();
+
+                if (potentialSingleUser.savedLoops){
+                    let initializeSavedLoops = potentialSingleUser.savedLoops;
+                    initializeSavedLoops.forEach((loop)=>{
+                        loop['saved'] = true;
+                    })
+                    initializeSavedLoops.reverse();
+                    setSingleUser({...potentialSingleUser, loops: initializeLoops, savedLoops: initializeSavedLoops});
+                } else {
+                    setSingleUser({...potentialSingleUser, loops: initializeLoops});
+                }
+
                 setError({message: null});
             } else {
                 setError({message: "Unable to fetch data."});
@@ -111,6 +125,12 @@ export default function SingleUser(props){
     function renderUserSearchForm(){
         return (
             <div>
+                <label>
+                Search By Start Loop Title: <input className='singleUserSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
+                            const currentSearchData = searchData;
+                            setSearchData({...currentSearchData, query: e.target.value});
+                            }}/>
+                </label>
                  <label>
                     <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
                         const currentSearchData = searchData;
@@ -176,17 +196,60 @@ export default function SingleUser(props){
     }
 
     useEffect(()=>{
-        if (singleUser){
-            console.log(singleUser);
-            let currentVisibleLoops = visibleLoops;
+        if (singleUser.loops){
+            let currentVisibleLoops;
             if (singleUser.savedLoops){
-                let savedLoops = singleUser.savedLoops;
-                savedLoops.forEach((loop)=>{
-                    loop['saved'] = true;
-                })
-                currentVisibleLoops = [...singleUser.loops, ...savedLoops];
+                currentVisibleLoops = [...singleUser.loops, ...singleUser.savedLoops];
             } else {
-                currentVisibleLoops = singleUser.loops;
+                currentVisibleLoops = [...singleUser.loops];
+            }
+
+            if (!searchData.query == ''){
+                const startIncludesQuery = currentVisibleLoops.filter((loop)=>{
+                    if (loop.startLoop){
+                        return false;
+                    } else {
+                        return loop.title.toLowerCase().includes(searchData.query.toLowerCase());
+                    }
+                })
+
+                const replyIncludesQuery = currentVisibleLoops.filter((loop)=>{
+                    if (loop.startLoop){
+                        return loop.startLoop.title.toLowerCase().includes(searchData.query.toLowerCase());
+                    } else {
+                        return false;
+                    }
+                })
+
+                const includesQuery = [...startIncludesQuery, ...replyIncludesQuery];
+
+                const startStartsWithQuery = includesQuery.filter((loop)=>{
+                    if (loop.startLoop){
+                        return false;
+                    } else {
+                        return loop.title.toLowerCase().startsWith(searchData.query.toLowerCase());
+                    }
+                })
+
+                const replyStartsWithQuery = includesQuery.filter((loop)=>{
+                    if (loop.startLoop){
+                        return loop.startLoop.title.toLowerCase().startsWith(searchData.query.toLowerCase());
+                    } else {
+                        return false;
+                    }
+                })
+
+                const startsWithQuery = [...startStartsWithQuery, ...replyStartsWithQuery];
+
+                const includesButDoesNotStartWith = includesQuery.filter((includesLoop) =>{
+                    const found = startsWithQuery.find((startsWithLoop) => {
+                        return includesLoop.id == startsWithLoop.id;
+                    })
+
+                    return !found;
+                })
+
+                currentVisibleLoops = [...startsWithQuery, ...includesButDoesNotStartWith];
             }
 
             if (!searchData.startLoops){
