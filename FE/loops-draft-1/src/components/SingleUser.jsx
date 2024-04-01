@@ -62,6 +62,10 @@ export default function SingleUser(props){
     }, [updateProfile])
 
     useEffect(()=>{
+        console.log(updateData);
+    }, [updateData]);
+
+    useEffect(()=>{
         if (updateData.password == updateData.confirmPassword){
             setNotAMatch(false);
         } else {
@@ -72,13 +76,13 @@ export default function SingleUser(props){
     async function handleUpdateProfileSubmit(event){
         event.preventDefault();
         const currentUpdateData = updateData;
-        if (!currentUpdateData.username || updateData.username == ''){
+        if (!currentUpdateData.username || currentUpdateData.username == ''){
             delete currentUpdateData.username;
         }
-        if (!currentUpdateData.email || updateData.email == ''){
+        if (!currentUpdateData.email || currentUpdateData.email == ''){
             delete currentUpdateData.email;
         }
-        if (!currentUpdateData.password || updateData.password == ''){
+        if (!currentUpdateData.password || currentUpdateData.password == ''){
             delete currentUpdateData.password;
         }
         if (currentUpdateData.admin == null){
@@ -89,10 +93,13 @@ export default function SingleUser(props){
         }
         delete currentUpdateData.confirmPassword;
 
+        console.log("onsubmit", currentUpdateData);
+
         const potentialSubmit = await fetchUserPatch(currentUpdateData, props.token, userId);
         if (!potentialSubmit){
             setUpdateSubmitError({message: "Failed to fetch."});
         } else if (!potentialSubmit.message) {
+            console.log("potsub",potentialSubmit);
             setUpdateProfile(false);
             setRefresh(refresh + 1);
         } else {
@@ -128,7 +135,7 @@ export default function SingleUser(props){
                                 <label className='updateUsername'>
                                 Email: <input className='updateProfileInput' type= 'email' value= {updateData.email} onChange= {(e) => {
                                         const currentUpdateData = updateData;
-                                        setUpdateData({...currentUpdateData, username: e.target.value});
+                                        setUpdateData({...currentUpdateData, email: e.target.value});
                                         }}/>
                                 </label>
                                 <label className='updatePassword'>

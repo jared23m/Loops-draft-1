@@ -88,19 +88,42 @@ export async function fetchRegisterPost(registerData){
 
 export async function fetchUserPatch(patchUserData, token, userId){
     try{
+
+            const input = {
+                username: patchUserData.username,
+                    password: patchUserData.password,
+                    email: patchUserData.email,
+                    admin: patchUserData.admin,
+                    isActive: patchUserData.isActive
+            }
+
+            if (!input.username){
+                delete input.username;
+            }
+
+            if (!input.password){
+                delete input.password;
+            }
+
+            if (!input.email){
+                delete input.email;
+            }
+
+            if (!input.admin){
+                delete input.admin;
+            }
+
+            if (!input.isActive){
+                delete input.isActive;
+            }
+            console.log('input', input);
             const response = await fetch(`${API_URL}users/${userId}`, {
                 method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    username: patchUserData.username,
-                    password: patchUserData.password,
-                    email: patchUserData.email,
-                    admin: patchUserData.admin,
-                    isActive: patchUserData.isActive
-                })
+                body: JSON.stringify(input)
             });
             const json = await response.json();
             return json;

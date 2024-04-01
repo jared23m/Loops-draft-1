@@ -206,10 +206,17 @@ usersRouter.delete("/:userId", requireUser, requireAdmin, async (req, res, next)
 })
 
 usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
+
+  console.log('ere');
   try {
     const { userId } = req.params;
     const tokenId = req.user.id;
     const { body } = req;
+    
+    console.log('reqBody', body);
+
+    const userRow = await getUserRowById(userId);
+    console.log('userRow', userRow);
 
     if (!req.user.admin && !userRow.isactive){
       next({
@@ -272,6 +279,8 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
     if (newBody.password) {
       newBody.password = await bcrypt.hash(newBody.password, 10);
     }
+
+    console.log('newBody', newBody);
 
       const updatingUser = await updateUser(userId, newBody);
       const updatedUser = await getUserRowById(userId);
