@@ -121,7 +121,8 @@ export default function LoopCard(props){
         <>
         {props.loop &&
         <>
-            {props.loop.title && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {(props.loop.title && props.loop.status != 'loopBank') && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {(props.loop.title && props.loop.status == 'loopBank') && <p>{props.loop.title}</p>}
             {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
             <p>Key Signature: {props.loop.keysig}</p>
             {props.loop.relativeChords.map((chord) => {
