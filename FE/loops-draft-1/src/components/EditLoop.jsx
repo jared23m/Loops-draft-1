@@ -78,7 +78,7 @@ export default function EditLoop(props){
                     title = updatingLoop2.title;
                 }
             } else {
-                if (updatingLoop.status == 'loopBank'){
+                if (updatingLoop.status == 'loopBank' && mode != 'newFromLoopBank'){
                     setIsLoopBank(true);
                 }
                 status = updatingLoop.status;
