@@ -186,7 +186,13 @@ export default function EditLoop(props){
                 keySig: stagedLoop.keySig,
                 relativeChordNames
             }
-        } else {
+        } else if (isLoopBank){
+            patchLoopData = {
+                title: stagedLoop.title,
+                keySig: stagedLoop.keySig,
+                relativeChordNames
+            }
+        }else {
             patchLoopData = {
                 title: stagedLoop.title,
                 status: stagedLoop.status,

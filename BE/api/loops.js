@@ -262,7 +262,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               message: `Tokened user did not make this loop.`
             });
             return
-          } else if (newBody.status && potentialLoop.status == "loopBank") {
+          } else if ((newBody.status) && potentialLoop.status == "loopBank") {
             next({
               name: "LoopBankError",
               message: `You cannot change the status of a loopBank loop.`
