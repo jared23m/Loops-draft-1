@@ -16,8 +16,8 @@ export default function SingleUser(props){
         email: '',
         password: '',
         confirmPassword: '',
-        admin: null,
-        isActive: null
+        admin: false,
+        isActive: true
     });
     const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
     const [notAMatch, setNotAMatch] = useState(false);
@@ -102,10 +102,10 @@ export default function SingleUser(props){
         if (!currentUpdateData.password || currentUpdateData.password == ''){
             delete currentUpdateData.password;
         }
-        if (currentUpdateData.admin == null){
+        if (!props.admin || props.admin && userId == props.accountId){
             delete currentUpdateData.admin;
         }
-        if (currentUpdateData.isActive == null){
+        if (props.admin && userId == props.accountId){
             delete currentUpdateData.isActive;
         }
         delete currentUpdateData.confirmPassword;
