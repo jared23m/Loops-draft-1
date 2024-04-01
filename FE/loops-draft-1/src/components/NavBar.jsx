@@ -5,6 +5,8 @@ export default function NavBar(props){
 
     return (
     <>
+        <h2>Loops</h2>
+        <Link to='/'>Home/About</Link>
         <Link to="/edit/new">Create Loop</Link>
         <Link to="/loops">Loops</Link>
         <Link to="/users">Users</Link>

@@ -12,6 +12,7 @@ import AllLoops from './components/AllLoops'
 import Thruline from './components/Thruline'
 import NavBar from './components/NavBar'
 import LoopBank from './components/LoopBank'
+import Home from './components/Home'
 
 function App() {
 
@@ -25,6 +26,10 @@ function App() {
     <NavBar accountId={accountId} setToken={setToken} setAccountId={setAccountId} setAccountUsername={setAccountUsername} setAdmin={setAdmin}/>
     <p></p>
     <Routes>
+    <Route
+      path="/"
+      element={<Home/>}
+      ></Route>
     <Route
       path="/edit/:mode/:loopId"
       element={<EditLoop token={token} accountId={accountId}/>}
