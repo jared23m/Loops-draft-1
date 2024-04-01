@@ -274,16 +274,17 @@ export async function fetchForkLoopPost(forkLoopData, token, forkedFromLoopId){
 
 export async function fetchLoopPatch(patchLoopData, token, loopId, mode){
     try{
-            let body = JSON.stringify({
+            let objectBody = {
                 title: patchLoopData.title,
                 status: patchLoopData.status,
                 keySig: patchLoopData.keySig,
                 relativeChordNames: patchLoopData.relativeChordNames
-            })
-            if (mode=='reply'){
-                delete patchLoopData.title;
-                delete patchLoopData.status;
             }
+            if (mode=='reply'){
+                delete objectBody.title;
+                delete objectBody.status;
+            }
+            let body = JSON.stringify(objectBody);
             const response = await fetch(`${API_URL}loops/${loopId}`, {
                 method: 'PATCH',
                 headers: {

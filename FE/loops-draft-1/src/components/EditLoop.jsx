@@ -39,6 +39,7 @@ export default function EditLoop(props){
     const {loopId, secondaryLoopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(null);
     const [submitError, setSubmitError] = useState({message: null});
+    const [isLoopBank, setIsLoopBank] = useState(false);
     const navigate = useNavigate();
 
     async function thrulineGet(token, loopId, secondaryLoopId){
@@ -70,10 +71,16 @@ export default function EditLoop(props){
                 } else if (potentialThruline2){
                     setError({message: null});
                     const updatingLoop2 = potentialThruline2[potentialThruline2.length - 1];
+                    if (updatingLoop2.status == 'loopBank'){
+                        setIsLoopBank(true);
+                    }
                     status = updatingLoop2.status;
                     title = updatingLoop2.title;
                 }
             } else {
+                if (updatingLoop.status == 'loopBank'){
+                    setIsLoopBank(true);
+                }
                 status = updatingLoop.status;
                 title = updatingLoop.title;
             }
@@ -171,11 +178,21 @@ export default function EditLoop(props){
             return getNameFromChord(chord);
         })
 
-        let patchLoopData = {
-            title: null,
-            status: null,
-            keySig: stagedLoop.keySig,
-            relativeChordNames
+        let patchLoopData;
+        if (stagedLoop.status == 'reply'){
+            patchLoopData = {
+                title: null,
+                status: null,
+                keySig: stagedLoop.keySig,
+                relativeChordNames
+            }
+        } else {
+            patchLoopData = {
+                title: stagedLoop.title,
+                status: stagedLoop.status,
+                keySig: stagedLoop.keySig,
+                relativeChordNames
+            }
         }
 
         const potentialSubmit = await fetchLoopPatch(patchLoopData, token, loopId, mode);
@@ -236,9 +253,9 @@ export default function EditLoop(props){
             let relative;
             let name = relativeChordName;
             let unsuffixedName;
-            if (name[name.length-1] == 'm'){
-                let nameArr = name.split('');
-                let unsuffixedNameArr = nameArr.splice(nameArr.length-3, 3);
+            let nameArr = name.split('');
+            if (nameArr[name.length-1] == 'm'){
+                let unsuffixedNameArr = nameArr.splice(0, nameArr.length-3);
                 unsuffixedName = unsuffixedNameArr.join('');
             } else {
                 unsuffixedName = name;
@@ -453,27 +470,30 @@ export default function EditLoop(props){
                                     setStagedLoop({...currentStagedLoop, title: e.target.value});
                                     }}/>
                                     </label>
+                                    
+                                    {!isLoopBank &&
                                     <label className='editStatus'>
-                                    Status: 
-                                    <select value={stagedLoop.status} onChange={(e) => {
-                                        const currentStagedLoop = stagedLoop;
-                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
-                                    }}>
-                                    <option value="public" onChange={(e) => {
-                                        const currentStagedLoop = stagedLoop;
-                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
-                                    }}>Public</option>
-                                    <option value="private" onChange={(e) => {
-                                        const currentStagedLoop = stagedLoop;
-                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
-                                    }}>Private</option>
-            
-                                    <option value="loopBank" onChange={(e) => {
-                                        const currentStagedLoop = stagedLoop;
-                                        setStagedLoop({...currentStagedLoop, status: e.target.value});
-                                    }}>LoopBank</option>
-                                    </select>
-                            </label>
+                                             Status: 
+                                             <select value={stagedLoop.status} onChange={(e) => {
+                                                 const currentStagedLoop = stagedLoop;
+                                                 setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                             }}>
+                                             <option value="public" onChange={(e) => {
+                                                 const currentStagedLoop = stagedLoop;
+                                                 setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                             }}>Public</option>
+                                             <option value="private" onChange={(e) => {
+                                                 const currentStagedLoop = stagedLoop;
+                                                 setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                             }}>Private</option>
+                                             <option value="loopBank" onChange={(e) => {
+                                                 const currentStagedLoop = stagedLoop;
+                                                 setStagedLoop({...currentStagedLoop, status: e.target.value});
+                                             }}>LoopBank</option>
+                                             </select>
+                                     </label>
+                                    }
+                                   
                             </>
                         }
                         <label className='editKeySig'>
