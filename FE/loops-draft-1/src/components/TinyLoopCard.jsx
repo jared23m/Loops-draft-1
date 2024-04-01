@@ -1,7 +1,7 @@
 
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import { fetchLoopDelete, fetchSaveLoopPost} from '../api';
 import LoopCard from './LoopCard'
 import {renderAbsoluteChords} from '../musicTheory/index'
@@ -9,6 +9,10 @@ import {renderAbsoluteChords} from '../musicTheory/index'
 
 export default function TinyLoopCard(props){
     const [open, setOpen] = useState(false);
+
+    useEffect(()=>{
+        setOpen(false);
+    }, [props.parentComp, props.secondaryLoopId])
 
     return (
         <>

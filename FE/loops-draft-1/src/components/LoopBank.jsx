@@ -27,7 +27,7 @@ export default function LoopBank(props){
             }
         }
         loopBankGet(props.token);
-    }, [refresh]);
+    }, [refresh, secondaryLoopId]);
 
     useEffect(()=>{
         if (loopBank){
