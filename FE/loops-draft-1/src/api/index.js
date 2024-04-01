@@ -116,7 +116,6 @@ export async function fetchUserPatch(patchUserData, token, userId){
             if (!input.isActive){
                 delete input.isActive;
             }
-            console.log('input', input);
             const response = await fetch(`${API_URL}users/${userId}`, {
                 method: 'PATCH',
                 headers: {

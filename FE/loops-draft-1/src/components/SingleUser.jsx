@@ -62,10 +62,6 @@ export default function SingleUser(props){
     }, [updateProfile])
 
     useEffect(()=>{
-        console.log(updateData);
-    }, [updateData]);
-
-    useEffect(()=>{
         if (updateData.password == updateData.confirmPassword){
             setNotAMatch(false);
         } else {
@@ -93,13 +89,10 @@ export default function SingleUser(props){
         }
         delete currentUpdateData.confirmPassword;
 
-        console.log("onsubmit", currentUpdateData);
-
         const potentialSubmit = await fetchUserPatch(currentUpdateData, props.token, userId);
         if (!potentialSubmit){
             setUpdateSubmitError({message: "Failed to fetch."});
         } else if (!potentialSubmit.message) {
-            console.log("potsub",potentialSubmit);
             setUpdateProfile(false);
             setRefresh(refresh + 1);
         } else {
