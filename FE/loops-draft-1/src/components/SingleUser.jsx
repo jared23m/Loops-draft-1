@@ -21,6 +21,17 @@ export default function SingleUser(props){
     });
     const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
     const [notAMatch, setNotAMatch] = useState(false);
+    const [searchData, setSearchData] = useState({
+        startLoops: true,
+        replyLoops: true,
+        forkedLoops: true
+    })
+    const [privateSearchData, setPrivateSearchData] = useState({
+        publicLoops: true,
+        privateLoops: true,
+        loopBankLoops: true,
+        savedLoops: true
+    })
 
     useEffect(()=>{
         async function singleUserGet(token, userId){
@@ -37,11 +48,7 @@ export default function SingleUser(props){
         singleUserGet(props.token, userId);
     }, [refresh, userId]);
 
-    useEffect(()=>{
-        if (singleUser){
-            setVisibleLoops(singleUser.loops);
-        }
-    }, [singleUser]);
+    
 
     useEffect(()=>{
         if (updateProfile){
@@ -100,6 +107,141 @@ export default function SingleUser(props){
         }
   
     }
+
+    function renderUserSearchForm(){
+        return (
+            <div>
+                 <label>
+                    <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
+                        const currentSearchData = searchData;
+                        const currentStartLoops = currentSearchData.startLoops;
+                        setSearchData({...currentSearchData, startLoops: !currentStartLoops});
+                    }}/>
+                    Start Loops
+                </label>
+                <label>
+                    <input type="checkbox" value="replyLoops" checked={searchData.replyLoops} onChange={()=>{
+                        const currentSearchData = searchData;
+                        const currentReplyLoops = currentSearchData.replyLoops;
+                        setSearchData({...currentSearchData, replyLoops: !currentReplyLoops});
+                    }}/>
+                    Reply Loops
+                </label>
+                <label>
+                    <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
+                        const currentSearchData = searchData;
+                        const currentForkedLoops = currentSearchData.forkedLoops;
+                        setSearchData({...currentSearchData, forkedLoops: !currentForkedLoops});
+                    }}/>
+                    Forked Loops
+                </label>
+                {singleUser.savedLoops &&
+                <>
+                    <label>
+                    <input type="checkbox" value="publicLoops" checked={privateSearchData.publicLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentPublicLoops = currentPrivateSearchData.publicLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, publicLoops: !currentPublicLoops});
+                    }}/>
+                    Public Loops
+                    </label>
+                    <label>
+                    <input type="checkbox" value="privateLoops" checked={privateSearchData.privateLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentPrivateLoops = currentPrivateSearchData.privateLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, privateLoops: !currentPrivateLoops});
+                    }}/>
+                    Private Loops
+                    </label>
+                    <label>
+                    <input type="checkbox" value="loopBankLoops" checked={privateSearchData.loopBankLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentLoopBankLoops = currentPrivateSearchData.loopBankLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, loopBankLoops: !currentLoopBankLoops});
+                    }}/>
+                    LoopBank Loops
+                    </label>
+                    <label>
+                    <input type="checkbox" value="savedLoops" checked={privateSearchData.savedLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentSavedLoops = currentPrivateSearchData.savedLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, savedLoops: !currentSavedLoops});
+                    }}/>
+                    Saved Loops
+                    </label>
+                </>
+                }
+            </div>
+        )
+    }
+
+    useEffect(()=>{
+        if (singleUser){
+            console.log(singleUser);
+            let currentVisibleLoops = visibleLoops;
+            if (singleUser.savedLoops){
+                let savedLoops = singleUser.savedLoops;
+                savedLoops.forEach((loop)=>{
+                    loop['saved'] = true;
+                })
+                currentVisibleLoops = [...singleUser.loops, ...savedLoops];
+            } else {
+                currentVisibleLoops = singleUser.loops;
+            }
+
+            if (!searchData.startLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.title == null;
+                })
+            }
+
+            if (!searchData.replyLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.parentloopid == null;
+                })
+            }
+
+            if (!searchData.forkedLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.originalloopid == null;
+                })
+            }
+
+            if (!privateSearchData.publicLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    if (loop.startLoop){
+                        return loop.startLoop.status != 'public';
+                    } else {
+                        return loop.status != 'public';
+                    }
+                })
+            }
+
+            if (!privateSearchData.privateLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    if (loop.startLoop){
+                        return loop.startLoop.status != 'private';
+                    } else {
+                        return loop.status != 'private';
+                    }
+                })
+            }
+
+            if (!privateSearchData.loopBankLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.status != 'loopBank';
+                })
+            }
+
+            if (!privateSearchData.savedLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return !loop.saved;
+                })
+            }
+
+            setVisibleLoops(currentVisibleLoops);
+        }
+    }, [singleUser, searchData, privateSearchData]);
 
     return (
         <>
@@ -193,6 +335,7 @@ export default function SingleUser(props){
                             }
             </>
             } 
+            {renderUserSearchForm()}
             <>
                 {(visibleLoops && visibleLoops.length > 0) ?
                 <>
