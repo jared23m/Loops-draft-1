@@ -48,6 +48,14 @@ usersRouter.post("/register", async (req, res, next) => {
       });
       return
     }
+
+    if (username.length > 8){
+      next({
+        name: "EntryInvalid",
+        message: "Username must be 8 or fewer characters.",
+      });
+      return
+    }
     if (unhashed.length > 15){
       next({
         name: "EntryInvalid",
@@ -309,6 +317,13 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       next({
         name: "EntryInvalid",
         message: "Password must be 8-15 characters.",
+      });
+      return
+    }
+    if (newBody.username && newBody.username.length > 8){
+      next({
+        name: "EntryInvalid",
+        message: "Username must be 8 or fewer characters.",
       });
       return
     }
