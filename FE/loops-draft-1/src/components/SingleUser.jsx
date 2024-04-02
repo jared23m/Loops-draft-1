@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { fetchSingleUserGet , fetchUserPatch} from "../api"
 import TinyLoopCard from "./TinyLoopCard"
 
 export default function SingleUser(props){
 
+    const navigate = useNavigate();
     const [error, setError] = useState({message: "Loading..."});
     const [singleUser, setSingleUser] = useState({});
     const [visibleLoops, setVisibleLoops] = useState([]);
@@ -127,8 +128,16 @@ export default function SingleUser(props){
         if (!potentialSubmit){
             setUpdateSubmitError({message: "Failed to fetch."});
         } else if (!potentialSubmit.message) {
-            setUpdateProfile(false);
-            setRefresh(refresh + 1);
+            if (potentialSubmit.isactive == false){
+                props.setToken(null);
+                props.setAccountId(null);
+                props.setAccountUsername(null);
+                props.setAdmin(false);
+                navigate('/');
+            } else {
+                setUpdateProfile(false);
+                setRefresh(refresh + 1);
+            }
         } else {
             setUpdateSubmitError(potentialSubmit);
         }

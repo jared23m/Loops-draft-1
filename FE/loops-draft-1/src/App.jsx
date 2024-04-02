@@ -70,7 +70,7 @@ function App() {
       ></Route>
     <Route
       path="/users/:userId"
-      element={<SingleUser token={token} admin={admin} accountId={accountId}/>}
+      element={<SingleUser token={token} admin={admin} accountId={accountId} setToken={setToken} setAccountId={setAccountId} setAccountUsername={setAccountUsername} setAdmin={setAdmin}/>}
       ></Route>
     <Route
       path="/users"

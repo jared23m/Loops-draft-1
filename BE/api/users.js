@@ -240,7 +240,6 @@ usersRouter.delete("/:userId", requireUser, requireAdmin, async (req, res, next)
 })
 
 usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
-
   try {
     const { userId } = req.params;
     const tokenId = req.user.id;
@@ -285,27 +284,17 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
         message: "You cannot change this users user info because you are not the user."
       });
     }
-
-    let trimmedEmail;
-    let trimmedUsername;
-    let trimmedPassword;
     
-    if (!newBody.email){
+    if (!newBody.email || newBody.email == ''){
       delete newBody.email;
-    } else {
-      trimmedEmail = newBody.email.replaceAll(' ', '');
-    }
+    } 
 
-    if (!newBody.password){
+    if (!newBody.password || newBody.password == ''){
       delete newBody.password;
-    } else {
-      trimmedPassword = newBody.password.replaceAll(' ', '');
     }
 
-    if (!newBody.username){
+    if (!newBody.username || newBody.username == ''){
       delete newBody.username;
-    } else {
-      trimmedUsername = newBody.username.replaceAll(' ', '');
     }
 
     if (!newBody.admin){
@@ -316,13 +305,6 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       delete newBody.isActive;
     }
 
-    if ((trimmedUsername == '' || trimmedPassword == '' || trimmedEmail == '')){
-      next({
-        name: "EntryInvalid",
-        message: "Entries must not be left blank.",
-      });
-      return
-    }
     if (newBody.password && newBody.password.length < 8){
       next({
         name: "EntryInvalid",
@@ -352,15 +334,15 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       });
       return
     }
-
-    const user = await getUserRowByUsername(username);
-    if (user && user.id != req.user.id) {
-      next({
-        name: "UserExistsError",
-        message: "Another user by that username already exists.",
-      });
+    if (newBody.username){
+      const user = await getUserRowByUsername(newBody.username);
+      if (user && user.id != req.user.id) {
+        next({
+          name: "UserExistsError",
+          message: "Another user by that username already exists.",
+        });
+      }
     }
-
 
     if (newBody.password) {
       newBody.password = await bcrypt.hash(newBody.password, 10);
