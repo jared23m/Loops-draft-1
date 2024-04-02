@@ -42,7 +42,7 @@ export default function AllLoops(props){
         return (
             <div>
                 <label>
-                Search By Start Loop Title: <input className='singleUserSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
+                Search By Start Loop Title: <input className='allLoopsSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
                             const currentSearchData = searchData;
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
