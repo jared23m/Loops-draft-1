@@ -115,12 +115,6 @@ export default function LoopCard(props){
   
     }
 
-    useEffect(()=>{
-        console.log(props.loop)
-    }, [props.loop]);
-
-
-
     return (
         <>
         {props.loop &&
