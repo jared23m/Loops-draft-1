@@ -31,7 +31,9 @@ export default function SingleUser(props){
         publicLoops: true,
         privateLoops: true,
         loopBankLoops: true,
-        savedLoops: true
+        savedLoops: true,
+        myLoops: true,
+        othersLoops: true
     })
 
     useEffect(()=>{
@@ -46,7 +48,18 @@ export default function SingleUser(props){
                 if (potentialSingleUser.savedLoops){
                     let initializeSavedLoops = potentialSingleUser.savedLoops;
                     initializeSavedLoops.forEach((loop)=>{
-                        loop['saved'] = true;
+                        loop['savedByMe'] = true;
+                    })
+                    initializeLoops.forEach((loop, index)=>{
+                        const matchingIndex = initializeSavedLoops.findIndex((savedLoop) =>{
+                            return savedLoop.id == loop.id;
+                        })
+
+                        if(matchingIndex != (-1)){
+                            initializeLoops[index]['savedByMe'] = true;
+                            initializeSavedLoops.splice(matchingIndex, 1);
+                        }
+
                     })
                     initializeSavedLoops.reverse();
                     setSingleUser({...potentialSingleUser, loops: initializeLoops, savedLoops: initializeSavedLoops});
@@ -131,6 +144,7 @@ export default function SingleUser(props){
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
                 </label>
+                <p></p>
                  <label>
                     <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
                         const currentSearchData = searchData;
@@ -188,6 +202,22 @@ export default function SingleUser(props){
                         setPrivateSearchData({...currentPrivateSearchData, savedLoops: !currentSavedLoops});
                     }}/>
                     Saved Loops
+                    </label>
+                    <label>
+                    <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentMyLoops = currentPrivateSearchData.myLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, myLoops: !currentMyLoops});
+                    }}/>
+                    My Loops
+                    </label>
+                    <label>
+                    <input type="checkbox" value="othersLoops" checked={privateSearchData.othersLoops} onChange={()=>{
+                        const currentPrivateSearchData = privateSearchData;
+                        const currentOthersLoops = currentPrivateSearchData.othersLoops;
+                        setPrivateSearchData({...currentPrivateSearchData, othersLoops: !currentOthersLoops});
+                    }}/>
+                    Others' Loops
                     </label>
                 </>
                 }
@@ -254,7 +284,7 @@ export default function SingleUser(props){
 
             if (!searchData.startLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
-                    return loop.title == null;
+                    return (loop.title == null || (loop.status == 'loopBank'));
                 })
             }
 
@@ -298,7 +328,19 @@ export default function SingleUser(props){
 
             if (!privateSearchData.savedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
-                    return !loop.saved;
+                    return !loop.savedByMe;
+                })
+            }
+
+            if (!privateSearchData.myLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.userid != userId;
+                })
+            }
+
+            if (!privateSearchData.othersLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.userid == userId;
                 })
             }
 
