@@ -74,7 +74,7 @@ function App() {
       ></Route>
     <Route
       path="/users"
-      element={<AllUsers/>}
+      element={<AllUsers token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     <Route
       path="/loops/:loopId"
