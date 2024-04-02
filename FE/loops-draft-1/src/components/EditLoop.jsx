@@ -85,6 +85,10 @@ export default function EditLoop(props){
                 title = updatingLoop.title;
             }
 
+            if (mode=='copy'){
+                setIsLoopBank(false);
+            }
+
             setStagedLoop({
                 ...currentStagedLoop,
                 title,
