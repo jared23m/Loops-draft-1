@@ -123,6 +123,7 @@ export default function LoopCard(props){
         <>
             {(props.loop.title && props.loop.status != 'loopBank') && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
             {(props.loop.title && props.loop.status == 'loopBank') && <p>{props.loop.title}</p>}
+            <p>@ {props.loop.timestamp}</p>
             {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
             <p>Key Signature: {props.loop.keysig}</p>
             {props.loop.relativeChords.map((chord) => {
@@ -130,7 +131,6 @@ export default function LoopCard(props){
                     <p>{chord.name}</p>
                 </div>
             })}
-            <p>@ {props.loop.timestamp}</p>
             {props.loop.saved == true &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
             }
