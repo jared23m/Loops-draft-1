@@ -26,7 +26,8 @@ export default function TinyLoopCard(props){
                     admin={props.admin} 
                     accountId={props.accountId} 
                     refresh={props.refresh} 
-                    setRefresh={props.setRefresh}/>
+                    setRefresh={props.setRefresh}
+                    loopIdParam={props.loopIdParam}/>
                     <button onClick={()=>setOpen(false)}>Close Details</button>
                 </>
                 :

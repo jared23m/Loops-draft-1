@@ -149,7 +149,8 @@ export default function SingleLoop(props){
             admin={props.admin} 
             accountId={props.accountId} 
             refresh={refresh} 
-            setRefresh={setRefresh}/>
+            setRefresh={setRefresh}
+            loopIdParam={loopId}/>
              {loop.childLoops &&
                 <>
                     {loop.repliesOpen == true &&

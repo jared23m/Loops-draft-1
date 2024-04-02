@@ -115,6 +115,10 @@ export default function LoopCard(props){
   
     }
 
+    useEffect(()=>{
+        console.log(props.loop)
+    }, [props.loop]);
+
 
 
     return (
@@ -156,7 +160,11 @@ export default function LoopCard(props){
             </>
             }
             {props.loop.status != 'loopBank' && <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
-            {props.loop.startLoop && <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>}
+            {(props.loop.startLoop && (!props.loopIdParam)) &&
+            <>
+                <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
+            </>
+            }
             {props.token ?
                 <>
                     <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>

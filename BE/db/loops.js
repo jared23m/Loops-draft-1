@@ -86,7 +86,7 @@ async function createLoop({
         })
       )
 
-      return await getLoopWithChordsById(loop.id, userId);
+      return await getLoopWithChordsAndStartById(loop.id, userId);
     } catch (error) {
       throw error;
     }
@@ -116,7 +116,7 @@ async function createLoop({
       }
   
       if (relativeChordNames == undefined || relativeChordNames == null) {
-        return await getLoopWithChordsById(loopId);
+        return await getLoopWithChordsAndStartById(loopId);
       }
 
         await client.query(`
@@ -176,7 +176,7 @@ async function createLoop({
           })
         )
 
-      return await getLoopWithChordsById(loopId, reqUserId);
+      return await getLoopWithChordsAndStartById(loopId, reqUserId);
     } catch (error) {
       throw error;
     }
@@ -354,7 +354,7 @@ async function createLoop({
   }
   async function getLoopWithChildrenById(loopId, reqUserId=null){
     try {
-      const loop = await getLoopWithChordsById(loopId, reqUserId);
+      const loop = await getLoopWithChordsAndStartById(loopId, reqUserId);
 
       const {rows: children} = await client.query(
         `
@@ -403,7 +403,7 @@ async function createLoop({
 
   async function getThrulineById(loopId, reqUserId = null){
     try {
-      const singleLoop = await getLoopWithChordsById(loopId, reqUserId);
+      const singleLoop = await getLoopWithChordsAndStartById(loopId, reqUserId);
       if (singleLoop.parentloopid){
         const thruline = await getThrulineById(singleLoop.parentloopid, reqUserId);
         return [
@@ -595,7 +595,7 @@ async function createLoop({
 
       const loopsWithChords = await Promise.all(
         loopIds.map((loopId)=>{
-          return getLoopWithChordsById(loopId.id, userId);
+          return getLoopWithChordsAndStartById(loopId.id, userId);
         })
       )
 
