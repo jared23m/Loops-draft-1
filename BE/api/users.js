@@ -29,6 +29,40 @@ usersRouter.post("/register", async (req, res, next) => {
   const { email, password: unhashed, username } = req.body;
 
   try {
+
+    const trimmedUsername = username.replaceAll(' ', '');
+    const trimmedPassword = unhashed.replaceAll(' ', '');
+    const trimmedEmail = email.replaceAll(' ', '');
+
+    if ((trimmedUsername == '' || trimmedPassword == '' || trimmedEmail == '')){
+      next({
+        name: "EntryInvalid",
+        message: "Entries must not be left blank.",
+      });
+      return
+    }
+    if (unhashed.length < 8){
+      next({
+        name: "EntryInvalid",
+        message: "Password must be 8-15 characters.",
+      });
+      return
+    }
+    if (unhashed.length > 15){
+      next({
+        name: "EntryInvalid",
+        message: "Password must be 8-15 characters.",
+      });
+      return
+    }
+    if (!email.includes("@")){
+      next({
+        name: "EntryInvalid",
+        message: "Email must include an @ symbol",
+      });
+      return
+    }
+
     if (!lettersAndNumbers(username)){
       next({
         name: "UsernameInvalid",
@@ -251,17 +285,27 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
         message: "You cannot change this users user info because you are not the user."
       });
     }
+
+    let trimmedEmail;
+    let trimmedUsername;
+    let trimmedPassword;
     
     if (!newBody.email){
       delete newBody.email;
+    } else {
+      trimmedEmail = newBody.email.replaceAll(' ', '');
     }
 
     if (!newBody.password){
       delete newBody.password;
+    } else {
+      trimmedPassword = newBody.password.replaceAll(' ', '');
     }
 
     if (!newBody.username){
       delete newBody.username;
+    } else {
+      trimmedUsername = newBody.username.replaceAll(' ', '');
     }
 
     if (!newBody.admin){
@@ -270,6 +314,51 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
 
     if (!newBody.isActive){
       delete newBody.isActive;
+    }
+
+    if ((trimmedUsername == '' || trimmedPassword == '' || trimmedEmail == '')){
+      next({
+        name: "EntryInvalid",
+        message: "Entries must not be left blank.",
+      });
+      return
+    }
+    if (newBody.password && newBody.password.length < 8){
+      next({
+        name: "EntryInvalid",
+        message: "Password must be 8-15 characters.",
+      });
+      return
+    }
+    if (newBody.password && newBody.password.length > 15){
+      next({
+        name: "EntryInvalid",
+        message: "Password must be 8-15 characters.",
+      });
+      return
+    }
+    if (newBody.email && !newBody.email.includes("@")){
+      next({
+        name: "EntryInvalid",
+        message: "Email must include an @ symbol",
+      });
+      return
+    }
+
+    if (newBody.username && !lettersAndNumbers(newBody.username)){
+      next({
+        name: "UsernameInvalid",
+        message: "Usernames can only have letters and numbers.",
+      });
+      return
+    }
+
+    const user = await getUserRowByUsername(username);
+    if (user && user.id != req.user.id) {
+      next({
+        name: "UserExistsError",
+        message: "Another user by that username already exists.",
+      });
     }
 
 
