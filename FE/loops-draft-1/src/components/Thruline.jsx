@@ -26,16 +26,23 @@ export default function Thruline(props){
         thrulineGet(props.token, loopId);
     }, [refresh, loopId]);
 
-
+    function handleReverseOrder(){
+        const currentThruline = thruline;
+        const reversedThruline = currentThruline.reverse();
+        setThruline([...reversedThruline]);
+    }
+  
     return (
         <>
         {error.message ?
             <p>{error.message}</p>
         :
             <>
+            <button onClick={handleReverseOrder}>Reverse Order</button>
             {thruline.map((loop)=>{
                 return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
              })}
+            <button onClick={handleReverseOrder}>Reverse Order</button>
             </>
         }
         </>

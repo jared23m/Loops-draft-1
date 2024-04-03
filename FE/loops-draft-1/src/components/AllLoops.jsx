@@ -32,12 +32,6 @@ export default function AllLoops(props){
         allLoopsGet(props.token);
     }, [refresh]);
 
-    useEffect(()=>{
-        if (allLoops){
-            setVisibleLoops(allLoops);
-        }
-    }, [allLoops]);
-
     function renderAllLoopsSearchForm(){
         return (
             <div>
@@ -150,7 +144,11 @@ export default function AllLoops(props){
         }
     }, [allLoops, searchData]);
 
-
+    function handleReverseOrder(){
+        const currentAllLoops = allLoops;
+        const reversedLoops = currentAllLoops.reverse();
+        setAllLoops([...reversedLoops]);
+    }
 
     return (
         <>
@@ -161,9 +159,11 @@ export default function AllLoops(props){
             {renderAllLoopsSearchForm()}
             {(visibleLoops && visibleLoops.length > 0) ?
                 <>
+                <button onClick={handleReverseOrder}>Reverse Order</button>
                 {visibleLoops.map((loop)=>{
                     return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
                 })}
+                <button onClick={handleReverseOrder}>Reverse Order</button>
                 </>
             :
             <>
