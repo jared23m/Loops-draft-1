@@ -99,6 +99,12 @@ export default function AllUsers(props){
         }
     }, [allUsers, searchData]);
 
+    function handleReverseOrder(){
+        const currentAllUsers = allUsers;
+        const reversedUsers = currentAllUsers.reverse();
+        setAllUsers([...reversedUsers]);
+    }
+
     return (
         <>
         {error.message ?
@@ -106,9 +112,11 @@ export default function AllUsers(props){
         :
             <>
             {renderAllUsersSearchForm()}
+            <button onClick={handleReverseOrder}>Reverse Order</button>
             {visibleUsers.map((user)=>{
                 return <UserCard key={user.id} user={user}/>
              })}
+            <button onClick={handleReverseOrder}>Reverse Order</button>
             </>
         }
         </>

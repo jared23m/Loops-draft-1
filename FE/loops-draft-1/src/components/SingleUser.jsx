@@ -8,6 +8,7 @@ export default function SingleUser(props){
     const navigate = useNavigate();
     const [error, setError] = useState({message: "Loading..."});
     const [singleUser, setSingleUser] = useState({});
+    const [loopList, setLoopList] = useState([]);
     const [visibleLoops, setVisibleLoops] = useState([]);
     const [refresh, setRefresh] = useState(0);
     const {userId} = useParams();
@@ -63,9 +64,11 @@ export default function SingleUser(props){
 
                     })
                     initializeSavedLoops.reverse();
-                    setSingleUser({...potentialSingleUser, loops: initializeLoops, savedLoops: initializeSavedLoops});
+                    setSingleUser({...potentialSingleUser, savedLoops: true});
+                    setLoopList([...initializeLoops, ...initializeSavedLoops])
                 } else {
-                    setSingleUser({...potentialSingleUser, loops: initializeLoops});
+                    setSingleUser({...potentialSingleUser, savedLoops: false});
+                    setLoopList([...initializeLoops])
                 }
 
                 setError({message: null});
@@ -76,7 +79,12 @@ export default function SingleUser(props){
         singleUserGet(props.token, userId);
     }, [refresh, userId]);
 
-    
+    function handleReverseOrder(){
+        const currentLoopList = loopList
+        const reversedLoops = currentLoopList.reverse();
+        setLoopList([...reversedLoops]);
+    }
+
 
     useEffect(()=>{
         if (updateProfile){
@@ -235,13 +243,8 @@ export default function SingleUser(props){
     }
 
     useEffect(()=>{
-        if (singleUser.loops){
-            let currentVisibleLoops;
-            if (singleUser.savedLoops){
-                currentVisibleLoops = [...singleUser.loops, ...singleUser.savedLoops];
-            } else {
-                currentVisibleLoops = [...singleUser.loops];
-            }
+        if (loopList){
+            let currentVisibleLoops = loopList;
 
             if (!searchData.query == ''){
                 const startIncludesQuery = currentVisibleLoops.filter((loop)=>{
@@ -355,7 +358,7 @@ export default function SingleUser(props){
 
             setVisibleLoops(currentVisibleLoops);
         }
-    }, [singleUser, searchData, privateSearchData]);
+    }, [loopList, searchData, privateSearchData]);
 
     return (
         <>
@@ -453,9 +456,11 @@ export default function SingleUser(props){
             <>
                 {(visibleLoops && visibleLoops.length > 0) ?
                 <>
+                    <button onClick={handleReverseOrder}>Reverse Order</button>
                     {visibleLoops.map((loop)=>{
                     return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
                     })}
+                    <button onClick={handleReverseOrder}>Reverse Order</button>
                 </>
                 :
                 <>
