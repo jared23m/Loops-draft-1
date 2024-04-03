@@ -1,0 +1,134 @@
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    color:antiquewhite;
+    background-color: rgb(11,20,22);
+    margin: 0;
+    padding: 0;
+  }
+
+button{
+    font-family: 'Roboto Condensed', sans-serif;
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+
+input{
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+select{
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+label{
+    font-size: 150%;
+}
+
+
+.navBar{
+    display: grid;
+    height: 75px;
+    grid-template-rows: 75px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.navButton{
+    text-decoration: none;
+    color:antiquewhite;
+    padding: 5%;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+#logOut{
+    border: none;
+    background-color: rgb(11,20,22);
+    font-size: 100%;
+}
+
+#logOut:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+.navButton:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}
+
+.logo{
+    justify-self: start;
+    margin-left: 10%;
+    font-weight: normal;
+}
+
+.editEntries{
+    display:grid;
+    gap: 1rem;
+    height: 75px;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    align-items: center;
+    justify-items: space-evenly;
+    height: 100%;
+    margin-left: 2%;
+}
+
+.onTheSide{
+    display:grid;
+    height: 75px;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: start;
+    height: 150px;
+}
+
+.editChords{
+    display: grid;
+    gap: 1rem;
+}
+
+.eachChord{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 75px);
+    gap: 1rem;
+}
+
+.editTitle{
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+.editStatus{
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+.editKeySig{
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+
+
+
+
+

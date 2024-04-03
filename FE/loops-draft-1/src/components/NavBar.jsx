@@ -4,16 +4,16 @@ export default function NavBar(props){
     const navigate = useNavigate();
 
     return (
-    <>
-        <h2>Loops</h2>
-        <Link to='/'>Home/About</Link>
-        <Link to="/edit/new">Create Loop</Link>
-        <Link to="/loops">Loops</Link>
-        <Link to="/users">Users</Link>
+    <div className="navBar">
+        <h1 className='logo'>Loops</h1>
+        <Link className='navButton' id='homeAbout'to='/'>Home/About</Link>
+        <Link className='navButton' id='createLoop' to="/edit/new">Create Loop</Link>
+        <Link className='navButton' id='allLoops'to="/loops">Loops</Link>
+        <Link className='navButton' id='allUsers'to="/users">Users</Link>
         {props.accountId ? 
         <>
-            <Link to={`/users/${props.accountId}`}>Account</Link>
-            <button onClick={()=>{
+            <Link className='navButton' id='account' to={`/users/${props.accountId}`}>Account</Link>
+            <button className='navButton' id='logOut'onClick={()=>{
                 props.setToken(null);
                 props.setAccountId(null);
                 props.setAccountUsername(null);
@@ -24,11 +24,11 @@ export default function NavBar(props){
         
         :
         <>
-            <Link to='/login'>Login</Link>
-            <Link to='/register'>Register</Link>
+            <Link className='navButton' id='login'to='/login'>Login</Link>
+            <Link className='navButton' id='register'to='/register'>Register</Link>
         </>
         }
-    </>
+    </div>
     )
 }
 

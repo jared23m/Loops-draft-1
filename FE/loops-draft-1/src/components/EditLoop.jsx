@@ -472,6 +472,7 @@ export default function EditLoop(props){
                     <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
                     {(mode == 'new' && props.token) && <Link to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
                     <div className='editEntries'>
+                    <div className='onTheSide'>
                         {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                             <>
                                     <label className='editTitle'>
@@ -520,11 +521,12 @@ export default function EditLoop(props){
                                 })}
                             </select>
                         </label>
+                        </div>
                         <label className='editChords'>
                         Chords:
                             {stagedLoop.chords.map((chord, index)=>{
                                 return (
-                                            <div key={index}>
+                                            <div className="eachChord" key={index}>
                                                 <select value={chord.relativeRootSymbol} onChange={(e) => {
                                                         const currentStagedLoop = stagedLoop;
                                                         let currentChords = stagedLoop.chords;
