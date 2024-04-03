@@ -29,7 +29,6 @@ export default function Thruline(props){
     function handleReverseOrder(){
         const currentThruline = thruline;
         const reversedThruline = currentThruline.reverse();
-        console.log(reversedThruline);
         setThruline([...reversedThruline]);
     }
   
