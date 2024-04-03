@@ -40,14 +40,48 @@ label{
     font-size: 150%;
 }
 
+/*NavBar*/
 
 .navBar{
     display: grid;
-    height: 75px;
-    grid-template-rows: 75px;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(1, 60px);
+    grid-template-columns: 100px minmax(600px, 1fr);
     align-items: center;
+    padding-top: 5px;
+}
+
+.logo{
+    font-weight: normal;
+    margin-left: 30px;
+    align-self: baseline;
+}
+
+.navButtonContainer{
+    display:grid;
     justify-items: center;
+    align-items: center;
+    margin-right: 5%;
+    grid-template-rows: 50px;
+    grid-template-columns: repeat(6, minmax(75px, 1fr));
+    justify-self: space-evenly;
+    align-self: baseline;
+    position: relative;
+    top: -4px;
+}
+
+@media only screen and (max-width: 750px) {
+    .navBar{
+        grid-template-rows: repeat(2, 50px);
+        grid-template-columns: 1fr;
+    }
+
+    .navButtonContainer{
+        justify-items: start;
+        margin-left: 25px;
+        position: relative;
+        top: 7px;
+    }
+
 }
 
 .navButton{
@@ -60,7 +94,7 @@ label{
 
 #logOut{
     border: none;
-    background-color: rgb(11,20,22);
+    background-color: transparent;
     font-size: 100%;
 }
 
@@ -74,11 +108,15 @@ label{
     color: rgb(11,20,22);
 }
 
-.logo{
-    justify-self: start;
-    margin-left: 10%;
-    font-weight: normal;
+/*HOME*/
+
+.homeMessage{
+    margin-left: 2%;
+    margin-right: 4%;
+    max-width: 1000px;
 }
+
+/*edit*/
 
 .editEntries{
     display:grid;

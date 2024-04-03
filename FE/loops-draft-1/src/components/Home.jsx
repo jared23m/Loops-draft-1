@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 export default function Home(){
     const navigate = useNavigate();
     return (
-        <>
+        <div className='homeMessage'>
             <h1>
             For anyone new...
             </h1>
@@ -69,6 +69,6 @@ export default function Home(){
             You could think of this as one song, one of potentially hundreds or even thousands of songs 
             created from one single loop tree.
             </p>
-        </>
+        </div>
     )
 }
