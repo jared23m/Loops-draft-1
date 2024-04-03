@@ -12,6 +12,7 @@ button{
     color:antiquewhite;
     border: none;
     border-radius: 5px;
+    font-size: 100%;
 }
 
 button:hover{
@@ -120,19 +121,18 @@ label{
 
 .editEntries{
     display:grid;
+    margin-top: 50px;
     gap: 1rem;
     height: 75px;
-    grid-template-rows: 1fr 1fr;
-    width: 100%;
-    align-items: center;
+    grid-template-rows: 150px minmax(50px, 1fr);
     justify-items: space-evenly;
     height: 100%;
-    margin-left: 2%;
+    margin-left: 30px;
 }
 
 .onTheSide{
     display:grid;
-    height: 75px;
+    align-self: stretch;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr;
     align-items: center;
@@ -140,31 +140,111 @@ label{
     height: 150px;
 }
 
+.editInput{
+    margin-left: 10px;
+}
+
+.editSelect{
+    margin-left: 10px;
+}
+
 .editChords{
     display: grid;
+    align-self: stretch;
     gap: 1rem;
 }
 
 .eachChord{
     display: grid;
-    grid-template-columns: repeat(auto-fit, 75px);
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(4, 75px);
     gap: 1rem;
 }
-
-.editTitle{
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
+.plus{
+    width: 30px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
-.editStatus{
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
+.minus{
+    width: 30px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0)
 }
 
-.editKeySig{
-    grid-row: 3 / 4;
-    grid-column: 1 / 2;
+.keyChangeButtons{
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 1fr;
+    justify-items: center;
+    align-items: center;
+    margin-left: 25px;
+    margin-top: 50px;
+    background-color: antiquewhite;
+    height: 100px;
+    width: 400px;
+    border-radius: 5px;
 }
+
+.keyChangeButton{
+    padding: 10px;
+}
+
+.editPageLoginToSubmit{
+    margin-left: 35px;
+    position: relative;
+    top: 15px;
+    display:grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 75px 75px 60px 75px;
+    align-items:center;
+}
+
+.or{
+    text-align: center;
+}
+
+.editLogIn{
+    margin-left: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.editSignUp{
+    border: 1px solid antiquewhite;
+}
+
+.editPageSubmit{
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+.editPageSubmitButton{
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    width: 75px;
+    text-align: center;
+}
+
+.editPageGrabFromLoopBank{
+    text-decoration: none;
+    color: antiquewhite;
+    margin-left: 30px;
+    position: relative;
+    bottom: -30px;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.editPageGrabFromLoopBank:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+
+
 
 
 
