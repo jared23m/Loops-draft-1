@@ -28,7 +28,7 @@ export default function Login(props){
     }
 
     return (
-        <>
+        <div className='loginMaster'>
             {props.token ?
             <>
                 <p>You cannot access this page while being logged in.</p>
@@ -41,7 +41,7 @@ export default function Login(props){
                 }}>Log Out</button>
             </>
             :
-            <div className='Login'>
+            <div className='LoginFromContainer'>
             <form className="logInForm" onSubmit= {handleLoginSubmit}>
                 <div className='logInEntries'>
                     <label className='logInUsername'>
@@ -57,11 +57,11 @@ export default function Login(props){
                             }}/>
                     </label>
                 </div>
-                    <button className="logInButton" id='submit'>Submit</button>
+                    <button className="logInSubmitButton" id='submit'>Submit</button>
                     {error.message && <p className='logInErrMess'>{error.message}</p>}
             </form>
             </div>
             }
-        </>
+        </div>
     )
 }

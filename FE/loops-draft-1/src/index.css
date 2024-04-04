@@ -301,6 +301,8 @@ label{
     cursor: pointer;
 }
 
+/*LOOP CARD*/
+
 .loopCard{
     margin-left: 30px;
     width: 75%;
@@ -528,4 +530,36 @@ label{
 .seeStartLoop:hover{
     background-color: antiquewhite;
     color: rgb(11,20,22);
+}
+
+/*LOGIN*/
+
+.loginMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px){
+    .loginMaster{
+        margin-top: 150px;
+    }
+}
+
+.logInEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.logInInput{
+    width: 50%;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.logInSubmitButton{
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
 }
