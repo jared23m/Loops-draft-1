@@ -65,11 +65,12 @@ label{
 
 .navButtonContainer{
     display:grid;
+    width: 80%;
     justify-items: center;
     align-items: center;
     margin-right: 5%;
     grid-template-rows: 50px;
-    grid-template-columns: repeat(6, minmax(75px, 1fr));
+    grid-template-columns: repeat(6, minmax(40px, 1fr));
     justify-self: space-evenly;
     align-self: baseline;
     position: relative;
@@ -90,6 +91,12 @@ label{
         top: 7px;
     }
 
+}
+
+@media only screen and (min-width: 750px){
+    .navButtonContainer{
+        justify-self: end;
+    }
 }
 
 .navLink{
@@ -126,16 +133,16 @@ label{
 /*HOME*/
 
 .homeMessage{
-    margin-left: 2%;
-    margin-right: 4%;
+    margin-left: 30px;
+    margin-right: 30px;
     max-width: 1000px;
-    margin-top: 100px;
+    margin-top: 125px;
 }
 
 /*edit*/
 
 .editLoopMaster{
-    margin-top: 100px;
+    margin-top: 125px;
 }
 
 .editEntries{
@@ -149,18 +156,31 @@ label{
     margin-left: 30px;
 }
 
+.editInput{
+    margin-right: 0px;
+}
+
 .onTheSide{
-    display:grid;
+    display:flex;
+    width: 88%;
+    flex-direction:column;
     align-self: stretch;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr;
-    align-items: center;
-    justify-items: start;
     height: 150px;
+    gap: 1rem;
+    margin-top: 25px;
 }
 
 .editInput{
     margin-left: 10px;
+    width: 100%;
+}
+
+.editTitle{
+    display:flex;
+}
+
+.editKeySig{
+    display:flex;
 }
 
 .editSelect{
@@ -172,6 +192,7 @@ label{
     display: grid;
     align-self: stretch;
     gap: 1rem;
+    margin-top: 50px;
 }
 
 .eachChord{
@@ -264,13 +285,14 @@ label{
 
 .loopCard{
     margin-left: 30px;
-    width: 80%;
+    width: 75%;
     max-width: 800px;
     display: flex;
     flex-direction: column;
     z-index: 1;
     border: 1px solid antiquewhite;
     padding: 15px;
+    padding-top: 0px;
     border-radius: 5px;
 }
 
@@ -283,6 +305,7 @@ label{
    color: antiquewhite;
    text-decoration: none;
    padding-left: 10px;
+   margin-top: 15px;
 }
 
 .loopTitle:hover{
@@ -294,15 +317,23 @@ label{
 .titleTimestamp{
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
     
+}
+
+.abAndRel{
+    display: flex;
+    margin-bottom: 10px;
 }
 
 .absoluteChords{
     display: grid;
-    grid-template-columns: repeat(4, 50px);
-    grid-template-rows: 50px;
+    grid-template-columns: repeat(1, 50px);
+    grid-template-rows: repeat(4,30px);
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
+    width: 50%;
+    max-width: 100px;
 }
 
 .absoluteChord{
@@ -311,10 +342,11 @@ label{
 
 .relativeChords{
     display: grid;
-    grid-template-columns: repeat(4, 50px);
-    grid-template-rows: 50px;
+    grid-template-columns: repeat(1, 50px);
+    grid-template-rows: repeat(4, 30px);
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
+    width: 50%;
 }
 
 .relativeChord{
@@ -324,6 +356,7 @@ label{
 .createdByContainer{
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .loopCardUserLink{
@@ -342,11 +375,9 @@ label{
 
 .cbAndStatus{
     display: flex;
+    flex-direction: column;
 }
 
-.loopCardStatus{
-    margin-left: 10px;
-}
 
 .forkedFromContainer{
     display: flex;
@@ -430,7 +461,7 @@ label{
  .replyToContainer{
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    margin-bottom: 10px;
  }
 
  .repliedFroms{
