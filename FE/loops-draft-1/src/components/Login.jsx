@@ -44,13 +44,13 @@ export default function Login(props){
             <div className='LoginFromContainer'>
             <form className="logInForm" onSubmit= {handleLoginSubmit}>
                 <div className='logInEntries'>
-                    <label className='logInUsername'>
+                    <label className='logInLabel'>
                     Username: <input className='logInInput' type= 'text' value= {loginData.username} onChange= {(e) => {
                             const currentLoginData = loginData;
                             setLoginData({...currentLoginData, username: e.target.value});
                             }}/>
                     </label>
-                    <label className='logInPassword'>
+                    <label className='logInLabel'>
                      Password: <input className='logInInput' type= 'password' value= {loginData.password} onChange= {(e) => {
                             const currentLoginData = loginData;
                             setLoginData({...currentLoginData, password: e.target.value});

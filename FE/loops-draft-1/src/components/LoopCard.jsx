@@ -22,9 +22,9 @@ export default function LoopCard(props){
     function renderReplyWindow(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBankGrab/replyTo/${loopId}`)}>Choose from loop bank</button>
-                <button onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
-                <button onClick={()=> setReplyIsOpen(false)}>Cancel</button>
+                <button className='replyReplaceButton'onClick={()=>navigate(`/loopBankGrab/replyTo/${loopId}`)}>Choose from loop bank</button>
+                <button className='editFromScratchButton'onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
+                <button className='cancelButton'onClick={()=> setReplyIsOpen(false)}>Cancel</button>
             </>
 
         )
@@ -33,9 +33,9 @@ export default function LoopCard(props){
     function renderEditMenu(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBankGrab/update/${loopId}`)}>Replace from loop bank</button>
-                <button onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
-                <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
+                <button className='editReplaceButton'onClick={()=>navigate(`/loopBankGrab/update/${loopId}`)}>Replace from loop bank</button>
+                <button  className='editFromScratchButton'onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
+                <button  className='cancelButton' onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
 
         )
@@ -53,26 +53,31 @@ export default function LoopCard(props){
                         setForkData({...currentForkData, title: e.target.value});
                         }}/>
                 </label>
-                <label className='forkStatus'>
-                 Status: 
-                        <select value={forkData.status} onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>
-                        <option value="public" onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>Public</option>
-                        <option value="private" onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>Private</option>
-                        </select>
-                </label>
+                <div className="forkStatusAndSubmit">
+                        <label className='forkStatus'>
+                        Status: 
+                                <select value={forkData.status} onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>
+                                <option value="public" onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>Public</option>
+                                <option value="private" onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>Private</option>
+                                </select>
+                        </label>
+                        <div className='subForkOrCancel'>
+                        <button className="forkSubmitButton" id='submit'>Submit</button>
+                        <button  className="forkCancelButton"type='button' onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+                        </div>
+                </div>
             </div>
-                <button className="forkButton" id='submit'>Submit</button>
             </form>
-                <button onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+                
             </>
 
         )
@@ -133,13 +138,6 @@ export default function LoopCard(props){
                 </div>
             </div>
             <p className='loopCardKeySig'>Key Signature: {props.loop.keysig}</p>
-            {props.loop.saved == true &&
-                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
-            }
-            {props.loop.saved == false &&
-                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
-            }
-            {saveError.message && <p>{saveError.message}</p>}
             <div className='cbAndStatus'>
             <div className='createdByContainer'>
             <p>Created by:</p>
@@ -167,23 +165,33 @@ export default function LoopCard(props){
                 </div>
             </div>
             }
-            <div class='TLAndSL'>
-            {props.loop.status != 'loopBank' && <Link className='seeThruline'to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
-            {(props.loop.startLoop && (!props.loopIdParam)) &&
-            <>
+            {props.loop.status != 'loopBank' &&
+            <div className='TLAndSL'>
+                {props.loop.status != 'loopBank' && <Link className='seeThruline'to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
+                {(props.loop.startLoop && (!props.loopIdParam)) &&
+                <>
                 <Link className='seeStartLoop'to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
-            </>
-            }
+                </>
+                }
             </div>
+            }
+            <div className="manipLoopButtonContainer">
+            {props.loop.saved == true &&
+                <button className='saveLoopButton'onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
+            }
+            {props.loop.saved == false &&
+                <button className='saveLoopButton'onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
+            }
+            {saveError.message && <p>{saveError.message}</p>}
             {props.token ?
                 <>
-                    <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
+                    <button className='copyLoopButton'onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
                     {props.accountId == props.loop.userid && 
                     <>
                         {editMenuOpen ?
                             renderEditMenu(props.loop.id)
                         :
-                            <button onClick={() => setEditMenuOpen(true)}>Edit Loop</button>
+                            <button className='editLoopButton'onClick={() => setEditMenuOpen(true)}>Edit Loop</button>
                         }
                     </>
                     }
@@ -192,11 +200,11 @@ export default function LoopCard(props){
                             {areYouSureIsOpen ?
                                 <>
                                     <p>Are you sure you want to delete this loop?</p>
-                                    <button onClick={()=>handleLoopDelete(props.token, props.loop.id)}>Yes</button>
-                                    <button onClick={()=> setAreYouSureIsOpen(false)}>No</button>
+                                    <button className='deleteYesButton' onClick={()=>handleLoopDelete(props.token, props.loop.id)}>Yes</button>
+                                    <button className='deleteNoButton' onClick={()=> setAreYouSureIsOpen(false)}>No</button>
                                 </>
                             :
-                                <button onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
+                                <button className='deleteLoopButton'onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
                             }
                             {deleteError.message && <p>{deleteError.message}</p>}
                         </>
@@ -205,12 +213,12 @@ export default function LoopCard(props){
                     {props.loop.status != 'loopBank' &&
                     <>
                         {!replyIsOpen ?
-                        <button onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
+                        <button className='replyLoopButton' onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
                     :
                         renderReplyWindow(props.loop.id)
                     }
                     {!forkMenuOpen ?
-                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
+                        <button className='forkLoopButton' onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
                     :
                         renderForkMenu(props.loop.id)
                     }
@@ -228,6 +236,7 @@ export default function LoopCard(props){
                     </div>
                 </div>
             }
+            </div>
         </div>
     )
 }

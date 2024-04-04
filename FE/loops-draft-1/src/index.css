@@ -122,11 +122,12 @@ label{
     border: none;
     background-color: transparent;
     font-size: 100%;
+    color: rgb(11,20,22)
 }
 
 #logOut:hover{
-    background-color: antiquewhite;
-    color: rgb(11,20,22);
+    background-color: rgb(11,20,22);
+    color: antiquewhite;
     cursor: pointer;
 }
 .navButton:hover{
@@ -306,7 +307,7 @@ label{
 .loopCard{
     margin-left: 30px;
     width: 75%;
-    max-width: 800px;
+    max-width: 750px;
     display: flex;
     flex-direction: column;
     z-index: 1;
@@ -343,34 +344,41 @@ label{
 
 .abAndRel{
     display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
+    gap: 1rem;
 }
 
 .absoluteChords{
     display: grid;
-    grid-template-columns: repeat(1, 50px);
-    grid-template-rows: repeat(4,30px);
+    grid-template-columns: repeat(4, minmax(50px, 1fr));
+    grid-template-rows: repeat(1,30px);
     align-items: center;
     gap: 2rem;
-    width: 50%;
-    max-width: 100px;
+    width: 100%;
+    font-size: 6vw;
 }
 
-.absoluteChord{
-    font-size: 200%;
+@media only screen and (min-width: 800px){
+    .absoluteChords{
+        font-size: 300%;
+    }
 }
 
 .relativeChords{
     display: grid;
-    grid-template-columns: repeat(1, 50px);
-    grid-template-rows: repeat(4, 30px);
+    grid-template-columns: repeat(4, minmax(50px, 1fr));
+    grid-template-rows: repeat(1, 30px);
     align-items: center;
     gap: 2rem;
-    width: 50%;
+    width: 100%;
+    font-size: 6vw;
 }
 
-.relativeChord{
-    font-size: 200%;
+@media only screen and (min-width: 800px){
+    .relativeChords{
+        font-size: 300%;
+    }
 }
 
 .createdByContainer{
@@ -402,6 +410,7 @@ label{
 .forkedFromContainer{
     display: flex;
     align-items: center;
+    margin-bottom: 30px;
 }
 
 .forkedFromLinks{
@@ -437,7 +446,6 @@ label{
     border: 1px solid antiquewhite;
     padding: 10px;
     border-radius: 5px;
-
 }
 
 .seeThruline:hover{
@@ -481,7 +489,7 @@ label{
  .replyToContainer{
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
  }
 
  .repliedFroms{
@@ -513,7 +521,6 @@ label{
  }
 
  .TLAndSL{
-    margin-top: 25px;
     margin-bottom: 20px;
  }
  .seeStartLoop{
@@ -532,6 +539,118 @@ label{
     color: rgb(11,20,22);
 }
 
+/*Logged In Loop*/
+
+.manipLoopButtonContainer{
+    display: flex;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: start;
+}
+
+.saveLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.copyLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.editLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+.deleteLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.replyLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.forkLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.replyReplaceButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.replyFromScratchButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.editReplaceButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.editFromScratchButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.cancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0);
+}
+
+.deleteNoButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0);
+}
+.deleteYesButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.forkEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+}
+
+
+.forkInput{
+    width: 295px;
+}
+.forkStatusAndSubmit{
+    display: flex;
+    align-items: center;
+}
+
+.subForkOrCancel{
+    display: flex;
+    align-self: end;
+    margin-left: 10px;
+    gap: 1rem;
+}
+
+.forkSubmitButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.forkCancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
 /*LOGIN*/
 
 .loginMaster{
@@ -552,9 +671,13 @@ label{
 }
 
 .logInInput{
-    width: 50%;
-    min-width: 250px;
-    max-width: 400px;
+    width: 100%;
+}
+
+.logInLabel{
+    width: 80%;
+    min-width: 300px;
+    max-width: 500px;
 }
 
 .logInSubmitButton{
@@ -562,4 +685,45 @@ label{
     padding: 10px;
     border: 1px solid antiquewhite;
     border-radius: 5px;
+}
+
+/*REGISTER*/
+
+.registerMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px){
+    .registerMaster{
+        margin-top: 150px;
+    }
+}
+
+.registerEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.registerInput{
+    width: 100%;
+}
+
+.registerLabel{
+    width: 80%;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+.registerSubmitButton{
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
+
+.notAMatch{
+    margin-top: 40px;
+    margin-bottom: 0px;
 }

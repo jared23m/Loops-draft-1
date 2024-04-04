@@ -41,7 +41,7 @@ export default function Register(props){
     }
 
     return (
-        <>
+        <div className='registerMaster'>
             {props.token ?
                 <>
                     <p>You cannot access this page while being logged in.</p>
@@ -57,38 +57,37 @@ export default function Register(props){
                     <div className='Register'>
                     <form className="registerForm" onSubmit= {handleRegisterSubmit}>
                     <div className='registerEntries'>
-                        <label className='registerUsername'>
+                        <label className='registerLabel'>
                         Username: <input className='registerInput' type= 'text' value= {registerData.username} onChange= {(e) => {
                                 const currentRegisterData = registerData;
                                 setRegisterData({...currentRegisterData, username: e.target.value});
                                 }}/>
                         </label>
-                        <label className='registerEmail'>
+                        <label className='registerLabel'>
                         Email: <input className='registerInput' type= 'email' value= {registerData.email} onChange= {(e) => {
                                 const currentRegisterData = registerData;
                                 setRegisterData({...currentRegisterData, email: e.target.value});
                                 }}/>
                         </label>
-                        <label className='registerPassword'>
+                        <label className='registerLabel'>
                         Password: <input className='registerInput' type= 'password' value= {registerData.password} onChange= {(e) => {
                                 const currentRegisterData = registerData;
                                 setRegisterData({...currentRegisterData, password: e.target.value});
                                 }}/>
                         </label>
-                        <label className='registerConfirmPassword'>
+                        <label className='registerLabel'>
                         Confirm Password: <input className='registerInput' type= 'password' value= {registerData.confirmPassword} onChange= {(e) => {
                                 const currentRegisterData = registerData;
                                 setRegisterData({...currentRegisterData, confirmPassword: e.target.value});
                                 }}/>
                         </label>
                     </div>
-                        {notAMatch && <p>Password and Confirm Password must match.</p>}
-                        <button disabled={notAMatch}className="registerButton" id='submit'>Submit</button>
+                        {notAMatch && <p className='notAMatch'>Password and Confirm Password must match.</p>}
+                        <button disabled={notAMatch}className="registerSubmitButton" id='submit'>Submit</button>
                         {error.message && <p className='registerErrMess'>{error.message}</p>}
                 </form>
                 </div>
             }
-        </>
-        
+        </div>
     )
 }
