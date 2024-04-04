@@ -419,7 +419,7 @@ export default function EditLoop(props){
     }
 
     return (
-        <>
+        <div className='editLoopMaster'>
             {(!props.token && mode != 'new') ?
             <>
                 <p>You cannot access this page without being logged in.</p>
@@ -605,6 +605,6 @@ export default function EditLoop(props){
                     }
                 </>
             }
-        </>
+        </div>
     )
 }

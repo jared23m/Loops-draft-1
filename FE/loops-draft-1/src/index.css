@@ -48,13 +48,19 @@ label{
     grid-template-rows: repeat(1, 60px);
     grid-template-columns: 100px minmax(600px, 1fr);
     align-items: center;
-    padding-top: 5px;
+    position: fixed;
+    top: 0;
+    background-color: antiquewhite;
+    margin-top: 0px;
+    padding-bottom: 10px;
+    width: 100%;
 }
 
 .logo{
     font-weight: normal;
     margin-left: 30px;
     align-self: baseline;
+    color: rgb(11,20,22);
 }
 
 .navButtonContainer{
@@ -68,6 +74,7 @@ label{
     align-self: baseline;
     position: relative;
     top: -4px;
+    margin-left: 20px;
 }
 
 @media only screen and (max-width: 750px) {
@@ -85,13 +92,20 @@ label{
 
 }
 
-.navButton{
+.navLink{
     text-decoration: none;
-    color:antiquewhite;
+    color:rgb(11,20,22);
     padding: 5%;
     border-radius: 5px;
     font-size: 100%;
 }
+
+.navLink:hover{
+    color: antiquewhite;
+    background-color: rgb(11,20,22);
+}
+
+
 
 #logOut{
     border: none;
@@ -115,9 +129,14 @@ label{
     margin-left: 2%;
     margin-right: 4%;
     max-width: 1000px;
+    margin-top: 100px;
 }
 
 /*edit*/
+
+.editLoopMaster{
+    margin-top: 100px;
+}
 
 .editEntries{
     display:grid;
@@ -147,6 +166,7 @@ label{
 .editSelect{
     margin-left: 10px;
 }
+
 
 .editChords{
     display: grid;
@@ -242,9 +262,221 @@ label{
     cursor: pointer;
 }
 
+.loopCard{
+    margin-left: 30px;
+    width: 80%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    border: 1px solid antiquewhite;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.loopTitle{
+    font-size:150%;
+   border: 1px solid antiquewhite;
+   padding: 10px;
+   border-radius: 5px;
+   margin-right: auto;
+   color: antiquewhite;
+   text-decoration: none;
+   padding-left: 10px;
+}
+
+.loopTitle:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+}
 
 
+.titleTimestamp{
+    display: flex;
+    flex-direction: column;
+    
+}
 
+.absoluteChords{
+    display: grid;
+    grid-template-columns: repeat(4, 50px);
+    grid-template-rows: 50px;
+    align-items: center;
+    gap: 3rem;
+}
 
+.absoluteChord{
+    font-size: 200%;
+}
 
+.relativeChords{
+    display: grid;
+    grid-template-columns: repeat(4, 50px);
+    grid-template-rows: 50px;
+    align-items: center;
+    gap: 3rem;
+}
 
+.relativeChord{
+    font-size: 200%;
+}
+
+.createdByContainer{
+    display: flex;
+    align-items: center;
+}
+
+.loopCardUserLink{
+    margin-left: 10px;
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.loopCardUserLink:hover{
+   color: rgb(11,20,22);
+   background-color: antiquewhite;
+}
+
+.cbAndStatus{
+    display: flex;
+}
+
+.loopCardStatus{
+    margin-left: 10px;
+}
+
+.forkedFromContainer{
+    display: flex;
+    align-items: center;
+}
+
+.forkedFromLinks{
+    margin-left: 10px;
+}
+
+.forkedFroms{
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+.forkedFroms:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+.forkedFromsLoop{
+    border: 1px solid antiquewhite;
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+.seeThruline{
+    margin-right: auto;
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+.seeThruline:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}
+
+.forkedFromsLoop:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .toReplyContainer{
+    display: flex;
+    margin-top: 10px;
+ }
+
+ .toReplyText{
+    white-space: nowrap;
+ }
+
+ .loginOrSignUpContainer{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    margin-left: 10px;
+    justify-content: space-evenly;
+ }
+
+ .loopCardLogin{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+ }
+
+ .loopCardSignUp{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+ }
+
+ .replyToContainer{
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+ }
+
+ .repliedFroms{
+    margin-left: 10px;
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+ }
+
+ .repliedFroms:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .repliedFromsLoop{
+    margin-left: 10px;
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+ }
+
+ .repliedFromsLoop:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .TLAndSL{
+    margin-top: 25px;
+    margin-bottom: 20px;
+ }
+ .seeStartLoop{
+    margin-right: auto;
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+
+}
+
+.seeStartLoop:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}

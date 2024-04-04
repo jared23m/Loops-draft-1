@@ -7,13 +7,13 @@ export default function NavBar(props){
     <div className="navBar">
         <h1 className='logo'>Loops</h1>
         <div className='navButtonContainer'>
-            <Link className='navButton' id='homeAbout'to='/'>Home</Link>
-            <Link className='navButton' id='createLoop' to="/edit/new">Create</Link>
-            <Link className='navButton' id='allLoops'to="/loops">Loops</Link>
-            <Link className='navButton' id='allUsers'to="/users">Users</Link>
+            <Link className='navLink' id='homeAbout'to='/'>Home</Link>
+            <Link className='navLink' id='createLoop' to="/edit/new">Create</Link>
+            <Link className='navLink' id='allLoops'to="/loops">Loops</Link>
+            <Link className='navLink' id='allUsers'to="/users">Users</Link>
             {props.accountId ? 
             <>
-                <Link className='navButton' id='account' to={`/users/${props.accountId}`}>Account</Link>
+                <Link className='navLink' id='account' to={`/users/${props.accountId}`}>Account</Link>
                 <button className='navButton' id='logOut'onClick={()=>{
                     props.setToken(null);
                     props.setAccountId(null);
@@ -25,8 +25,8 @@ export default function NavBar(props){
             
             :
             <>
-                <Link className='navButton' id='login'to='/login'>Login</Link>
-                <Link className='navButton' id='register'to='/register'>Register</Link>
+                <Link className='navLink' id='login'to='/login'>Login</Link>
+                <Link className='navLink' id='register'to='/register'>Register</Link>
             </>
             }
         </div>

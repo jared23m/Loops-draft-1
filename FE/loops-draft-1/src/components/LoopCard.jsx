@@ -116,19 +116,23 @@ export default function LoopCard(props){
     }
 
     return (
-        <>
-        {props.loop &&
-        <>
-            {(props.loop.title && props.loop.status != 'loopBank') && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
-            {(props.loop.title && props.loop.status == 'loopBank') && <p>{props.loop.title}</p>}
-            <p>@ {props.loop.timestamp}</p>
-            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
-            <p>Key Signature: {props.loop.keysig}</p>
-            {props.loop.relativeChords.map((chord) => {
-                return <div key={chord.id}>
-                    <p>{chord.name}</p>
+        <div className="loopCard">
+            <div className='titleTimestamp'>
+            {(props.loop.title && props.loop.status != 'loopBank') && <Link className='loopTitle' to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {(props.loop.title && props.loop.status == 'loopBank') && <p className='loopTitle' >{props.loop.title}</p>}
+            <p className='loopTimestamp'>@ {props.loop.timestamp}</p>
+            </div>
+            <div className="abAndRel">
+                {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
+                <div className='relativeChords'>
+                {props.loop.relativeChords.map((chord) => {
+                    return <div className='relativeChord' key={chord.id}>
+                        <p>{chord.name}</p>
+                    </div>
+                })}
                 </div>
-            })}
+            </div>
+            <p className='loopCardKeySig'>Key Signature: {props.loop.keysig}</p>
             {props.loop.saved == true &&
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
             }
@@ -136,29 +140,41 @@ export default function LoopCard(props){
                 <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
             }
             {saveError.message && <p>{saveError.message}</p>}
+            <div className='cbAndStatus'>
+            <div className='createdByContainer'>
             <p>Created by:</p>
-            <Link to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
-            {props.loop.status != 'reply' && <p>Status: {props.loop.status}</p>}
-            {props.loop.parentloopid && 
-            <>
-                <p>Reply to:</p> 
-                <Link to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
-                <Link to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
-            </>
+            <Link className='loopCardUserLink' to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
+            </div>
+            {props.loop.status != 'reply' ?
+             <p className='loopCardStatus'>Status: {props.loop.status}</p>
+            :
+
+                <div className='replyToContainer'>
+                    <p>Reply to:</p> 
+                
+                    <Link className="repliedFroms"to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
+                    <Link className="repliedFromsLoop"to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
+                </div>
             }
+            </div>
+            
             {(props.loop.originalloopid && props.loop.originalUser) && 
-            <>
-                <p>Forked from:</p> 
-                <Link to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
-                <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
-            </>
+            <div className='forkedFromContainer'>
+                <p>Forked from:</p>
+                <div className="forkedFromLinks">
+                    <Link className="forkedFroms" to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
+                    <Link className="forkedFromsLoop" to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
+                </div>
+            </div>
             }
-            {props.loop.status != 'loopBank' && <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
+            <div class='TLAndSL'>
+            {props.loop.status != 'loopBank' && <Link className='seeThruline'to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
             {(props.loop.startLoop && (!props.loopIdParam)) &&
             <>
-                <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
+                <Link className='seeStartLoop'to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
             </>
             }
+            </div>
             {props.token ?
                 <>
                     <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
@@ -203,16 +219,15 @@ export default function LoopCard(props){
                     }
                 </> 
             :
-                <>
-                    <p>To Reply: </p>
-                    <button onClick={()=> navigate('/login')}>Log In</button>
-                    <p>or</p>
-                    <button onClick={()=> navigate('/register')}>Sign Up</button>
-                </>
+                <div className="toReplyContainer">
+                    <p className="toReplyText">To Reply: </p>
+                    <div className="loginOrSignUpContainer">
+                        <button className="loopCardLogin"onClick={()=> navigate('/login')}>Log In</button>
+                        <p>or</p>
+                        <button className="loopCardSignUp"onClick={()=> navigate('/register')}>Sign Up</button>
+                    </div>
+                </div>
             }
-           
-        </>
-        }
-        </>
+        </div>
     )
 }
