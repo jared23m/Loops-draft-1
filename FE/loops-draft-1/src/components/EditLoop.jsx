@@ -468,8 +468,8 @@ export default function EditLoop(props){
                         </div>
                     :
                     <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
-                    {(mode == 'new' && props.token) && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
                     <div className='editEntries'>
+                         {(mode == 'new' && props.token) && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
                     <div className='onTheSide'>
                         {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                             <>
