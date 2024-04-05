@@ -804,3 +804,67 @@ label{
     border: 1px solid antiquewhite;
     margin-bottom: 20px;
 }
+
+/*SINGLE USER*/
+
+
+.singleUserMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .singleUserMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopList{
+    width: 80%;
+    max-width: 1000px;
+    margin-top: 30px;
+}
+
+.reverseOrderButton{
+    margin-bottom: 20px;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+}
+
+.userPageName{
+    font-size: 400%;
+    margin-bottom: 0px;
+}
+
+.userPageStatus{
+    font-size: 175%;
+}
+
+.updateProfileButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    margin-bottom: 20px;
+}
+
+.checkBoxes{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    width: 80%;
+    margin-top: 40px;
+    position: relative;
+    left: -12px;
+}
+
+input[type='checkbox']{
+    background-color: rgb(11,20,22);
+    accent-color: rgb(11,20,22);
+    transform: scale(2);
+    margin-right: 20px;
+    margin-left: 20px;
+    outline: 1px solid antiquewhite;
+    margin-bottom: 30px;
+}
+
+.searchForm{
+    margin-top: 30px;
+}
