@@ -63,6 +63,11 @@ export default function Home(){
             loops that you have only saved.
             </p>
             <p>
+            If you click on a start loop's title, you will be directed to a loop tree page, 
+            where you can open up all the replies of the start loop, as well as their replies,
+            and so on.
+            </p>
+            <p>
             If you click on the "see thruline" button, you no longer see a tree, but one linear 
             "root" of the tree, all the way to the end of the branch, so to speak. You will see every 
             parent loop of the reply loop leading all the way back up to the start loop with the title. 
