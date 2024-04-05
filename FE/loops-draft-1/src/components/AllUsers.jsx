@@ -31,29 +31,30 @@ export default function AllUsers(props){
     function renderAllUsersSearchForm(){
         return (
             <div>
-                <label>
+                <label className='searchByStartLoop'>
                 Search By Username: <input className='allUsersSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
                             const currentSearchData = searchData;
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
                 </label>
-                <p></p>
-                 <label>
-                    <input type="checkbox" value="admin" checked={searchData.admin} onChange={()=>{
-                        const currentSearchData = searchData;
-                        const currentAdmin = currentSearchData.admin;
-                        setSearchData({...currentSearchData, admin: !currentAdmin});
-                    }}/>
-                    Admin
-                </label>
-                <label>
-                    <input type="checkbox" value="nonAdmin" checked={searchData.nonAdmin} onChange={()=>{
-                        const currentSearchData = searchData;
-                        const currentNonAdmin = currentSearchData.nonAdmin;
-                        setSearchData({...currentSearchData, nonAdmin: !currentNonAdmin});
-                    }}/>
-                    Non Admin
-                </label>
+                <div className='checkBoxes'>
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="admin" checked={searchData.admin} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentAdmin = currentSearchData.admin;
+                            setSearchData({...currentSearchData, admin: !currentAdmin});
+                        }}/>
+                        Admin
+                    </label>
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="nonAdmin" checked={searchData.nonAdmin} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentNonAdmin = currentSearchData.nonAdmin;
+                            setSearchData({...currentSearchData, nonAdmin: !currentNonAdmin});
+                        }}/>
+                        Non Admin
+                    </label>
+                </div>
             </div>
         )
     }
@@ -106,19 +107,21 @@ export default function AllUsers(props){
     }
 
     return (
-        <>
+        <div className='allUsersMaster'>
         {error.message ?
             <p>{error.message}</p>
         :
             <>
             {renderAllUsersSearchForm()}
-            <button onClick={handleReverseOrder}>Reverse Order</button>
-            {visibleUsers.map((user)=>{
-                return <UserCard key={user.id} user={user}/>
-             })}
-            <button onClick={handleReverseOrder}>Reverse Order</button>
+            <div className='userList'>
+                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+                {visibleUsers.map((user)=>{
+                    return <UserCard key={user.id} user={user}/>
+                })}
+                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+            </div>
             </>
         }
-        </>
+        </div>
     )
 }

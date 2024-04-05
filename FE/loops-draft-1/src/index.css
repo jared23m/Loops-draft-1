@@ -1,0 +1,1061 @@
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    color:antiquewhite;
+    background-color: rgb(11,20,22);
+    margin: 0;
+    padding: 0;
+  }
+
+html{
+    zoom: 0.8;
+}
+
+button{
+    font-family: 'Roboto Condensed', sans-serif;
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: none;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+button:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+
+input{
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+select{
+    background-color: rgb(11,20,22);
+    color:antiquewhite;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+label{
+    font-size: 150%;
+}
+
+/*NavBar*/
+
+.navBar{
+    display: grid;
+    grid-template-rows: repeat(1, 60px);
+    grid-template-columns: 100px minmax(600px, 1fr);
+    align-items: center;
+    position: fixed;
+    top: 0;
+    background-color: antiquewhite;
+    margin-top: 0px;
+    padding-bottom: 10px;
+    width: 100%;
+    z-index: 1;
+}
+
+.logo{
+    font-weight: normal;
+    margin-left: 30px;
+    align-self: baseline;
+    color: rgb(11,20,22);
+}
+
+.navButtonContainer{
+    display:grid;
+    width: 80%;
+    justify-items: center;
+    align-items: center;
+    margin-right: 5%;
+    grid-template-rows: 50px;
+    grid-template-columns: repeat(6, minmax(40px, 1fr));
+    justify-self: space-evenly;
+    align-self: baseline;
+    position: relative;
+    top: -4px;
+    margin-left: 20px;
+}
+
+@media only screen and (max-width: 750px) {
+    .navBar{
+        grid-template-rows: repeat(2, 50px);
+        grid-template-columns: 1fr;
+    }
+
+    .navButtonContainer{
+        justify-items: start;
+        margin-left: 25px;
+        position: relative;
+        top: 7px;
+    }
+
+}
+
+@media only screen and (min-width: 750px){
+    .navButtonContainer{
+        justify-self: end;
+    }
+}
+
+.navLink{
+    text-decoration: none;
+    color:rgb(11,20,22);
+    padding: 5%;
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+.navLink:hover{
+    color: antiquewhite;
+    background-color: rgb(11,20,22);
+}
+
+
+
+#logOut{
+    border: none;
+    background-color: transparent;
+    font-size: 100%;
+    color: rgb(11,20,22);
+    white-space: nowrap;
+}
+
+#logOut:hover{
+    background-color: rgb(11,20,22);
+    color: antiquewhite;
+    cursor: pointer;
+}
+.navButton:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}
+
+/*HOME*/
+
+.homeMessage{
+    margin-left: 30px;
+    margin-right: 30px;
+    max-width: 1000px;
+    margin-top: 170px;
+    line-height: 200%;
+    font-size: 150%;
+}
+
+@media only screen and (min-width: 750px){
+    .homeMessage{
+        margin-top: 120px;
+    }
+}
+
+/*edit*/
+
+.editLoopMaster{
+    margin-top: 100px;
+}
+
+@media only screen and (max-width: 750px){
+    .editLoopMaster{
+        margin-top: 150px;
+    }
+}
+
+.editEntries{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.editInput{
+    margin-right: 0px;
+}
+
+.onTheSide{
+    display:flex;
+    width: 88%;
+    flex-direction:column;
+    align-self: stretch;
+    gap: 1rem;
+    margin-top: 25px;
+}
+
+.editInput{
+    margin-left: 10px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.editTitle{
+    display:flex;
+}
+
+.editKeySig{
+    display:flex;
+    margin-bottom: 20px;
+}
+
+.editSelect{
+    margin-left: 10px;
+}
+
+
+.editChords{
+    display: grid;
+    align-self: stretch;
+    gap: 1rem;
+    margin-top: 0px;
+}
+
+.eachChord{
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(4, 75px);
+    gap: 1rem;
+}
+.plus{
+    width: 30px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.minus{
+    width: 30px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0)
+}
+
+.keyChangeButtons{
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    margin-top: 50px;
+    background-color: antiquewhite;
+    margin-right: 30px;
+    max-width: 500px;
+    border-radius: 5px;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 20px;
+    gap: 2rem;
+}
+
+
+@media only screen and (min-width: 420px){
+    .keyChangeButtons{
+        flex-direction: row;
+    }
+}
+
+
+.keyChangeButton{
+    padding: 10px;
+
+}
+
+.editPageLoginToSubmit{
+    margin-left: 35px;
+    position: relative;
+    top: 15px;
+    display:grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 75px 75px 60px 75px;
+    align-items:center;
+}
+
+.or{
+    text-align: center;
+}
+
+.editLogIn{
+    margin-left: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.editSignUp{
+    border: 1px solid antiquewhite;
+}
+
+.editPageSubmit{
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+.editPageSubmitButton{
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    width: 75px;
+    text-align: center;
+}
+
+.editPageGrabFromLoopBank{
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: auto;
+}
+
+.editPageGrabFromLoopBank:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+
+/*LOOP CARD*/
+
+.loopCard{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    padding-top: 0px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+
+.loopTitle{
+    font-size:150%;
+   border: 1px solid antiquewhite;
+   padding: 10px;
+   border-radius: 5px;
+   margin-right: auto;
+   color: antiquewhite;
+   text-decoration: none;
+   padding-left: 10px;
+   margin-top: 15px;
+   margin-bottom: 5px;
+
+}
+
+.loopTitle:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+}
+
+
+.titleTimestamp{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.abAndRel{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    gap: 1rem;
+}
+
+.absoluteChords{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(50px, 1fr));
+    grid-template-rows: repeat(1,30px);
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    font-size: 6vw;
+}
+
+@media only screen and (min-width: 800px){
+    .absoluteChords{
+        font-size: 300%;
+    }
+}
+
+.relativeChords{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(50px, 1fr));
+    grid-template-rows: repeat(1, 30px);
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    font-size: 6vw;
+}
+
+@media only screen and (min-width: 800px){
+    .relativeChords{
+        font-size: 300%;
+    }
+}
+
+.createdByContainer{
+    display: flex;
+    align-items: center;
+}
+
+.loopCardUserLink{
+    margin-left: 10px;
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.loopCardUserLink:hover{
+   color: rgb(11,20,22);
+   background-color: antiquewhite;
+}
+
+.cbAndStatus{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+
+.forkedFromContainer{
+    display: flex;
+    align-items: center;
+}
+
+.forkedFromLinks{
+    margin-left: 10px;
+}
+
+.forkedFroms{
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+.forkedFroms:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+.forkedFromsLoop{
+    border: 1px solid antiquewhite;
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+.seeThruline{
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.seeThruline:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}
+
+.forkedFromsLoop:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .toReplyContainer{
+    display: flex;
+    margin-top: 10px;
+ }
+
+ .toReplyText{
+    white-space: nowrap;
+ }
+
+ .loginOrSignUpContainer{
+    display: flex;
+    align-items: center;
+    width: 200px;
+    margin-left: 10px;
+    justify-content: space-evenly;
+ }
+
+ .loopCardLogin{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+ }
+
+ .loopCardSignUp{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+ }
+
+ .replyToContainer{
+    display: flex;
+    align-items: center;
+ }
+
+ .repliedFroms{
+    margin-left: 10px;
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+ }
+
+ .repliedFroms:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .repliedFromsLoop{
+    margin-left: 10px;
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+ }
+
+ .repliedFromsLoop:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+ }
+
+ .TLAndSL{
+    display: flex;
+    margin-bottom: 20px;
+ }
+ .seeStartLoop{
+    color: antiquewhite;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+
+}
+
+.seeStartLoop:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+}
+
+/*Logged In Loop*/
+
+.manipLoopButtonContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: start;
+}
+
+.saveLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.copyLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.editLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+.deleteLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.replyLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.forkLoopButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.replyReplaceButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.replyFromScratchButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.editReplaceButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.editFromScratchButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.cancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0);
+}
+
+.deleteNoButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: rgb(92, 0, 0);
+}
+.deleteYesButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    background-color: green;
+}
+
+.forkEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 300px;
+}
+
+
+.forkInput{
+    width: 295px;
+}
+.forkStatusAndSubmit{
+    display: flex;
+    align-items: center;
+}
+
+.subForkOrCancel{
+    display: flex;
+    align-self: end;
+    margin-left: 10px;
+    gap: 1rem;
+}
+
+.forkSubmitButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.forkCancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+@media only screen and (min-width: 700px){
+    .cbAndStatus{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+    .statusOrRepliedFrom{
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        align-self: center;
+    }
+
+    .replyToContainer{
+        margin-bottom: 0px
+    }
+
+    .forkedFromContainer{
+        margin-left: 10px;
+    }
+   
+}
+
+/* TINY LOOP CARD */
+
+.tinyLoopMaster{
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+}
+
+.tinyLoopMaster2{
+    display: flex;
+    flex-direction: column;
+}
+
+.tinyLoopCard{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    padding-top: 0px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.openDetailsTinyLoopButton{
+    margin-top: 40px;
+    border: 1px solid antiquewhite;
+}
+
+.closeDetailsLoopButton{
+    margin-top: 40px;
+    border: 1px solid antiquewhite;
+}
+
+
+
+/*LOGIN*/
+
+.loginMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px){
+    .loginMaster{
+        margin-top: 150px;
+    }
+}
+
+.logInEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.logInInput{
+    width: 100%;
+}
+
+.logInLabel{
+    width: 80%;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+.logInSubmitButton{
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
+
+/*REGISTER*/
+
+.registerMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px){
+    .registerMaster{
+        margin-top: 150px;
+    }
+}
+
+.registerEntries{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.registerInput{
+    width: 100%;
+}
+
+.registerLabel{
+    width: 80%;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+.registerSubmitButton{
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
+
+.notAMatch{
+    margin-top: 40px;
+    margin-bottom: 0px;
+}
+
+/*SINGLE LOOP*/
+
+.singleLoopMaster{
+    margin-top: 100px;
+}
+
+@media only screen and (max-width: 750px){
+    .singleLoopMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopWithChildren{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: 50px;
+    max-width: 800px;
+    width: 90vw;
+}
+
+.openReplies{
+    border: 1px solid antiquewhite;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    background-color: green;
+    margin-left: auto;
+    padding: 10px;
+}
+
+.closeReplies{
+    border: 1px solid antiquewhite;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: rgb(92, 0, 0);
+    margin-left: auto;
+    padding: 10px;
+}
+
+/*SINGLE USER*/
+
+
+.singleUserMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .singleUserMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopList{
+    width: 80%;
+    max-width: 1000px;
+    margin-top: 30px;
+}
+
+.reverseOrderButton{
+    margin-bottom: 20px;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+}
+
+.userPageName{
+    font-size: 400%;
+    margin-bottom: 0px;
+}
+
+.userPageStatus{
+    font-size: 175%;
+}
+
+.updateProfileButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    margin-bottom: 20px;
+}
+
+.checkBoxes{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    width: 80%;
+    margin-top: 40px;
+    margin-left: 5px;
+    position: relative;
+    justify-content: start;
+    align-items: start;
+}
+
+.searchCheck{
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+input[type='checkbox']{
+    background-color: rgb(11,20,22);
+    accent-color: rgb(11,20,22);
+    transform: scale(2);
+    margin-right: 20px;
+    outline: 1px solid antiquewhite;
+}
+
+.searchForm{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.updateProfileEntries{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 20px;
+    max-width: 1100px;
+    margin-right: 30px;
+    align-items: end;
+}
+
+.updateUsername{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateEmail{
+    display: flex;
+    flex-direction: column;
+}
+
+.updatePassword{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateConfirmPassword{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateAdmin{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.updateIsActive{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.updateProfileSubmitButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.updateProfileCancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    margin-left: 10px;
+}
+
+/*ALL LOOPS*/
+
+.allLoopsMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .allLoopsMaster{
+        margin-top: 150px;
+    }
+}
+
+/*THRULINE*/
+
+.thrulineMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .thrulineMaster{
+        margin-top: 150px;
+    }
+}
+
+/*Loop Bank*/
+
+.loopBankMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .loopBankMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopBankSelectButton{
+    background-color: green;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    color: antiquewhite;
+    margin-bottom: 20px;
+    margin-left: auto;
+    padding: 10px;
+}
+
+.loopBankSelectButton:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+
+/*ALL USERS*/
+
+.allUsersMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .allUsersMaster{
+        margin-top: 150px;
+    }
+}
+
+.userCard{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    padding: 10px;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.userCardName{
+    text-decoration: none;
+    color: antiquewhite;
+    font-size: 150%;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.userCardName:hover{
+    color: rgb(11,20,22);
+    background-color: antiquewhite;
+}
+
+
+.userList{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: center;
+    margin-top: 30px;
+    margin-right: 30px;
+    gap: 2rem;
+}
+

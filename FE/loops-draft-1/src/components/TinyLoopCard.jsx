@@ -15,9 +15,9 @@ export default function TinyLoopCard(props){
     }, [props.parentComp, props.secondaryLoopId])
 
     return (
-        <>
+        <div className='tinyLoopMaster'>
             {props.loop &&
-            <>
+            <div className='tinyLoopMaster2'>
                 {open ?
                 <>
                     <LoopCard key={props.loop.id} 
@@ -27,31 +27,33 @@ export default function TinyLoopCard(props){
                     accountId={props.accountId} 
                     refresh={props.refresh} 
                     setRefresh={props.setRefresh}
-                    loopIdParam={props.loopIdParam}/>
-                    <button onClick={()=>setOpen(false)}>Close Details</button>
+                    loopIdParam={props.loopIdParam}
+                    setOpen={setOpen}/>
                 </>
                 :
-                <>
-                    {(props.loop.title && props.loop.status != 'loopBank') && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
-                    {(props.loop.title && props.loop.status == 'loopBank') && <p>{props.loop.title}</p>}
-                    <p>@ {props.loop.timestamp}</p>
+                <div className='tinyLoopCard'>
+                    <div className='titleTimestamp'>
+                        {(props.loop.title && props.loop.status != 'loopBank') && <Link className="loopTitle"to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+                        {(props.loop.title && props.loop.status == 'loopBank') && <p className="loopTitle">{props.loop.title}</p>}
+                        <p className="loopTimestamp">@ {props.loop.timestamp}</p>
+                    </div>
                     {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
-                    <button onClick={()=>setOpen(true)}>Open Details</button>
-                </>
+                    <button className='openDetailsTinyLoopButton'onClick={()=>setOpen(true)}>Open Details</button>
+                </div>
                 }
                 <>
                         {props.parentComp == 'update' &&
-                            <Link to={`/edit/updateFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/updateFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
                         } 
                         {props.parentComp == 'replyTo' &&
-                            <Link to={`/edit/replyFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/replyFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
                         } 
                         {props.parentComp == 'new' &&
-                            <Link to={`/edit/newFromLoopBank/${props.loop.id}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/newFromLoopBank/${props.loop.id}`}>Select Loop</Link>
                         } 
                 </>
-            </>
+            </div>
             }
-        </>
+        </div>
     )
 }

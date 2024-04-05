@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 export default function Home(){
     const navigate = useNavigate();
     return (
-        <>
+        <div className='homeMessage'>
             <h1>
             For anyone new...
             </h1>
@@ -63,12 +63,17 @@ export default function Home(){
             loops that you have only saved.
             </p>
             <p>
+            If you click on a start loop's title, you will be directed to a loop tree page, 
+            where you can open up all the replies of the start loop, as well as their replies,
+            and so on.
+            </p>
+            <p>
             If you click on the "see thruline" button, you no longer see a tree, but one linear 
             "root" of the tree, all the way to the end of the branch, so to speak. You will see every 
             parent loop of the reply loop leading all the way back up to the start loop with the title. 
             You could think of this as one song, one of potentially hundreds or even thousands of songs 
             created from one single loop tree.
             </p>
-        </>
+        </div>
     )
 }

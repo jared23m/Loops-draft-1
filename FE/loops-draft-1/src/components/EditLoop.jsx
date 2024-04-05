@@ -419,7 +419,7 @@ export default function EditLoop(props){
     }
 
     return (
-        <>
+        <div className='editLoopMaster'>
             {(!props.token && mode != 'new') ?
             <>
                 <p>You cannot access this page without being logged in.</p>
@@ -434,8 +434,8 @@ export default function EditLoop(props){
                     :
                     <>
                     {keyIsChanging ?
-                        <>
-                            <button  onClick={()=>{
+                        <div className='keyChangeButtons'>
+                            <button className='keyChangeButton' onClick={()=>{
                                     const currentStagedLoop = stagedLoop;
                                     let currentChords = stagedLoop.chords;
                                     currentChords.forEach((chord, index) => {
@@ -449,7 +449,7 @@ export default function EditLoop(props){
                                         chords: currentChords});
                                     setKeyIsChanging(null);
                                     }}>Keep Relative Chords</button>
-                            <button onClick={()=>{
+                            <button className='keyChangeButton'onClick={()=>{
                                     const currentStagedLoop = stagedLoop;
                                     let currentChords = stagedLoop.chords;
                                     currentChords.forEach((chord, index) => {
@@ -465,13 +465,12 @@ export default function EditLoop(props){
                                         chords: currentChords});
                                     setKeyIsChanging(null);
                             }}>Keep Absolute Chords</button>
-                        </>
-
-        
+                        </div>
                     :
                     <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
-                    {(mode == 'new' && props.token) && <Link to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
                     <div className='editEntries'>
+                         {(mode == 'new' && props.token) && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
+                    <div className='onTheSide'>
                         {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                             <>
                                     <label className='editTitle'>
@@ -484,7 +483,7 @@ export default function EditLoop(props){
                                     {!isLoopBank &&
                                     <label className='editStatus'>
                                              Status: 
-                                             <select value={stagedLoop.status} onChange={(e) => {
+                                             <select className='editSelect' value={stagedLoop.status} onChange={(e) => {
                                                  const currentStagedLoop = stagedLoop;
                                                  setStagedLoop({...currentStagedLoop, status: e.target.value});
                                              }}>
@@ -508,7 +507,7 @@ export default function EditLoop(props){
                         }
                         <label className='editKeySig'>
                         Key Signature: 
-                            <select value={stagedLoop.keySig} onChange={(e) => {
+                            <select className='editSelect'value={stagedLoop.keySig} onChange={(e) => {
                             const currentStagedLoop = stagedLoop;
                             setStagedLoop({...currentStagedLoop,
                                 keySig: e.target.value,
@@ -520,11 +519,12 @@ export default function EditLoop(props){
                                 })}
                             </select>
                         </label>
+                        </div>
                         <label className='editChords'>
                         Chords:
                             {stagedLoop.chords.map((chord, index)=>{
                                 return (
-                                            <div key={index}>
+                                            <div className="eachChord" key={index}>
                                                 <select value={chord.relativeRootSymbol} onChange={(e) => {
                                                         const currentStagedLoop = stagedLoop;
                                                         let currentChords = stagedLoop.chords;
@@ -575,28 +575,28 @@ export default function EditLoop(props){
                                                             })}
                                                 </select> 
                                             {stagedLoop.chords.length > 1 && 
-                                                <button type='button' onClick={()=>handleMinus(index)}>-</button>
+                                                <button className='minus'type='button' onClick={()=>handleMinus(index)}>-</button>
                                             }
                                             </div>
                                 )
                             })}
-                        </label>
-                        {stagedLoop.chords.length < 4 && 
-                            <button type='button' onClick={()=>handlePlus()}>+</button>
+                         {stagedLoop.chords.length < 4 && 
+                            <button className="plus" type='button' onClick={()=>handlePlus()}>+</button>
                         }
+                        </label>
                     </div>
                         {props.token ? 
-                            <>
-                                <button className="submitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
+                            <div className="editPageSubmit">
+                                <button className="editPageSubmitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
                                 {submitError.message && <p>{submitError.message}</p>}
-                            </>
+                            </div>
                             :
-                            <>
+                            <div className="editPageLoginToSubmit">
                                 <p>To Submit: </p>
-                                <button type='button' onClick={()=> navigate('/login')}>Log In</button>
-                                <p>or</p>
-                                <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
-                            </>
+                                <button className="editLogIn"type='button' onClick={()=> navigate('/login')}>Log In</button>
+                                <p className='or'>or</p>
+                                <button className="editSignUp" type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+                            </div>
                         }
                     </form>
                     }
@@ -605,6 +605,6 @@ export default function EditLoop(props){
                     }
                 </>
             }
-        </>
+        </div>
     )
 }

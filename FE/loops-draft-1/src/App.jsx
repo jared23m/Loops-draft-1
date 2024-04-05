@@ -25,7 +25,7 @@ function App() {
     <>
     <NavBar accountId={accountId} setToken={setToken} setAccountId={setAccountId} setAccountUsername={setAccountUsername} setAdmin={setAdmin}/>
     <p></p>
-    <Routes>
+    <Routes className="routes">
     <Route
       path="/"
       element={<Home/>}

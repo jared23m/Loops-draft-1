@@ -81,12 +81,12 @@ export function translateToAbsolute(relativeChords, keySig){
 export function renderAbsoluteChords(relativeChords, keySig){
   const absoluteChords = translateToAbsolute(relativeChords, keySig);
   return (
-      <>
+      <div className='absoluteChords'>
           {absoluteChords.map((chord) => {
-              return <div key={chord.position}>
+              return <div className='absoluteChord' key={chord.position}>
                   <p>{chord.name}</p>
               </div>
           })}
-      </>
+      </div>
   )
 }

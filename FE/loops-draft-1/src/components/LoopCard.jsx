@@ -22,9 +22,9 @@ export default function LoopCard(props){
     function renderReplyWindow(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBankGrab/replyTo/${loopId}`)}>Choose from loop bank</button>
-                <button onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
-                <button onClick={()=> setReplyIsOpen(false)}>Cancel</button>
+                <button className='replyReplaceButton'onClick={()=>navigate(`/loopBankGrab/replyTo/${loopId}`)}>Choose from loop bank</button>
+                <button className='editFromScratchButton'onClick={()=>navigate(`/edit/replyTo/${loopId}`)}>Create from scratch</button>
+                <button className='cancelButton'onClick={()=> setReplyIsOpen(false)}>Cancel</button>
             </>
 
         )
@@ -33,9 +33,9 @@ export default function LoopCard(props){
     function renderEditMenu(loopId){
         return(
             <>
-                <button onClick={()=>navigate(`/loopBankGrab/update/${loopId}`)}>Replace from loop bank</button>
-                <button onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
-                <button onClick={()=> setEditMenuOpen(false)}>Cancel</button>
+                <button className='editReplaceButton'onClick={()=>navigate(`/loopBankGrab/update/${loopId}`)}>Replace from loop bank</button>
+                <button  className='editFromScratchButton'onClick={()=>navigate(`/edit/update/${loopId}`)}>Edit in edit page</button>
+                <button  className='cancelButton' onClick={()=> setEditMenuOpen(false)}>Cancel</button>
             </>
 
         )
@@ -53,26 +53,31 @@ export default function LoopCard(props){
                         setForkData({...currentForkData, title: e.target.value});
                         }}/>
                 </label>
-                <label className='forkStatus'>
-                 Status: 
-                        <select value={forkData.status} onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>
-                        <option value="public" onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>Public</option>
-                        <option value="private" onChange={(e) => {
-                            const currentForkData = forkData;
-                            setForkData({...currentForkData, status: e.target.value});
-                        }}>Private</option>
-                        </select>
-                </label>
+                <div className="forkStatusAndSubmit">
+                        <label className='forkStatus'>
+                        Status: 
+                                <select value={forkData.status} onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>
+                                <option value="public" onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>Public</option>
+                                <option value="private" onChange={(e) => {
+                                    const currentForkData = forkData;
+                                    setForkData({...currentForkData, status: e.target.value});
+                                }}>Private</option>
+                                </select>
+                        </label>
+                        <div className='subForkOrCancel'>
+                        <button className="forkSubmitButton" id='submit'>Submit</button>
+                        <button  className="forkCancelButton"type='button' onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+                        </div>
+                </div>
             </div>
-                <button className="forkButton" id='submit'>Submit</button>
             </form>
-                <button onClick={()=> setForkMenuOpen(false)}>Cancel</button>
+                
             </>
 
         )
@@ -116,58 +121,79 @@ export default function LoopCard(props){
     }
 
     return (
-        <>
-        {props.loop &&
-        <>
-            {(props.loop.title && props.loop.status != 'loopBank') && <Link to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
-            {(props.loop.title && props.loop.status == 'loopBank') && <p>{props.loop.title}</p>}
-            <p>@ {props.loop.timestamp}</p>
-            {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
-            <p>Key Signature: {props.loop.keysig}</p>
-            {props.loop.relativeChords.map((chord) => {
-                return <div key={chord.id}>
-                    <p>{chord.name}</p>
+        <div className="loopCard">
+            <div className='titleTimestamp'>
+            {(props.loop.title && props.loop.status != 'loopBank') && <Link className='loopTitle' to={`/loops/${props.loop.id}`}>{props.loop.title}</Link>}
+            {(props.loop.title && props.loop.status == 'loopBank') && <p className='loopTitle' >{props.loop.title}</p>}
+            <p className='loopTimestamp'>@ {props.loop.timestamp}</p>
+            </div>
+            <div className="abAndRel">
+                {renderAbsoluteChords(props.loop.relativeChords, props.loop.keysig)}
+                <div className='relativeChords'>
+                {props.loop.relativeChords.map((chord) => {
+                    return <div className='relativeChord' key={chord.id}>
+                        <p>{chord.name}</p>
+                    </div>
+                })}
                 </div>
-            })}
+            </div>
+            <p className='loopCardKeySig'>Key Signature: {props.loop.keysig}</p>
+            <div className='cbAndStatus'>
+                <div className='createdByContainer'>
+                <p>Created by:</p>
+                <Link className='loopCardUserLink' to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
+                </div>
+                <div className='statusOrRepliedFrom'>
+                    {props.loop.status != 'reply' ?
+                    <p className='loopCardStatus'>Status: {props.loop.status}</p>
+                    :
+
+                        <div className='replyToContainer'>
+                            <p>Reply to:</p> 
+                        
+                            <Link className="repliedFroms"to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
+                            <Link className="repliedFromsLoop"to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
+                        </div>
+                    }
+                </div>
+                {(props.loop.originalloopid && props.loop.originalUser) && 
+                <div className='forkedFromContainer'>
+                    <p>Forked from:</p>
+                    <div className="forkedFromLinks">
+                        <Link className="forkedFroms" to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
+                        <Link className="forkedFromsLoop" to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
+                    </div>
+                </div>
+                }
+            </div>
+            
+            {props.loop.status != 'loopBank' &&
+            <div className='TLAndSL'>
+                {props.loop.status != 'loopBank' && <Link className='seeThruline'to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
+                {(props.loop.startLoop && (!props.loopIdParam)) &&
+                <>
+                <Link className='seeStartLoop'to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
+                </>
+                }
+            </div>
+            }
+            <div className="manipLoopButtonContainer">
             {props.loop.saved == true &&
-                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
+                <button className='saveLoopButton'onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>
             }
             {props.loop.saved == false &&
-                <button onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
+                <button className='saveLoopButton'onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Save Loop</button>
             }
             {saveError.message && <p>{saveError.message}</p>}
-            <p>Created by:</p>
-            <Link to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
-            {props.loop.status != 'reply' && <p>Status: {props.loop.status}</p>}
-            {props.loop.parentloopid && 
-            <>
-                <p>Reply to:</p> 
-                <Link to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
-                <Link to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
-            </>
-            }
-            {(props.loop.originalloopid && props.loop.originalUser) && 
-            <>
-                <p>Forked from:</p> 
-                <Link to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
-                <Link to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
-            </>
-            }
-            {props.loop.status != 'loopBank' && <Link to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
-            {(props.loop.startLoop && (!props.loopIdParam)) &&
-            <>
-                <Link to={`/loops/${props.loop.startLoop.id}`}>See Start Loop</Link>
-            </>
-            }
             {props.token ?
                 <>
-                    <button onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
+                    <button className='copyLoopButton'onClick={()=>navigate(`/edit/copy/${props.loop.id}`)}>Copy Loop</button>
                     {props.accountId == props.loop.userid && 
                     <>
                         {editMenuOpen ?
                             renderEditMenu(props.loop.id)
                         :
-                            <button onClick={() => setEditMenuOpen(true)}>Edit Loop</button>
+                            <button className='editLoopButton'onClick={() => setEditMenuOpen(true)}>Edit Loop</button>
                         }
                     </>
                     }
@@ -176,11 +202,11 @@ export default function LoopCard(props){
                             {areYouSureIsOpen ?
                                 <>
                                     <p>Are you sure you want to delete this loop?</p>
-                                    <button onClick={()=>handleLoopDelete(props.token, props.loop.id)}>Yes</button>
-                                    <button onClick={()=> setAreYouSureIsOpen(false)}>No</button>
+                                    <button className='deleteYesButton' onClick={()=>handleLoopDelete(props.token, props.loop.id)}>Yes</button>
+                                    <button className='deleteNoButton' onClick={()=> setAreYouSureIsOpen(false)}>No</button>
                                 </>
                             :
-                                <button onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
+                                <button className='deleteLoopButton'onClick={()=> setAreYouSureIsOpen(true)}>Delete Loop</button>
                             }
                             {deleteError.message && <p>{deleteError.message}</p>}
                         </>
@@ -189,12 +215,12 @@ export default function LoopCard(props){
                     {props.loop.status != 'loopBank' &&
                     <>
                         {!replyIsOpen ?
-                        <button onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
+                        <button className='replyLoopButton' onClick={()=> setReplyIsOpen(true)}>Reply to Loop</button>
                     :
                         renderReplyWindow(props.loop.id)
                     }
                     {!forkMenuOpen ?
-                        <button onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
+                        <button className='forkLoopButton' onClick={()=> setForkMenuOpen(true)}>Fork from Loop</button>
                     :
                         renderForkMenu(props.loop.id)
                     }
@@ -203,16 +229,17 @@ export default function LoopCard(props){
                     }
                 </> 
             :
-                <>
-                    <p>To Reply: </p>
-                    <button onClick={()=> navigate('/login')}>Log In</button>
-                    <p>or</p>
-                    <button onClick={()=> navigate('/register')}>Sign Up</button>
-                </>
+                <div className="toReplyContainer">
+                    <p className="toReplyText">To Reply: </p>
+                    <div className="loginOrSignUpContainer">
+                        <button className="loopCardLogin"onClick={()=> navigate('/login')}>Log In</button>
+                        <p>or</p>
+                        <button className="loopCardSignUp"onClick={()=> navigate('/register')}>Sign Up</button>
+                    </div>
+                </div>
             }
-           
-        </>
-        }
-        </>
+            </div>
+            <button className='closeDetailsLoopButton'onClick={()=>props.setOpen(false)}>Close Details</button>
+        </div>
     )
 }

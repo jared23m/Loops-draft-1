@@ -154,90 +154,91 @@ export default function SingleUser(props){
 
     function renderUserSearchForm(){
         return (
-            <div>
-                <label>
+            <div className='searchForm'>
+                <label className='searchByStartTitle'>
                 Search By Start Loop Title: <input className='singleUserSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
                             const currentSearchData = searchData;
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
                 </label>
-                <p></p>
-                 <label>
-                    <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
-                        const currentSearchData = searchData;
-                        const currentStartLoops = currentSearchData.startLoops;
-                        setSearchData({...currentSearchData, startLoops: !currentStartLoops});
-                    }}/>
-                    Start Loops
-                </label>
-                <label>
-                    <input type="checkbox" value="replyLoops" checked={searchData.replyLoops} onChange={()=>{
-                        const currentSearchData = searchData;
-                        const currentReplyLoops = currentSearchData.replyLoops;
-                        setSearchData({...currentSearchData, replyLoops: !currentReplyLoops});
-                    }}/>
-                    Reply Loops
-                </label>
-                <label>
-                    <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
-                        const currentSearchData = searchData;
-                        const currentForkedLoops = currentSearchData.forkedLoops;
-                        setSearchData({...currentSearchData, forkedLoops: !currentForkedLoops});
-                    }}/>
-                    Forked Loops
-                </label>
-                {singleUser.savedLoops &&
-                <>
-                    <label>
-                    <input type="checkbox" value="publicLoops" checked={privateSearchData.publicLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentPublicLoops = currentPrivateSearchData.publicLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, publicLoops: !currentPublicLoops});
-                    }}/>
-                    Public Loops
+                <div className="checkBoxes">
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentStartLoops = currentSearchData.startLoops;
+                            setSearchData({...currentSearchData, startLoops: !currentStartLoops});
+                        }}/>
+                        Start Loops
                     </label>
-                    <label>
-                    <input type="checkbox" value="privateLoops" checked={privateSearchData.privateLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentPrivateLoops = currentPrivateSearchData.privateLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, privateLoops: !currentPrivateLoops});
-                    }}/>
-                    Private Loops
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="replyLoops" checked={searchData.replyLoops} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentReplyLoops = currentSearchData.replyLoops;
+                            setSearchData({...currentSearchData, replyLoops: !currentReplyLoops});
+                        }}/>
+                        Reply Loops
                     </label>
-                    <label>
-                    <input type="checkbox" value="loopBankLoops" checked={privateSearchData.loopBankLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentLoopBankLoops = currentPrivateSearchData.loopBankLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, loopBankLoops: !currentLoopBankLoops});
-                    }}/>
-                    LoopBank Loops
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentForkedLoops = currentSearchData.forkedLoops;
+                            setSearchData({...currentSearchData, forkedLoops: !currentForkedLoops});
+                        }}/>
+                        Forked Loops
                     </label>
-                    <label>
-                    <input type="checkbox" value="savedLoops" checked={privateSearchData.savedLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentSavedLoops = currentPrivateSearchData.savedLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, savedLoops: !currentSavedLoops});
-                    }}/>
-                    Saved Loops
-                    </label>
-                    <label>
-                    <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentMyLoops = currentPrivateSearchData.myLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, myLoops: !currentMyLoops});
-                    }}/>
-                    My Loops
-                    </label>
-                    <label>
-                    <input type="checkbox" value="othersLoops" checked={privateSearchData.othersLoops} onChange={()=>{
-                        const currentPrivateSearchData = privateSearchData;
-                        const currentOthersLoops = currentPrivateSearchData.othersLoops;
-                        setPrivateSearchData({...currentPrivateSearchData, othersLoops: !currentOthersLoops});
-                    }}/>
-                    Others' Loops
-                    </label>
-                </>
-                }
+                    {singleUser.savedLoops &&
+                    <>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="publicLoops" checked={privateSearchData.publicLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentPublicLoops = currentPrivateSearchData.publicLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, publicLoops: !currentPublicLoops});
+                        }}/>
+                        Public Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="privateLoops" checked={privateSearchData.privateLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentPrivateLoops = currentPrivateSearchData.privateLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, privateLoops: !currentPrivateLoops});
+                        }}/>
+                        Private Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="loopBankLoops" checked={privateSearchData.loopBankLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentLoopBankLoops = currentPrivateSearchData.loopBankLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, loopBankLoops: !currentLoopBankLoops});
+                        }}/>
+                        LoopBank Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="savedLoops" checked={privateSearchData.savedLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentSavedLoops = currentPrivateSearchData.savedLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, savedLoops: !currentSavedLoops});
+                        }}/>
+                        Saved Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentMyLoops = currentPrivateSearchData.myLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, myLoops: !currentMyLoops});
+                        }}/>
+                        My Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="othersLoops" checked={privateSearchData.othersLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentOthersLoops = currentPrivateSearchData.othersLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, othersLoops: !currentOthersLoops});
+                        }}/>
+                        Others' Loops
+                        </label>
+                    </>
+                    }
+                </div>
             </div>
         )
     }
@@ -361,16 +362,16 @@ export default function SingleUser(props){
     }, [loopList, searchData, privateSearchData]);
 
     return (
-        <>
+        <div className="singleUserMaster">
         {error.message ?
             <p>{error.message}</p>
         :
             <>
-            <p>{singleUser.username}</p>
+            <p className="userPageName">{singleUser.username}</p>
             {singleUser.admin ?
-                    <p>Status: Admin</p>
+                    <p className="userPageStatus">Status: Admin</p>
                 :
-                    <p>Status: User</p>
+                    <p className="userPageStatus">Status: User</p>
             }      
             {(singleUser.id == props.accountId || props.admin) &&
             <>
@@ -384,7 +385,7 @@ export default function SingleUser(props){
                                         setUpdateData({...currentUpdateData, username: e.target.value});
                                         }}/>
                                 </label>
-                                <label className='updateUsername'>
+                                <label className='updateEmail'>
                                 Email: <input className='updateProfileInput' type= 'email' value= {updateData.email} onChange= {(e) => {
                                         const currentUpdateData = updateData;
                                         setUpdateData({...currentUpdateData, email: e.target.value});
@@ -405,7 +406,7 @@ export default function SingleUser(props){
                                 {(props.admin && singleUser.id != props.accountId) &&
                                 <label className='updateAdmin'>
                                 Admin: 
-                                        <select value={updateData.admin} onChange={(e) => {
+                                        <select className='selectBool'value={updateData.admin} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, admin: e.target.value});
                                         }}>
@@ -422,54 +423,54 @@ export default function SingleUser(props){
                                 }
                                 {((props.admin && singleUser.id != props.accountId) || !props.admin) &&
                                 <label className='updateIsActive'>
-                                Delete account forever: 
-                                        <select value={updateData.isActive} onChange={(e) => {
+                                Deactivate Account Permanently:
+                                        <select className='selectBool'value={updateData.isActive} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
                                         }}>
                                         <option value={true} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
-                                        }}>False</option>
+                                        }}>Don't deactivate</option>
                                         <option value={false} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
-                                        }}>True</option>
+                                        }}>Deactivate</option>
                                         </select>
                                  </label>
                                 }
                             </div>
                                 {notAMatch && <p>Password and Confirm Password must match.</p>}
-                                <button className="updateProfileButton" id='submit'>Submit</button>
-                                <button onClick={()=>setUpdateProfile(false)}>Cancel</button>
+                                <button className="updateProfileSubmitButton" id='submit'>Submit</button>
+                                <button className='updateProfileCancelButton'onClick={()=>setUpdateProfile(false)}>Cancel</button>
                                 {updateSubmitError.message && <p className='updateProfileErrMess'>{updateSubmitError.message}</p>}
                             </form>
                             </>
                             :
                             <>
-                                <button onClick={()=>setUpdateProfile(true)}>Update Profile</button>
+                                <button className='updateProfileButton'onClick={()=>setUpdateProfile(true)}>Update Profile</button>
                             </>
                             }
             </>
             } 
             {renderUserSearchForm()}
-            <>
+            <div className="loopList">
                 {(visibleLoops && visibleLoops.length > 0) ?
                 <>
-                    <button onClick={handleReverseOrder}>Reverse Order</button>
+                    <button className="reverseOrderButton"onClick={handleReverseOrder}>Reverse Order</button>
                     {visibleLoops.map((loop)=>{
                     return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
                     })}
-                    <button onClick={handleReverseOrder}>Reverse Order</button>
+                    <button className="reverseOrderButton"onClick={handleReverseOrder}>Reverse Order</button>
                 </>
                 :
                 <>
                     <p>No loops to display.</p>
                 </>
                 }
-            </>   
+        </div>  
             </>
         }
-        </>
+        </div>
     )
 }
