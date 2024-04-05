@@ -123,7 +123,8 @@ label{
     border: none;
     background-color: transparent;
     font-size: 100%;
-    color: rgb(11,20,22)
+    color: rgb(11,20,22);
+    white-space: nowrap;
 }
 
 #logOut:hover{
@@ -798,11 +799,15 @@ label{
 
 .openReplies{
     border: 1px solid antiquewhite;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .closeReplies{
     border: 1px solid antiquewhite;
     margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /*SINGLE USER*/
@@ -867,4 +872,57 @@ input[type='checkbox']{
 
 .searchForm{
     margin-top: 30px;
+}
+
+.updateProfileEntries{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 20px;
+    max-width: 1100px;
+    margin-right: 30px;
+    align-items: end;
+}
+
+.updateUsername{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateEmail{
+    display: flex;
+    flex-direction: column;
+}
+
+.updatePassword{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateConfirmPassword{
+    display: flex;
+    flex-direction: column;
+}
+
+.updateAdmin{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.updateIsActive{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.updateProfileSubmitButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+}
+
+.updateProfileCancelButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    margin-left: 10px;
 }

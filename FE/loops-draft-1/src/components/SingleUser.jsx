@@ -385,7 +385,7 @@ export default function SingleUser(props){
                                         setUpdateData({...currentUpdateData, username: e.target.value});
                                         }}/>
                                 </label>
-                                <label className='updateUsername'>
+                                <label className='updateEmail'>
                                 Email: <input className='updateProfileInput' type= 'email' value= {updateData.email} onChange= {(e) => {
                                         const currentUpdateData = updateData;
                                         setUpdateData({...currentUpdateData, email: e.target.value});
@@ -406,7 +406,7 @@ export default function SingleUser(props){
                                 {(props.admin && singleUser.id != props.accountId) &&
                                 <label className='updateAdmin'>
                                 Admin: 
-                                        <select value={updateData.admin} onChange={(e) => {
+                                        <select className='selectBool'value={updateData.admin} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, admin: e.target.value});
                                         }}>
@@ -423,26 +423,26 @@ export default function SingleUser(props){
                                 }
                                 {((props.admin && singleUser.id != props.accountId) || !props.admin) &&
                                 <label className='updateIsActive'>
-                                Delete account forever: 
-                                        <select value={updateData.isActive} onChange={(e) => {
+                                Deactivate Account Permanently:
+                                        <select className='selectBool'value={updateData.isActive} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
                                         }}>
                                         <option value={true} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
-                                        }}>False</option>
+                                        }}>Don't deactivate</option>
                                         <option value={false} onChange={(e) => {
                                             const currentUpdateData = updateData;
                                             setUpdateData({...currentUpdateData, isActive: e.target.value});
-                                        }}>True</option>
+                                        }}>Deactivate</option>
                                         </select>
                                  </label>
                                 }
                             </div>
                                 {notAMatch && <p>Password and Confirm Password must match.</p>}
-                                <button className="updateProfileButton" id='submit'>Submit</button>
-                                <button onClick={()=>setUpdateProfile(false)}>Cancel</button>
+                                <button className="updateProfileSubmitButton" id='submit'>Submit</button>
+                                <button className='updateProfileCancelButton'onClick={()=>setUpdateProfile(false)}>Cancel</button>
                                 {updateSubmitError.message && <p className='updateProfileErrMess'>{updateSubmitError.message}</p>}
                             </form>
                             </>
