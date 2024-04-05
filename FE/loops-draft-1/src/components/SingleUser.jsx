@@ -162,7 +162,7 @@ export default function SingleUser(props){
                             }}/>
                 </label>
                 <div className="checkBoxes">
-                    <label>
+                    <label className='searchCheck'>
                         <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
                             const currentSearchData = searchData;
                             const currentStartLoops = currentSearchData.startLoops;
@@ -170,7 +170,7 @@ export default function SingleUser(props){
                         }}/>
                         Start Loops
                     </label>
-                    <label>
+                    <label className='searchCheck'>
                         <input type="checkbox" value="replyLoops" checked={searchData.replyLoops} onChange={()=>{
                             const currentSearchData = searchData;
                             const currentReplyLoops = currentSearchData.replyLoops;
@@ -178,7 +178,7 @@ export default function SingleUser(props){
                         }}/>
                         Reply Loops
                     </label>
-                    <label>
+                    <label className='searchCheck'>
                         <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
                             const currentSearchData = searchData;
                             const currentForkedLoops = currentSearchData.forkedLoops;
@@ -188,7 +188,7 @@ export default function SingleUser(props){
                     </label>
                     {singleUser.savedLoops &&
                     <>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="publicLoops" checked={privateSearchData.publicLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentPublicLoops = currentPrivateSearchData.publicLoops;
@@ -196,7 +196,7 @@ export default function SingleUser(props){
                         }}/>
                         Public Loops
                         </label>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="privateLoops" checked={privateSearchData.privateLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentPrivateLoops = currentPrivateSearchData.privateLoops;
@@ -204,7 +204,7 @@ export default function SingleUser(props){
                         }}/>
                         Private Loops
                         </label>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="loopBankLoops" checked={privateSearchData.loopBankLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentLoopBankLoops = currentPrivateSearchData.loopBankLoops;
@@ -212,7 +212,7 @@ export default function SingleUser(props){
                         }}/>
                         LoopBank Loops
                         </label>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="savedLoops" checked={privateSearchData.savedLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentSavedLoops = currentPrivateSearchData.savedLoops;
@@ -220,7 +220,7 @@ export default function SingleUser(props){
                         }}/>
                         Saved Loops
                         </label>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentMyLoops = currentPrivateSearchData.myLoops;
@@ -228,7 +228,7 @@ export default function SingleUser(props){
                         }}/>
                         My Loops
                         </label>
-                        <label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="othersLoops" checked={privateSearchData.othersLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentOthersLoops = currentPrivateSearchData.othersLoops;

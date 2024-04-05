@@ -856,8 +856,15 @@ label{
     max-width: 1000px;
     width: 80%;
     margin-top: 40px;
+    margin-left: 5px;
     position: relative;
-    left: -12px;
+    justify-content: start;
+    align-items: start;
+}
+
+.searchCheck{
+    margin-bottom: 20px;
+    margin-right: 20px;
 }
 
 input[type='checkbox']{
@@ -865,13 +872,14 @@ input[type='checkbox']{
     accent-color: rgb(11,20,22);
     transform: scale(2);
     margin-right: 20px;
-    margin-left: 20px;
     outline: 1px solid antiquewhite;
-    margin-bottom: 30px;
 }
 
 .searchForm{
     margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
 }
 
 .updateProfileEntries{
@@ -925,4 +933,16 @@ input[type='checkbox']{
     padding: 10px;
     border: 1px solid antiquewhite;
     margin-left: 10px;
+}
+
+/*ALL LOOPS*/
+
+.allLoopsMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .allLoopsMaster{
+        margin-top: 150px;
+    }
 }
