@@ -162,9 +162,6 @@ label{
     }
 }
 
-
-
-
 .editEntries{
     display: flex;
     flex-direction: column;
@@ -378,7 +375,6 @@ label{
 .createdByContainer{
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
 }
 
 .loopCardUserLink{
@@ -398,13 +394,13 @@ label{
 .cbAndStatus{
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
 }
 
 
 .forkedFromContainer{
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 .forkedFromLinks{
@@ -434,7 +430,6 @@ label{
 }
 
 .seeThruline{
-    margin-right: auto;
     color: antiquewhite;
     text-decoration: none;
     border: 1px solid antiquewhite;
@@ -483,7 +478,6 @@ label{
  .replyToContainer{
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
  }
 
  .repliedFroms{
@@ -515,16 +509,16 @@ label{
  }
 
  .TLAndSL{
+    display: flex;
     margin-bottom: 20px;
  }
  .seeStartLoop{
-    margin-right: auto;
     color: antiquewhite;
     text-decoration: none;
     border: 1px solid antiquewhite;
     padding: 10px;
-    margin-left: 10px;
     border-radius: 5px;
+    margin-left: 10px;
 
 }
 
@@ -537,7 +531,6 @@ label{
 
 .manipLoopButtonContainer{
     display: flex;
-    margin-top: 10px;
     flex-wrap: wrap;
     gap: 1rem;
     align-items: start;
@@ -645,6 +638,32 @@ label{
     padding: 10px;
     border: 1px solid antiquewhite;
 }
+
+@media only screen and (min-width: 700px){
+    .cbAndStatus{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+    .statusOrRepliedFrom{
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        align-self: center;
+    }
+
+    .replyToContainer{
+        margin-bottom: 0px
+    }
+
+    .forkedFromContainer{
+        margin-left: 10px;
+    }
+   
+}
+
 /*LOGIN*/
 
 .loginMaster{

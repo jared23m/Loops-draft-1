@@ -139,32 +139,34 @@ export default function LoopCard(props){
             </div>
             <p className='loopCardKeySig'>Key Signature: {props.loop.keysig}</p>
             <div className='cbAndStatus'>
-            <div className='createdByContainer'>
-            <p>Created by:</p>
-            <Link className='loopCardUserLink' to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
-            </div>
-            {props.loop.status != 'reply' ?
-             <p className='loopCardStatus'>Status: {props.loop.status}</p>
-            :
-
-                <div className='replyToContainer'>
-                    <p>Reply to:</p> 
-                
-                    <Link className="repliedFroms"to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
-                    <Link className="repliedFromsLoop"to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
+                <div className='createdByContainer'>
+                <p>Created by:</p>
+                <Link className='loopCardUserLink' to={`/users/${props.loop.userid}`}>{props.loop.user.username}</Link>
                 </div>
-            }
+                <div className='statusOrRepliedFrom'>
+                    {props.loop.status != 'reply' ?
+                    <p className='loopCardStatus'>Status: {props.loop.status}</p>
+                    :
+
+                        <div className='replyToContainer'>
+                            <p>Reply to:</p> 
+                        
+                            <Link className="repliedFroms"to={`/users/${props.loop.parentUser.id}`}>{props.loop.parentUser.username}'s </Link>
+                            <Link className="repliedFromsLoop"to={`/thruline/${props.loop.parentloopid}`}>Loop</Link>
+                        </div>
+                    }
+                </div>
+                {(props.loop.originalloopid && props.loop.originalUser) && 
+                <div className='forkedFromContainer'>
+                    <p>Forked from:</p>
+                    <div className="forkedFromLinks">
+                        <Link className="forkedFroms" to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
+                        <Link className="forkedFromsLoop" to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
+                    </div>
+                </div>
+                }
             </div>
             
-            {(props.loop.originalloopid && props.loop.originalUser) && 
-            <div className='forkedFromContainer'>
-                <p>Forked from:</p>
-                <div className="forkedFromLinks">
-                    <Link className="forkedFroms" to={`/users/${props.loop.originalUser.id}`}>{props.loop.originalUser.username}'s </Link>
-                    <Link className="forkedFromsLoop" to={`/thruline/${props.loop.originalloopid}`}>Loop</Link>
-                </div>
-            </div>
-            }
             {props.loop.status != 'loopBank' &&
             <div className='TLAndSL'>
                 {props.loop.status != 'loopBank' && <Link className='seeThruline'to={`/thruline/${props.loop.id}`}>See Thruline</Link>}
