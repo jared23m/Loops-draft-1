@@ -235,14 +235,26 @@ label{
     margin-left: 25px;
     margin-top: 50px;
     background-color: antiquewhite;
-    height: 200px;
-    width: 85%;
+    margin-right: 30px;
+    max-width: 500px;
     border-radius: 5px;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 20px;
+    gap: 2rem;
 }
+
+
+@media only screen and (min-width: 420px){
+    .keyChangeButtons{
+        flex-direction: row;
+    }
+}
+
 
 .keyChangeButton{
     padding: 10px;
-    margin: auto;
+
 }
 
 .editPageLoginToSubmit{
@@ -801,6 +813,10 @@ label{
     border: 1px solid antiquewhite;
     margin-left: 10px;
     margin-right: 10px;
+    margin-bottom: 20px;
+    background-color: green;
+    margin-left: auto;
+    padding: 10px;
 }
 
 .closeReplies{
@@ -808,6 +824,9 @@ label{
     margin-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    background-color: rgb(92, 0, 0);
+    margin-left: auto;
+    padding: 10px;
 }
 
 /*SINGLE USER*/
