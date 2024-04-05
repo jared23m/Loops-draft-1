@@ -108,7 +108,7 @@ export default function LoopBank(props){
     }
 
     return (
-        <>
+        <div className='loopBankMaster'>
             {!props.token ?
             <>
                 <p>You cannot access this page without being logged in.</p>
@@ -123,25 +123,27 @@ export default function LoopBank(props){
                 :
                 <>
                 {renderLoopBankSearchForm()}
-                {(visibleLoops && visibleLoops.length > 0) ?
+                <div className='loopList'>
+                        {(visibleLoops && visibleLoops.length > 0) ?
+                                <>
+                                <button className='reverseOrderButton' onClick={handleReverseOrder}>Reverse Order</button>
+                                {visibleLoops.map((loop)=>{
+                                    return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
+                                            parentComp={mode} secondaryLoopId={secondaryLoopId}/>
+                                })}
+                                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+                                </>
+                        :
                         <>
-                        <button onClick={handleReverseOrder}>Reverse Order</button>
-                        {visibleLoops.map((loop)=>{
-                            return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}
-                                    parentComp={mode} secondaryLoopId={secondaryLoopId}/>
-                        })}
-                        <button onClick={handleReverseOrder}>Reverse Order</button>
+                            <p>No loops to display.</p>
                         </>
-                :
-                <>
-                    <p>No loops to display.</p>
-                </>
-                }
+                        }
+                </div>
                 </>
                 }
                 </>
             }
-        </>
+        </div>
         
     )
 }

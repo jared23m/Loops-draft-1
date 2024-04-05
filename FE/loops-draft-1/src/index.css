@@ -958,3 +958,34 @@ input[type='checkbox']{
         margin-top: 150px;
     }
 }
+
+/*Loop Bank*/
+
+.loopBankMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .loopBankMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopBankSelectButton{
+    background-color: green;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    color: antiquewhite;
+    margin-bottom: 20px;
+    margin-left: auto;
+    padding: 10px;
+}
+
+.loopBankSelectButton:hover{
+    background-color: antiquewhite;
+    color: rgb(11,20,22);
+    cursor: pointer;
+}
+

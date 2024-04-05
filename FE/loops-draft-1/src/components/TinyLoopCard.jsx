@@ -43,13 +43,13 @@ export default function TinyLoopCard(props){
                 }
                 <>
                         {props.parentComp == 'update' &&
-                            <Link to={`/edit/updateFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/updateFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
                         } 
                         {props.parentComp == 'replyTo' &&
-                            <Link to={`/edit/replyFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/replyFromLoopBank/${props.loop.id}/${props.secondaryLoopId}`}>Select Loop</Link>
                         } 
                         {props.parentComp == 'new' &&
-                            <Link to={`/edit/newFromLoopBank/${props.loop.id}`}>Select Loop</Link>
+                            <Link className='loopBankSelectButton'to={`/edit/newFromLoopBank/${props.loop.id}`}>Select Loop</Link>
                         } 
                 </>
             </div>
