@@ -143,7 +143,7 @@ export default function SingleLoop(props){
 
     function renderLoopWithChildren(loop){
         return (
-            <div>
+            <div className="loopWithChildren">
             <TinyLoopCard loop={loop} 
             token={props.token} 
             admin={props.admin} 
@@ -155,7 +155,7 @@ export default function SingleLoop(props){
                 <>
                     {loop.repliesOpen == true &&
                         <>
-                        <button onClick={()=> handleCloseReply(loop)}>Close Replies</button>
+                        <button className="closeReplies" onClick={()=> handleCloseReply(loop)}>Close Replies</button>
                         {loop.childLoops.map((childLoop) => {
                             return (
                                 <div key={childLoop.id}>
@@ -165,7 +165,7 @@ export default function SingleLoop(props){
                         })}
                         </>
                     }   
-                    {loop.repliesOpen == false && <button onClick={()=> handleOpenReply(loop)}>Open Replies</button>}
+                    {loop.repliesOpen == false && <button className="openReplies" onClick={()=> handleOpenReply(loop)}>Open Replies</button>}
                 </>
             } 
             </div>
@@ -173,14 +173,14 @@ export default function SingleLoop(props){
     }
 
     return (
-        <>
+        <div className="singleLoopMaster">
         {error.message ?
             <p>{error.message}</p>
         :
-            <>
+            <div>
             {renderLoopWithChildren(singleLoop)}
-            </>
+            </div>
         }
-        </>
+        </div>
     )
 }

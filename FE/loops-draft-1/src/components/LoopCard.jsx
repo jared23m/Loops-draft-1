@@ -239,6 +239,7 @@ export default function LoopCard(props){
                 </div>
             }
             </div>
+            <button className='closeDetailsLoopButton'onClick={()=>props.setOpen(false)}>Close Details</button>
         </div>
     )
 }

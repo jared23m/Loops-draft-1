@@ -58,6 +58,7 @@ label{
     margin-top: 0px;
     padding-bottom: 10px;
     width: 100%;
+    z-index: 1;
 }
 
 .logo{
@@ -296,17 +297,15 @@ label{
 /*LOOP CARD*/
 
 .loopCard{
-    margin-left: 30px;
-    width: 75%;
-    max-width: 750px;
     display: flex;
     flex-direction: column;
-    z-index: 1;
     border: 1px solid antiquewhite;
-    padding: 15px;
+    padding: 10px;
     padding-top: 0px;
     border-radius: 5px;
+    margin-bottom: 20px;
 }
+
 
 .loopTitle{
     font-size:150%;
@@ -318,6 +317,8 @@ label{
    text-decoration: none;
    padding-left: 10px;
    margin-top: 15px;
+   margin-bottom: 5px;
+
 }
 
 .loopTitle:hover{
@@ -329,8 +330,7 @@ label{
 .titleTimestamp{
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-    
+    margin-bottom: 20px;
 }
 
 .abAndRel{
@@ -459,8 +459,7 @@ label{
  .loginOrSignUpContainer{
     display: flex;
     align-items: center;
-    width: 100%;
-    max-width: 200px;
+    width: 200px;
     margin-left: 10px;
     justify-content: space-evenly;
  }
@@ -664,6 +663,41 @@ label{
    
 }
 
+/* TINY LOOP CARD */
+
+.tinyLoopMaster{
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+}
+
+.tinyLoopMaster2{
+    display: flex;
+    flex-direction: column;
+}
+
+.tinyLoopCard{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid antiquewhite;
+    padding: 10px;
+    padding-top: 0px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.openDetailsTinyLoopButton{
+    margin-top: 40px;
+    border: 1px solid antiquewhite;
+}
+
+.closeDetailsLoopButton{
+    margin-top: 40px;
+    border: 1px solid antiquewhite;
+}
+
+
+
 /*LOGIN*/
 
 .loginMaster{
@@ -739,4 +773,34 @@ label{
 .notAMatch{
     margin-top: 40px;
     margin-bottom: 0px;
+}
+
+/*SINGLE LOOP*/
+
+.singleLoopMaster{
+    margin-top: 100px;
+}
+
+@media only screen and (max-width: 750px){
+    .singleLoopMaster{
+        margin-top: 150px;
+    }
+}
+
+.loopWithChildren{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: 50px;
+    max-width: 800px;
+    width: 90vw;
+}
+
+.openReplies{
+    border: 1px solid antiquewhite;
+}
+
+.closeReplies{
+    border: 1px solid antiquewhite;
+    margin-bottom: 20px;
 }
