@@ -946,3 +946,15 @@ input[type='checkbox']{
         margin-top: 150px;
     }
 }
+
+/*THRULINE*/
+
+.thrulineMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+@media only screen and (max-width: 750px){
+    .thrulineMaster{
+        margin-top: 150px;
+    }
+}

@@ -33,18 +33,18 @@ export default function Thruline(props){
     }
   
     return (
-        <>
+        <div className='thrulineMaster'>
         {error.message ?
             <p>{error.message}</p>
         :
-            <>
-            <button onClick={handleReverseOrder}>Reverse Order</button>
-            {thruline.map((loop)=>{
-                return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
-             })}
-            <button onClick={handleReverseOrder}>Reverse Order</button>
-            </>
+            <div className='loopList'>
+                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+                {thruline.map((loop)=>{
+                    return <TinyLoopCard key={loop.id} loop={loop} token={props.token} admin={props.admin} accountId={props.accountId} refresh={refresh} setRefresh={setRefresh}/>
+                })}
+                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+            </div>
         }
-        </>
+       </div>
     )
 }
