@@ -13,6 +13,7 @@ export default function EditLoop(props){
         title: "My Loop",
         status: "public",
         keySig: "Cmaj/Amin",
+        jottings: "",
         chords: [
             {
             relativeRootSymbol: 'I',
@@ -63,6 +64,7 @@ export default function EditLoop(props){
 
             let status;
             let title;
+            let jottings;
 
             if (mode == 'updateFromLoopBank'){
                 const potentialThruline2 = await fetchThrulineGet(token, secondaryLoopId);
@@ -76,6 +78,7 @@ export default function EditLoop(props){
                     }
                     status = updatingLoop2.status;
                     title = updatingLoop2.title;
+                    jottings = updatingLoop2.jottings
                 }
             } else {
                 if (updatingLoop.status == 'loopBank' && mode != 'newFromLoopBank'){
@@ -83,6 +86,7 @@ export default function EditLoop(props){
                 }
                 status = updatingLoop.status;
                 title = updatingLoop.title;
+                jottings = updatingLoop.jottings;
             }
 
             if (mode=='copy'){
@@ -94,7 +98,8 @@ export default function EditLoop(props){
                 title,
                 status,
                 keySig: updatingLoop.keysig,
-                chords
+                chords,
+                jottings
             })
         } else {
             setError({message: "Unable to fetch data."})
@@ -157,7 +162,8 @@ export default function EditLoop(props){
             title: stagedLoop.title,
             status: stagedLoop.status,
             keySig: stagedLoop.keySig,
-            relativeChordNames
+            relativeChordNames,
+            jottings: stagedLoop.jottings
         }
 
         const potentialSubmit = await fetchStartLoopPost(startLoopData, token);
@@ -188,20 +194,23 @@ export default function EditLoop(props){
                 title: null,
                 status: null,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         } else if (isLoopBank){
             patchLoopData = {
                 title: stagedLoop.title,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         }else {
             patchLoopData = {
                 title: stagedLoop.title,
                 status: stagedLoop.status,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         }
 
@@ -229,7 +238,8 @@ export default function EditLoop(props){
 
         const replyLoopData = {
             keySig: stagedLoop.keySig,
-            relativeChordNames
+            relativeChordNames,
+            jottings: stagedLoop.jottings
         }
 
         const potentialSubmit = await fetchReplyLoopPost(replyLoopData, token, loopId);
@@ -505,6 +515,12 @@ export default function EditLoop(props){
                                    
                             </>
                         }
+                        <label className='editJottings'>
+                                    Jottings: <textarea className='jottingsInput' rows='3' type= 'text' value= {stagedLoop.jottings} onChange= {(e) => {
+                                    const currentStagedLoop = stagedLoop;
+                                    setStagedLoop({...currentStagedLoop, jottings: e.target.value});
+                                    }}/>
+                        </label>
                         <label className='editKeySig'>
                         Key Signature: 
                             <select className='editSelect'value={stagedLoop.keySig} onChange={(e) => {
