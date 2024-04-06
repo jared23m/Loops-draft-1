@@ -237,7 +237,8 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             status: body.status,
             relativeChordNames: body.relativeChordNames,
             keySig: body.keySig,
-            title: body.title
+            title: body.title,
+            jottings: body.jottings
           }
 
           if (!newBody.status){
@@ -254,6 +255,10 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
           if (!newBody.title){
             delete newBody.title
+          }
+
+          if(!newBody.jottings){
+            delete newBody.jottings
           }
 
           if (potentialLoop.userid != userId){

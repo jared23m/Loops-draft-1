@@ -541,6 +541,21 @@ label{
     color: rgb(11,20,22);
 }
 
+.jottingsContainer{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.noJottings{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.jottingsTitle{
+    font-size: 150%;
+}
+
 /*Logged In Loop*/
 
 .manipLoopButtonContainer{

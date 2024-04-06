@@ -68,6 +68,7 @@ const {
           timestamp varchar(255) NOT NULL,
           status varchar(255) NOT NULL,
           keySig varchar(255) NOT NULL,
+          jottings varchar(255) DEFAULT null,
           likeCount int DEFAULT 0 NOT NULL
         );
   
@@ -129,6 +130,7 @@ const {
         userId: 1,
         parentLoopId: null,
         title: "I'm having fun making music",
+        jottings: "this is a jotting.",
         status: "public",
         keySig: "Gmaj/Emin",
         timestamp: timestamp,
@@ -150,7 +152,8 @@ const {
         status: "reply",
         keySig: "Fmaj/Dmin",
         timestamp: timestamp,
-        relativeChordNames: ["I", "V", "vi", "IV"]
+        relativeChordNames: ["I", "V", "vi", "IV"],
+        jottings: "this is a reply jotting"
       });
 
       await createLoop({ 
