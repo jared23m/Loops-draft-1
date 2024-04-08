@@ -78,7 +78,11 @@ export default function EditLoop(props){
                     }
                     status = updatingLoop2.status;
                     title = updatingLoop2.title;
-                    jottings = updatingLoop2.jottings
+                    if (updatingLoop2.jottings == null){
+                        jottings = '';
+                    } else {
+                        jottings = updatingLoop2.jottings
+                    }
                 }
             } else {
                 if (updatingLoop.status == 'loopBank' && mode != 'newFromLoopBank'){
@@ -86,7 +90,11 @@ export default function EditLoop(props){
                 }
                 status = updatingLoop.status;
                 title = updatingLoop.title;
-                jottings = updatingLoop.jottings;
+                if (updatingLoop.jottings == null){
+                    jottings = '';
+                } else {
+                    jottings = updatingLoop.jottings
+                }
             }
 
             if (mode=='copy'){
