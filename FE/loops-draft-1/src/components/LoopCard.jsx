@@ -177,6 +177,16 @@ export default function LoopCard(props){
                 }
             </div>
             }
+            <div className='jottingsContainer'>
+                <p className='jottingsTitle'>Jottings:</p>
+                {props.loop.jottings ?
+                    <div className='theJotting'>
+                        {props.loop.jottings}
+                    </div>
+                    :
+                    <p className='noJottings'>No jottings for this loop.</p>
+                }
+            </div>
             <div className="manipLoopButtonContainer">
             {props.loop.saved == true &&
                 <button className='saveLoopButton'onClick={()=>handleSaveLoop(props.token, props.loop.id)}>Unsave Loop</button>

@@ -48,14 +48,6 @@ usersRouter.post("/register", async (req, res, next) => {
       });
       return
     }
-
-    if (username.length > 8){
-      next({
-        name: "EntryInvalid",
-        message: "Username must be 8 or fewer characters.",
-      });
-      return
-    }
     if (unhashed.length > 15){
       next({
         name: "EntryInvalid",
@@ -63,6 +55,14 @@ usersRouter.post("/register", async (req, res, next) => {
       });
       return
     }
+    if (username.length > 8){
+      next({
+        name: "EntryInvalid",
+        message: "Username must be 8 or fewer characters.",
+      });
+      return
+    }
+   
     if (!email.includes("@")){
       next({
         name: "EntryInvalid",
@@ -71,10 +71,25 @@ usersRouter.post("/register", async (req, res, next) => {
       return
     }
 
+    if (email.length > 30){
+      next({
+        name: "EntryInvalid",
+        message: "Email must be fewer than 30 characters"
+      });
+      return
+    }
+
     if (!lettersAndNumbers(username)){
       next({
         name: "UsernameInvalid",
         message: "Usernames can only have letters and numbers.",
+      });
+      return
+    }
+    if (!lettersAndNumbers(unhashed)){
+      next({
+        name: "PasswordInvalid",
+        message: "Passwords can only have letters and numbers.",
       });
       return
     }
@@ -342,6 +357,14 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       return
     }
 
+    if (newBody.email && newBody.email.length > 30){
+      next({
+        name: "EntryInvalid",
+        message: "Email must be fewer than 30 characters"
+      });
+      return
+    }
+
     if (newBody.username && !lettersAndNumbers(newBody.username)){
       next({
         name: "UsernameInvalid",
@@ -357,6 +380,14 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
           message: "Another user by that username already exists.",
         });
       }
+    }
+
+    if (newBody.password && !lettersAndNumbers(newBody.password)){
+      next({
+        name: "PasswordInvalid",
+        message: "Passwords can only have letters and numbers.",
+      });
+      return
     }
 
     if (newBody.password) {

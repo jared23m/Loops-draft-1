@@ -244,7 +244,8 @@ export async function fetchStartLoopPost(startLoopData, token){
                     title: startLoopData.title,
                     status: startLoopData.status,
                     keySig: startLoopData.keySig,
-                    relativeChordNames: startLoopData.relativeChordNames
+                    relativeChordNames: startLoopData.relativeChordNames,
+                    jottings: startLoopData.jottings
                 })
             });
             const json = await response.json();
@@ -264,7 +265,8 @@ export async function fetchReplyLoopPost(replyLoopData, token, parentLoopId){
                 },
                 body: JSON.stringify({
                     keySig: replyLoopData.keySig,
-                    relativeChordNames: replyLoopData.relativeChordNames
+                    relativeChordNames: replyLoopData.relativeChordNames,
+                    jottings: replyLoopData.jottings
                 })
             });
             const json = await response.json();
@@ -300,7 +302,8 @@ export async function fetchLoopPatch(patchLoopData, token, loopId, mode){
                 title: patchLoopData.title,
                 status: patchLoopData.status,
                 keySig: patchLoopData.keySig,
-                relativeChordNames: patchLoopData.relativeChordNames
+                relativeChordNames: patchLoopData.relativeChordNames,
+                jottings: patchLoopData.jottings
             }
             if (mode=='reply'){
                 delete objectBody.title;

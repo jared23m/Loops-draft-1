@@ -21,18 +21,19 @@ async function createLoop({
     status,
     keySig,
     timestamp,
-    relativeChordNames
+    relativeChordNames,
+    jottings = null
   }) {
     try {
       const {
         rows: [loop],
       } = await client.query(
         `
-        INSERT INTO loops(userId, parentLoopId, originalLoopId, title, status, keySig, timestamp) 
-        VALUES($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO loops(userId, parentLoopId, originalLoopId, title, status, keySig, timestamp, jottings) 
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;
       `,
-        [userId, parentLoopId, originalLoopId, title, status, keySig, timestamp]
+        [userId, parentLoopId, originalLoopId, title, status, keySig, timestamp, jottings]
       );
 
       const relativeChords = await Promise.all(
@@ -486,7 +487,8 @@ async function createLoop({
         status,
         keySig: loopWithChildren.keysig,
         timestamp,
-        relativeChordNames
+        relativeChordNames,
+        jottings: loopWithChildren.jottings
       }
 
       const createdLoop = await createLoop(loopData);
@@ -516,7 +518,8 @@ async function createLoop({
             status: 'reply',
             keySig: childLoop.keysig,
             timestamp,
-            relativeChordNames
+            relativeChordNames,
+            jottings: childLoop.jottings
           }
 
           return createLoop(loopData);

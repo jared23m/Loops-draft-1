@@ -6,6 +6,11 @@ body {
     padding: 0;
   }
 
+textarea{
+    font-family: 'Roboto Condensed', sans-serif;
+    color:antiquewhite;
+}
+
 html{
     zoom: 0.8;
 }
@@ -205,6 +210,20 @@ label{
     margin-left: 10px;
 }
 
+.editJottings{
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin-bottom: 10px;
+}
+
+.jottingsInput{
+    background-color: rgb(11,20,22);
+    color: antiquewhite;
+    font-size: 100%;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
 
 .editChords{
     display: grid;
@@ -539,6 +558,21 @@ label{
 .seeStartLoop:hover{
     background-color: antiquewhite;
     color: rgb(11,20,22);
+}
+
+.jottingsContainer{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.noJottings{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.jottingsTitle{
+    font-size: 150%;
 }
 
 /*Logged In Loop*/
@@ -1057,5 +1091,50 @@ input[type='checkbox']{
     margin-top: 30px;
     margin-right: 30px;
     gap: 2rem;
+}
+
+/*JOTTINGS*/
+
+.searchByJottings{
+    margin-top: 20px;
+}
+
+/*PAGE TITLES*/
+
+.allUsersTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.loopEditorTitle{
+    font-size: 400%;
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.loginTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.registerTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.singleLoopTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+    margin-left: 30px;
+}
+
+.thrulineTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.loopBankTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
 }
 

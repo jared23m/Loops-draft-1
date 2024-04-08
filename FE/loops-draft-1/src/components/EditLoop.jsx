@@ -13,6 +13,7 @@ export default function EditLoop(props){
         title: "My Loop",
         status: "public",
         keySig: "Cmaj/Amin",
+        jottings: "",
         chords: [
             {
             relativeRootSymbol: 'I',
@@ -63,6 +64,7 @@ export default function EditLoop(props){
 
             let status;
             let title;
+            let jottings;
 
             if (mode == 'updateFromLoopBank'){
                 const potentialThruline2 = await fetchThrulineGet(token, secondaryLoopId);
@@ -76,6 +78,11 @@ export default function EditLoop(props){
                     }
                     status = updatingLoop2.status;
                     title = updatingLoop2.title;
+                    if (updatingLoop2.jottings == null){
+                        jottings = '';
+                    } else {
+                        jottings = updatingLoop2.jottings
+                    }
                 }
             } else {
                 if (updatingLoop.status == 'loopBank' && mode != 'newFromLoopBank'){
@@ -83,6 +90,11 @@ export default function EditLoop(props){
                 }
                 status = updatingLoop.status;
                 title = updatingLoop.title;
+                if (updatingLoop.jottings == null){
+                    jottings = '';
+                } else {
+                    jottings = updatingLoop.jottings
+                }
             }
 
             if (mode=='copy'){
@@ -94,7 +106,8 @@ export default function EditLoop(props){
                 title,
                 status,
                 keySig: updatingLoop.keysig,
-                chords
+                chords,
+                jottings
             })
         } else {
             setError({message: "Unable to fetch data."})
@@ -102,22 +115,70 @@ export default function EditLoop(props){
     }
 
     useEffect(()=>{
-        const currentStagedLoop = stagedLoop;
         if(mode == 'replyTo'){
             setError({message: null});
-            setStagedLoop({
-                ...currentStagedLoop, 
+            setStagedLoop({ 
                 title: null,
-                status: null
+                status: null,
+                keySig: "Cmaj/Amin",
+                jottings: "",
+                chords: [
+                    {
+                    relativeRootSymbol: 'I',
+                    absoluteRootSymbol: "C",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'V',
+                    absoluteRootSymbol: "G",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'VI',
+                    absoluteRootSymbol: "A",
+                    quality: 'min'
+                    }, 
+                    {
+                    relativeRootSymbol: 'IV',
+                    absoluteRootSymbol: "F",
+                    quality: 'maj'
+                    }],
             });
         } else if (mode == 'new'){
             setError({message: null});
+            setStagedLoop({ 
+                title: "My Loop",
+                status: "public",
+                keySig: "Cmaj/Amin",
+                jottings: "",
+                chords: [
+                    {
+                    relativeRootSymbol: 'I',
+                    absoluteRootSymbol: "C",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'V',
+                    absoluteRootSymbol: "G",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'VI',
+                    absoluteRootSymbol: "A",
+                    quality: 'min'
+                    }, 
+                    {
+                    relativeRootSymbol: 'IV',
+                    absoluteRootSymbol: "F",
+                    quality: 'maj'
+                    }],
+            });
         } else if (mode == 'updateFromLoopBank'){
             thrulineGet(props.token, loopId, secondaryLoopId)
         } else {
             thrulineGet(props.token, loopId);
         }
-    }, [])
+    }, [loopId, secondaryLoopId, mode])
 
     function getChordFromName(relativeChordName, keySig){
         const relativeRootSymbol = getRelativeFromName(relativeChordName);
@@ -157,7 +218,8 @@ export default function EditLoop(props){
             title: stagedLoop.title,
             status: stagedLoop.status,
             keySig: stagedLoop.keySig,
-            relativeChordNames
+            relativeChordNames,
+            jottings: stagedLoop.jottings
         }
 
         const potentialSubmit = await fetchStartLoopPost(startLoopData, token);
@@ -188,20 +250,23 @@ export default function EditLoop(props){
                 title: null,
                 status: null,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         } else if (isLoopBank){
             patchLoopData = {
                 title: stagedLoop.title,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         }else {
             patchLoopData = {
                 title: stagedLoop.title,
                 status: stagedLoop.status,
                 keySig: stagedLoop.keySig,
-                relativeChordNames
+                relativeChordNames,
+                jottings: stagedLoop.jottings
             }
         }
 
@@ -229,7 +294,8 @@ export default function EditLoop(props){
 
         const replyLoopData = {
             keySig: stagedLoop.keySig,
-            relativeChordNames
+            relativeChordNames,
+            jottings: stagedLoop.jottings
         }
 
         const potentialSubmit = await fetchReplyLoopPost(replyLoopData, token, loopId);
@@ -420,6 +486,7 @@ export default function EditLoop(props){
 
     return (
         <div className='editLoopMaster'>
+            <p className='loopEditorTitle'>Loop Editor</p>
             {(!props.token && mode != 'new') ?
             <>
                 <p>You cannot access this page without being logged in.</p>
@@ -470,6 +537,9 @@ export default function EditLoop(props){
                     <form className="editForm" onSubmit={(event)=>handleAllSubmit(event, loopId)}>
                     <div className='editEntries'>
                          {(mode == 'new' && props.token) && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
+                         {(mode == 'copy') && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/new`}>Grab from loop bank</Link>}
+                         {(mode == 'update') && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/update/${loopId}`}>Grab from loop bank</Link>}
+                         {(mode == 'replyTo') && <Link className='editPageGrabFromLoopBank'to={`/loopBankGrab/replyTo/${loopId}`}>Grab from loop bank</Link>}
                     <div className='onTheSide'>
                         {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                             <>
@@ -505,6 +575,12 @@ export default function EditLoop(props){
                                    
                             </>
                         }
+                        <label className='editJottings'>
+                                    Jottings: <textarea className='jottingsInput' rows='3' type= 'text' value= {stagedLoop.jottings} onChange= {(e) => {
+                                    const currentStagedLoop = stagedLoop;
+                                    setStagedLoop({...currentStagedLoop, jottings: e.target.value});
+                                    }}/>
+                        </label>
                         <label className='editKeySig'>
                         Key Signature: 
                             <select className='editSelect'value={stagedLoop.keySig} onChange={(e) => {

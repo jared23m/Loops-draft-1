@@ -10,6 +10,7 @@ export default function AllLoops(props){
     const [visibleLoops, setVisibleLoops] = useState([]);
     const [searchData, setSearchData] = useState({
         query: '',
+        jottingsQuery: '',
         startLoops: true,
         replyLoops: true,
         forkedLoops: true
@@ -39,6 +40,12 @@ export default function AllLoops(props){
                 Search By Start Loop Title: <input className='allLoopsSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
                             const currentSearchData = searchData;
                             setSearchData({...currentSearchData, query: e.target.value});
+                            }}/>
+                </label>
+                <label className='searchByJottings'>
+                Search By Jottings: <input className='allLoopsSearchInput' type= 'text' value= {searchData.jottingsQuery} onChange= {(e) => {
+                            const currentSearchData = searchData;
+                            setSearchData({...currentSearchData, jottingsQuery: e.target.value});
                             }}/>
                 </label>
                 <div className='checkBoxes'>
@@ -123,6 +130,34 @@ export default function AllLoops(props){
                 currentVisibleLoops = [...startsWithQuery, ...includesButDoesNotStartWith];
             }
 
+            if (!searchData.jottingsQuery == ''){
+                const includesQuery = currentVisibleLoops.filter((loop)=>{
+                    if (!loop.jottings){
+                        return false;
+                    } else {
+                        return loop.jottings.toLowerCase().includes(searchData.jottingsQuery.toLowerCase());
+                    }
+                })
+
+                const startsWithQuery = includesQuery.filter((loop)=>{
+                    if (!loop.jottings){
+                        return false;
+                    } else {
+                        return loop.jottings.toLowerCase().startsWith(searchData.jottingsQuery.toLowerCase());
+                    }
+                })
+
+                const includesButDoesNotStartWith = includesQuery.filter((includesLoop) =>{
+                    const found = startsWithQuery.find((startsWithLoop) => {
+                        return includesLoop.id == startsWithLoop.id;
+                    })
+
+                    return !found;
+                })
+
+                currentVisibleLoops = [...startsWithQuery, ...includesButDoesNotStartWith];
+            }
+
             if (!searchData.startLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
                     return (loop.title == null || (loop.status == 'loopBank'));
@@ -153,6 +188,7 @@ export default function AllLoops(props){
 
     return (
         <div className='allLoopsMaster'>
+            <p className='userPageName'>All Loops</p>
         {error.message ?
             <p>{error.message}</p>
         :

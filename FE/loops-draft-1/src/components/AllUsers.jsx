@@ -9,7 +9,9 @@ export default function AllUsers(props){
     const [searchData, setSearchData] = useState({
         query: '',
         admin: true,
-        nonAdmin: true
+        nonAdmin: true,
+        active: true,
+        notActive: true
     })
     const[visibleUsers, setVisibleUsers] = useState([]);
 
@@ -54,6 +56,26 @@ export default function AllUsers(props){
                         }}/>
                         Non Admin
                     </label>
+                    {props.admin &&
+                    <>
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="active" checked={searchData.active} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentActive = currentSearchData.active;
+                            setSearchData({...currentSearchData, active: !currentActive});
+                        }}/>
+                        Active
+                    </label>
+                    <label className='searchCheck'>
+                        <input type="checkbox" value="notActive" checked={searchData.notActive} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentNotActive = currentSearchData.notActive;
+                            setSearchData({...currentSearchData, notActive: !currentNotActive});
+                        }}/>
+                        Not Active
+                    </label>
+                    </>
+                    }
                 </div>
             </div>
         )
@@ -96,6 +118,18 @@ export default function AllUsers(props){
                 })
             }
 
+            if (!searchData.active){
+                currentVisibleUsers = currentVisibleUsers.filter((user)=>{
+                    return user.isactive == false;
+                })
+            }
+
+            if (!searchData.notActive){
+                currentVisibleUsers = currentVisibleUsers.filter((user)=>{
+                    return user.isactive == true;
+                })
+            }
+
             setVisibleUsers(currentVisibleUsers);
         }
     }, [allUsers, searchData]);
@@ -108,6 +142,7 @@ export default function AllUsers(props){
 
     return (
         <div className='allUsersMaster'>
+            <p className='allUsersTitle'>All Users</p>
         {error.message ?
             <p>{error.message}</p>
         :

@@ -21,10 +21,10 @@ export default function Register(props){
         }
     }, [registerData])
 
+
     async function handleRegisterSubmit(event){
         event.preventDefault();
         const currentData = registerData;
-        delete currentData.confirmPassword;
         const potentialSubmit = await fetchRegisterPost(currentData);
         if (!potentialSubmit){
             setError({message: "Failed to fetch."});
@@ -42,6 +42,7 @@ export default function Register(props){
 
     return (
         <div className='registerMaster'>
+            <p className='registerTitle'>Register</p>
             {props.token ?
                 <>
                     <p>You cannot access this page while being logged in.</p>
