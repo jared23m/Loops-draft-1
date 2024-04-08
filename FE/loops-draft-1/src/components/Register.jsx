@@ -15,16 +15,23 @@ export default function Register(props){
 
     useEffect(()=>{
         if (registerData.password == registerData.confirmPassword){
+            console.log('false');
             setNotAMatch(false);
         } else {
+            console.log('password', registerData.password);
+            console.log('confirmPassword', registerData.confirmPassword);
+            console.log('true');
             setNotAMatch(true);
         }
     }, [registerData])
 
+    useEffect(()=>{
+        console.log(registerData);
+    }, [registerData]);
+
     async function handleRegisterSubmit(event){
         event.preventDefault();
         const currentData = registerData;
-        delete currentData.confirmPassword;
         const potentialSubmit = await fetchRegisterPost(currentData);
         if (!potentialSubmit){
             setError({message: "Failed to fetch."});

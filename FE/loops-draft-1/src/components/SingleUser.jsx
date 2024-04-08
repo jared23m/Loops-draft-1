@@ -131,7 +131,6 @@ export default function SingleUser(props){
         if (props.admin && userId == props.accountId){
             delete currentUpdateData.isActive;
         }
-        delete currentUpdateData.confirmPassword;
 
         const potentialSubmit = await fetchUserPatch(currentUpdateData, props.token, userId);
         if (!potentialSubmit){
