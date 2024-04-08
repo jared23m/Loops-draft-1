@@ -107,22 +107,70 @@ export default function EditLoop(props){
     }
 
     useEffect(()=>{
-        const currentStagedLoop = stagedLoop;
         if(mode == 'replyTo'){
             setError({message: null});
-            setStagedLoop({
-                ...currentStagedLoop, 
+            setStagedLoop({ 
                 title: null,
-                status: null
+                status: null,
+                keySig: "Cmaj/Amin",
+                jottings: "",
+                chords: [
+                    {
+                    relativeRootSymbol: 'I',
+                    absoluteRootSymbol: "C",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'V',
+                    absoluteRootSymbol: "G",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'VI',
+                    absoluteRootSymbol: "A",
+                    quality: 'min'
+                    }, 
+                    {
+                    relativeRootSymbol: 'IV',
+                    absoluteRootSymbol: "F",
+                    quality: 'maj'
+                    }],
             });
         } else if (mode == 'new'){
             setError({message: null});
+            setStagedLoop({ 
+                title: "My Loop",
+                status: "public",
+                keySig: "Cmaj/Amin",
+                jottings: "",
+                chords: [
+                    {
+                    relativeRootSymbol: 'I',
+                    absoluteRootSymbol: "C",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'V',
+                    absoluteRootSymbol: "G",
+                    quality: 'maj'
+                    }, 
+                    {
+                    relativeRootSymbol: 'VI',
+                    absoluteRootSymbol: "A",
+                    quality: 'min'
+                    }, 
+                    {
+                    relativeRootSymbol: 'IV',
+                    absoluteRootSymbol: "F",
+                    quality: 'maj'
+                    }],
+            });
         } else if (mode == 'updateFromLoopBank'){
             thrulineGet(props.token, loopId, secondaryLoopId)
         } else {
             thrulineGet(props.token, loopId);
         }
-    }, [])
+    }, [loopId, secondaryLoopId, mode])
 
     function getChordFromName(relativeChordName, keySig){
         const relativeRootSymbol = getRelativeFromName(relativeChordName);
