@@ -1093,3 +1093,8 @@ input[type='checkbox']{
     gap: 2rem;
 }
 
+/*JOTTINGS*/
+
+.searchByJottings{
+    margin-top: 20px;
+}
