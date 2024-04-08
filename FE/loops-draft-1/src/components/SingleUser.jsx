@@ -25,6 +25,7 @@ export default function SingleUser(props){
     const [notAMatch, setNotAMatch] = useState(false);
     const [searchData, setSearchData] = useState({
         query: '',
+        jottingsQuery: '',
         startLoops: true,
         replyLoops: true,
         forkedLoops: true
@@ -161,6 +162,12 @@ export default function SingleUser(props){
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
                 </label>
+                <label className='searchByJottings'>
+                Search By Jottings: <input className='allLoopsSearchInput' type= 'text' value= {searchData.jottingsQuery} onChange= {(e) => {
+                            const currentSearchData = searchData;
+                            setSearchData({...currentSearchData, jottingsQuery: e.target.value});
+                            }}/>
+                </label>  
                 <div className="checkBoxes">
                     <label className='searchCheck'>
                         <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
@@ -283,6 +290,34 @@ export default function SingleUser(props){
                 })
 
                 const startsWithQuery = [...startStartsWithQuery, ...replyStartsWithQuery];
+
+                const includesButDoesNotStartWith = includesQuery.filter((includesLoop) =>{
+                    const found = startsWithQuery.find((startsWithLoop) => {
+                        return includesLoop.id == startsWithLoop.id;
+                    })
+
+                    return !found;
+                })
+
+                currentVisibleLoops = [...startsWithQuery, ...includesButDoesNotStartWith];
+            }
+
+            if (!searchData.jottingsQuery == ''){
+                const includesQuery = currentVisibleLoops.filter((loop)=>{
+                    if (!loop.jottings){
+                        return false;
+                    } else {
+                        return loop.jottings.toLowerCase().includes(searchData.jottingsQuery.toLowerCase());
+                    }
+                })
+
+                const startsWithQuery = includesQuery.filter((loop)=>{
+                    if (!loop.jottings){
+                        return false;
+                    } else {
+                        return loop.jottings.toLowerCase().startsWith(searchData.jottingsQuery.toLowerCase());
+                    }
+                })
 
                 const includesButDoesNotStartWith = includesQuery.filter((includesLoop) =>{
                     const found = startsWithQuery.find((startsWithLoop) => {
