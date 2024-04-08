@@ -174,6 +174,7 @@ export default function SingleLoop(props){
 
     return (
         <div className="singleLoopMaster">
+            <p className='singleLoopTitle'>Loop Tree</p>
         {error.message ?
             <p>{error.message}</p>
         :

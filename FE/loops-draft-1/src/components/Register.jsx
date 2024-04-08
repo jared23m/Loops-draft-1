@@ -42,6 +42,7 @@ export default function Register(props){
 
     return (
         <div className='registerMaster'>
+            <p className='registerTitle'>Register</p>
             {props.token ?
                 <>
                     <p>You cannot access this page while being logged in.</p>

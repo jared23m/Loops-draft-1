@@ -188,6 +188,7 @@ export default function AllLoops(props){
 
     return (
         <div className='allLoopsMaster'>
+            <p className='userPageName'>All Loops</p>
         {error.message ?
             <p>{error.message}</p>
         :

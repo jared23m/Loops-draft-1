@@ -144,6 +144,7 @@ export default function LoopBank(props){
 
     return (
         <div className='loopBankMaster'>
+            <p className='loopBankTitle'>Loop Bank</p>
             {!props.token ?
             <>
                 <p>You cannot access this page without being logged in.</p>

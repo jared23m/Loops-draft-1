@@ -29,6 +29,7 @@ export default function Login(props){
 
     return (
         <div className='loginMaster'>
+            <p className='loginTitle'>Login</p>
             {props.token ?
             <>
                 <p>You cannot access this page while being logged in.</p>

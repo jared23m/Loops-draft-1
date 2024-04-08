@@ -478,6 +478,7 @@ export default function EditLoop(props){
 
     return (
         <div className='editLoopMaster'>
+            <p className='loopEditorTitle'>Loop Editor</p>
             {(!props.token && mode != 'new') ?
             <>
                 <p>You cannot access this page without being logged in.</p>

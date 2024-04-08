@@ -34,6 +34,7 @@ export default function Thruline(props){
   
     return (
         <div className='thrulineMaster'>
+            <p className='thrulineTitle'>Thruline</p>
         {error.message ?
             <p>{error.message}</p>
         :

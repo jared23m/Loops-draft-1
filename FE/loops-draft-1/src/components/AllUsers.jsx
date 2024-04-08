@@ -142,6 +142,7 @@ export default function AllUsers(props){
 
     return (
         <div className='allUsersMaster'>
+            <p className='allUsersTitle'>All Users</p>
         {error.message ?
             <p>{error.message}</p>
         :

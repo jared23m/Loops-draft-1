@@ -1098,3 +1098,43 @@ input[type='checkbox']{
 .searchByJottings{
     margin-top: 20px;
 }
+
+/*PAGE TITLES*/
+
+.allUsersTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.loopEditorTitle{
+    font-size: 400%;
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.loginTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.registerTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.singleLoopTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+    margin-left: 30px;
+}
+
+.thrulineTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.loopBankTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
