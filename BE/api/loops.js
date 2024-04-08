@@ -46,6 +46,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     return
     }
 
+    if(body.title.length > 20){
+      next({
+        name: "TitleError",
+        message: "Your title must be 20 characters or fewer.",
+      });
+    return
+    }
+
+    if(body.jottings.length > 100){
+      next({
+        name: "JottingsError",
+        message: "Your jottings must be 100 characters or fewer.",
+      });
+    return
+    }
+
     if (!(body.status == 'public' || body.status == 'private' || body.status == 'loopBank')){
         next({
             name: "LoopStatusInvalid",
@@ -132,6 +148,14 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
 
     if (body.title){
       delete body.title;
+    }
+
+    if(body.jottings.length > 100){
+      next({
+        name: "JottingsError",
+        message: "Your jottings must be 100 characters or fewer.",
+      });
+    return
     }
   
     if (loopInQuestion.status == 'loopBank'){
@@ -293,10 +317,26 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
            return
            }
 
-           if(body.title && (!alphabetWithSpaces(body.title))){
+           if(newBody.title && (!alphabetWithSpaces(newBody.title))){
             next({
               name: "TitleError",
               message: "Your title must only contain letters of the alphabet and spaces",
+            });
+          return
+          }
+
+          if(newBody.title && newBody.title.length > 20){
+            next({
+              name: "TitleError",
+              message: "Your title must be 20 characters or fewer.",
+            });
+          return
+          }
+      
+          if(newBody.jottings && newBody.jottings.length > 100){
+            next({
+              name: "JottingsError",
+              message: "Your jottings must be 100 characters or fewer.",
             });
           return
           }
