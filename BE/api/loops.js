@@ -38,14 +38,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     return
     }
 
-    if(!alphabetWithSpaces(body.title)){
-      next({
-        name: "TitleError",
-        message: "Your title must only contain letters of the alphabet and spaces",
-      });
-    return
-    }
-
     if(body.title.length > 20){
       next({
         name: "TitleError",
@@ -317,13 +309,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
            return
            }
 
-           if(newBody.title && (!alphabetWithSpaces(newBody.title))){
-            next({
-              name: "TitleError",
-              message: "Your title must only contain letters of the alphabet and spaces",
-            });
-          return
-          }
 
           if(newBody.title && newBody.title.length > 20){
             next({
@@ -571,13 +556,6 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       return
       }
   
-      if(!alphabetWithSpaces(body.title)){
-        next({
-          name: "TitleError",
-          message: "Your title must only contain letters of the alphabet and spaces",
-        });
-      return
-      }
   
     if (loopInQuestion.status == 'loopBank'){
       next({

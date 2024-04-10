@@ -43,6 +43,9 @@ export default function Register(props){
     return (
         <div className='registerMaster'>
             <p className='registerTitle'>Register</p>
+            <p className='disclaimer'>This website uses JSON Web Tokens and Bcrypt. Unhashed passwords are never stored in the database. However, 
+                it is still recommended to use a unique password for any website.
+            </p>
             {props.token ?
                 <>
                     <p>You cannot access this page while being logged in.</p>

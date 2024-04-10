@@ -6,6 +6,7 @@ export default function NavBar(props){
     return (
     <div className="navBar">
         <h1 className='logo'>Loops</h1>
+       
         <div className='navButtonContainer'>
             <Link className='navLink' id='homeAbout'to='/'>Home</Link>
             <Link className='navLink' id='createLoop' to="/edit/new">Create</Link>
