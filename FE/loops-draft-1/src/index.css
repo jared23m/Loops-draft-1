@@ -1226,3 +1226,28 @@ img{
     padding: 10px;
     border-radius: 5px;
 }
+
+.disabledLoopSubmit{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    background-color: grey;
+}
+
+.disabledLoopSubmit:hover{
+    cursor:default;
+    background-color: grey;
+    color:antiquewhite;
+}
+
+.mappedLoopErrors{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgb(92, 0, 0);
+    max-width: 500px;
+    margin-right: 30px;
+    padding: 10px;
+    border-radius: 5px;
+}
