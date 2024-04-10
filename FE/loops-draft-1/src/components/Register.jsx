@@ -122,11 +122,13 @@ export default function Register(props){
                                 }}/>
                         </label>
                     </div>
-                        <div className='mappedRegisterErrors'>
-                        {feErrors.map((error) =>{
-                            return <p>{error}</p>;
-                        })}
-                        </div>
+                        {feErrors.length > 0 &&
+                            <div className='mappedRegisterErrors'>
+                            {feErrors.map((error) =>{
+                                return <p key={error}>{error}</p>;
+                            })}
+                            </div>
+                        }
                         <button disabled={submitDisabled}className={submitName} id='submit'>Submit</button>
                         {error.message && <p className='registerErrMess'>{error.message}</p>}
                 </form>

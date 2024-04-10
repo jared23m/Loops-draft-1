@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchSingleUserGet , fetchUserPatch} from "../api"
 import TinyLoopCard from "./TinyLoopCard"
+import { lettersAndNumbers } from "../musicTheory"
 
 export default function SingleUser(props){
 
@@ -22,7 +23,9 @@ export default function SingleUser(props){
         isActive: true
     });
     const [updateSubmitError, setUpdateSubmitError] = useState({message: null});
-    const [notAMatch, setNotAMatch] = useState(false);
+    const [feErrors, setFeErrors] = useState([]);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [submitName, setSubmitName] = useState('disabledUpdateSubmit');
     const [searchData, setSearchData] = useState({
         query: '',
         jottingsQuery: '',
@@ -38,6 +41,45 @@ export default function SingleUser(props){
         myLoops: true,
         othersLoops: true
     })
+
+    useEffect(()=>{
+        let currentErrors=[];
+
+            if (updateData.username.length > 8){
+                currentErrors.push('Username length must be 8 characters or fewer.');
+            }
+
+            if(updateData.username.length > 0 & !lettersAndNumbers(updateData.username)){
+                currentErrors.push('Username must only have letters and numbers.');
+            }
+
+            if(updateData.password.length > 0 && (updateData.password.length < 8 || updateData.password.length > 15)){
+                currentErrors.push('Password must be 8-15 characters.');
+            }
+
+            if(updateData.email.length > 30){
+                currentErrors.push('Email must be 30 characters or fewer.');
+            }
+
+            if(updateData.email.length > 0 && !updateData.email.includes('@')){
+                currentErrors.push('Email must include an @ symbol.');
+            }
+
+            if (updateData.password != updateData.confirmPassword){
+                currentErrors.push('Password and confirm password must match.');
+            }
+
+        if(currentErrors.length > 0){
+            setSubmitDisabled(true);
+            setSubmitName('disabledUpdateSubmit');
+        } else {
+            setSubmitDisabled(false);
+            setSubmitName('updateProfileSubmitButton');
+        }
+
+        setFeErrors([...currentErrors]);
+
+    }, [updateData]);
 
     useEffect(()=>{
         async function singleUserGet(token, userId){
@@ -104,14 +146,6 @@ export default function SingleUser(props){
             })
         }
     }, [updateProfile])
-
-    useEffect(()=>{
-        if (updateData.password == updateData.confirmPassword){
-            setNotAMatch(false);
-        } else {
-            setNotAMatch(true);
-        }
-    }, [updateData])
 
     async function handleUpdateProfileSubmit(event){
         event.preventDefault();
@@ -474,8 +508,14 @@ export default function SingleUser(props){
                                  </label>
                                 }
                             </div>
-                                {notAMatch && <p>Password and Confirm Password must match.</p>}
-                                <button className="updateProfileSubmitButton" id='submit'>Submit</button>
+                            {feErrors.length > 0 &&
+                                    <div className='mappedUpdateErrors'>
+                                    {feErrors.map((error) =>{
+                                        return <p key={error}>{error}</p>;
+                                    })}
+                                    </div>
+                            }
+                                <button disabled={submitDisabled}className={submitName}id='submit'>Submit</button>
                                 <button className='updateProfileCancelButton'onClick={()=>setUpdateProfile(false)}>Cancel</button>
                                 {updateSubmitError.message && <p className='updateProfileErrMess'>{updateSubmitError.message}</p>}
                             </form>
