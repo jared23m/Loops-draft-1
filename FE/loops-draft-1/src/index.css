@@ -1174,3 +1174,25 @@ img{
     display: flex;
     align-items: center;
 }
+
+/*INPUT RESTRICTIONS*/
+
+.disabledRegisterSubmit{
+    margin-top: 40px;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    background-color: grey;
+}
+
+.disabledRegisterSubmit:hover{
+    cursor:default;
+    background-color: grey;
+    color:antiquewhite;
+}
+
+.mappedRegisterErrors{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}

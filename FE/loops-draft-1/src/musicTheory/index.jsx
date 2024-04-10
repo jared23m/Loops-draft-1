@@ -90,3 +90,8 @@ export function renderAbsoluteChords(relativeChords, keySig){
       </div>
   )
 }
+
+
+export function lettersAndNumbers(subject){
+    return (/^[A-Za-z0-9]*$/.test(subject));
+}

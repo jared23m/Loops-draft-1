@@ -74,7 +74,7 @@ usersRouter.post("/register", async (req, res, next) => {
     if (email.length > 30){
       next({
         name: "EntryInvalid",
-        message: "Email must be fewer than 30 characters"
+        message: "Email must be 30 or fewer characters"
       });
       return
     }
