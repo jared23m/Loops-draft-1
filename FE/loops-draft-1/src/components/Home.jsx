@@ -7,6 +7,7 @@ export default function Home(){
             <h1>
             For anyone new...
             </h1>
+            <div className='pic1container'>
             <p>
             Loops is a collaborative songwriting tool, but it can also be used on your own. 
             A loop is a small chord progression consiting of 1-4 functional chord symbols 
@@ -17,6 +18,8 @@ export default function Home(){
             roman numeral symbols into the lettered symbols, and vice versa, given whatever key
             signature the loop is.
             </p>
+            <img src="https://i.ibb.co/P6K1nd2/loops-ss-1.jpg" alt="loops-ss-1" border="0"></img>
+            </div>
             <p>
             When you create a new loop, it can either be public, private, or a loopBank loop. 
             Public loops and private loops are both loop trees. In other words, they can be 
@@ -40,6 +43,7 @@ export default function Home(){
             option to either keep the current roman numeral chord symbols, or keep the lettered 
             symbols instead.
             </p>
+            <img src="https://i.ibb.co/rmk4J1K/loops-ss-2.jpg" alt="loops-ss-2" border="0"></img>
             <p>
             You can edit and delete a loop you created after you submit it, but only before others 
             reply to it. Once someone besides yourself replies to the loop, you can no longer edit 
@@ -52,6 +56,7 @@ export default function Home(){
             loop, you also copy all of its replies, and their replies, and so on. You can then edit
             this forked loop tree, because the entire tree is now technically authored by you.
             </p>
+            <img className='loopBankGreenButtonSS'src="https://i.ibb.co/RBfJ8M1/loops-ss-5.jpg" alt="loops-ss-5" border="0"></img>
             <p>
             When you reply to or edit a loop, you will notice an option to search from your loop 
             bank to choose one of your loopBank loops, or move straight into the loop editor. 
@@ -67,6 +72,7 @@ export default function Home(){
             where you can open up all the replies of the start loop, as well as their replies,
             and so on.
             </p>
+            <img className='loopTreeSS'src="https://i.ibb.co/jbmTzyV/loops-ss-4.jpg" alt="loops-ss-4" border="0"></img>
             <p>
             If you click on the "see thruline" button, you no longer see a tree, but one linear 
             "root" of the tree, all the way to the end of the branch, so to speak. You will see every 
