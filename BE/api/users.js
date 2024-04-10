@@ -86,13 +86,7 @@ usersRouter.post("/register", async (req, res, next) => {
       });
       return
     }
-    if (!lettersAndNumbers(unhashed)){
-      next({
-        name: "PasswordInvalid",
-        message: "Passwords can only have letters and numbers.",
-      });
-      return
-    }
+
     const user = await getUserRowByUsername(username);
     if (user) {
       next({
@@ -380,14 +374,6 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
           message: "Another user by that username already exists.",
         });
       }
-    }
-
-    if (newBody.password && !lettersAndNumbers(newBody.password)){
-      next({
-        name: "PasswordInvalid",
-        message: "Passwords can only have letters and numbers.",
-      });
-      return
     }
 
     if (newBody.password) {
