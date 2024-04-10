@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import { fetchRegisterPost } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { lettersAndNumbers } from '../musicTheory/index';
 
 export default function Register(props){
     const [registerData, setRegisterData] = useState({
@@ -10,15 +11,50 @@ export default function Register(props){
         confirmPassword: ''
     });
     const [error, setError] = useState({message: null});
-    const [notAMatch, setNotAMatch] = useState(false);
+    const [feErrors, setFeErrors] = useState(['Fields must be filled out before submitting.']);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [submitName, setSubmitName] = useState('disabledRegisterSubmit');
     const navigate = useNavigate();
 
     useEffect(()=>{
-        if (registerData.password == registerData.confirmPassword){
-            setNotAMatch(false);
+        let currentErrors=[];
+        if (registerData.username == '' || registerData.email=='' || registerData.password==''){
+            currentErrors = ['Fields must be filled out before submitting.'];
+        } 
+            if (registerData.username.length > 8){
+                currentErrors.push('Username length must be 8 characters or fewer.');
+            }
+
+            if(!lettersAndNumbers(registerData.username)){
+                currentErrors.push('Username must only have letters and numbers.');
+            }
+
+            if(registerData.password.length > 0 && (registerData.password.length < 8 || registerData.password.length > 15)){
+                currentErrors.push('Password must be 8-15 characters.');
+            }
+
+            if(registerData.email.length > 30){
+                currentErrors.push('Email must be 30 characters or fewer.');
+            }
+
+            if(registerData.email.length > 0 && !registerData.email.includes('@')){
+                currentErrors.push('Email must include an @ symbol.');
+            }
+
+            if (registerData.password != registerData.confirmPassword){
+                currentErrors.push('Password and confirm password must match.');
+            }
+
+        if(currentErrors.length > 0){
+            setSubmitDisabled(true);
+            setSubmitName('disabledRegisterSubmit');
         } else {
-            setNotAMatch(true);
+            setSubmitDisabled(false);
+            setSubmitName('registerSubmitButton');
         }
+
+        setFeErrors([...currentErrors]);
+
     }, [registerData])
 
 
@@ -86,8 +122,14 @@ export default function Register(props){
                                 }}/>
                         </label>
                     </div>
-                        {notAMatch && <p className='notAMatch'>Password and Confirm Password must match.</p>}
-                        <button disabled={notAMatch}className="registerSubmitButton" id='submit'>Submit</button>
+                        {feErrors.length > 0 &&
+                            <div className='mappedRegisterErrors'>
+                            {feErrors.map((error) =>{
+                                return <p key={error}>{error}</p>;
+                            })}
+                            </div>
+                        }
+                        <button disabled={submitDisabled}className={submitName} id='submit'>Submit</button>
                         {error.message && <p className='registerErrMess'>{error.message}</p>}
                 </form>
                 </div>

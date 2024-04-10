@@ -40,8 +40,38 @@ export default function EditLoop(props){
     const {loopId, secondaryLoopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(null);
     const [submitError, setSubmitError] = useState({message: null});
+    const [feErrors, setFeErrors] = useState(['Title must be filled out before submitting.']);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [submitName, setSubmitName] = useState('disabledLoopSubmit');
     const [isLoopBank, setIsLoopBank] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        let currentErrors=[];
+
+        if (stagedLoop.title && stagedLoop.title.length == 0){
+            currentErrors = ['Title must be filled out before submitting.'];
+        }
+
+        if (stagedLoop.title && stagedLoop.title.length > 20){
+            currentErrors.push('Title must be 20 characters or fewer.');
+        }
+
+        if (stagedLoop.jottings && stagedLoop.jottings.length > 100){
+            currentErrors.push('Jottings must be 100 characters or fewer.');
+        }
+
+        if(currentErrors.length > 0){
+            setSubmitDisabled(true);
+            setSubmitName('disabledLoopSubmit');
+        } else {
+            setSubmitDisabled(false);
+            setSubmitName('editPageSubmitButton');
+        }
+
+        setFeErrors([...currentErrors]);
+
+    }, [stagedLoop]);
 
     async function thrulineGet(token, loopId, secondaryLoopId){
         const potentialThruline = await fetchThrulineGet(token, loopId);
@@ -663,7 +693,14 @@ export default function EditLoop(props){
                     </div>
                         {props.token ? 
                             <div className="editPageSubmit">
-                                <button className="editPageSubmitButton" id='submit' onClick={handleAllSubmit}>Submit</button>
+                                  {feErrors.length > 0 &&
+                                    <div className='mappedLoopErrors'>
+                                    {feErrors.map((error) =>{
+                                        return <p key={error}>{error}</p>;
+                                    })}
+                                    </div>
+                                 }
+                                <button disabled={submitDisabled} className={submitName} id='submit' onClick={handleAllSubmit}>Submit</button>
                                 {submitError.message && <p>{submitError.message}</p>}
                             </div>
                             :
