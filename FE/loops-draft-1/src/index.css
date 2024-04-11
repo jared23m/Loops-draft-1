@@ -1251,3 +1251,49 @@ img{
     padding: 10px;
     border-radius: 5px;
 }
+
+/*CHAR COUNT*/
+
+.titleWithCharCount{
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+.titleCharCount{
+    align-self: end;
+    margin-bottom: 0px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.titleCharCountRed{
+    align-self: end;
+    margin-bottom: 0px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(92, 0, 0);
+}
+
+.jottingsWithCharCount{
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+}
+
+.jottingsCharCount{
+    align-self: end;
+    margin-bottom: 0px;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.jottingsCharCountRed{
+    align-self: end;
+    margin-bottom: 0px;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(92, 0, 0);
+}

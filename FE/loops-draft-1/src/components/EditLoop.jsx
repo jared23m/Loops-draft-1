@@ -573,13 +573,15 @@ export default function EditLoop(props){
                     <div className='onTheSide'>
                         {(mode == 'new' || mode == 'copy' || mode == 'newFromLoopBank' || (mode =='update' || mode == 'updateFromLoopBank') && stagedLoop.status != 'reply') &&
                             <>
-                                    <label className='editTitle'>
-                                    Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {
-                                    const currentStagedLoop = stagedLoop;
-                                    setStagedLoop({...currentStagedLoop, title: e.target.value});
-                                    }}/>
-                                    </label>
-                                    
+                                    <div className='titleWithCharCount'>
+                                        <label className='editTitle'>
+                                        Title: <input className='editInput' type= 'text' value= {stagedLoop.title} onChange= {(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, title: e.target.value});
+                                        }}/>
+                                        </label>
+                                        <p className={stagedLoop.title.length > 20 ? 'titleCharCountRed' : 'titleCharCount'}>{stagedLoop.title.length}/20</p>
+                                    </div>
                                     {!isLoopBank &&
                                     <label className='editStatus'>
                                              Status: 
@@ -605,12 +607,15 @@ export default function EditLoop(props){
                                    
                             </>
                         }
-                        <label className='editJottings'>
-                                    Jottings: <textarea className='jottingsInput' rows='3' type= 'text' value= {stagedLoop.jottings} onChange= {(e) => {
-                                    const currentStagedLoop = stagedLoop;
-                                    setStagedLoop({...currentStagedLoop, jottings: e.target.value});
-                                    }}/>
-                        </label>
+                        <div className='jottingsWithCharCount'>
+                            <label className='editJottings'>
+                                        Jottings: <textarea className='jottingsInput' rows='3' type= 'text' value= {stagedLoop.jottings} onChange= {(e) => {
+                                        const currentStagedLoop = stagedLoop;
+                                        setStagedLoop({...currentStagedLoop, jottings: e.target.value});
+                                        }}/>
+                            </label>
+                            <p className={stagedLoop.jottings.length > 100 ? 'jottingsCharCountRed' : 'jottingsCharCount'}>{stagedLoop.jottings.length}/100</p>
+                        </div>
                         <label className='editKeySig'>
                         Key Signature: 
                             <select className='editSelect'value={stagedLoop.keySig} onChange={(e) => {
