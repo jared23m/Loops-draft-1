@@ -97,24 +97,30 @@ export default function Register(props){
                     <div className='Register'>
                     <form className="registerForm" onSubmit= {handleRegisterSubmit}>
                     <div className='registerEntries'>
-                        <label className='registerLabel'>
-                        Username: <input className='registerInput' type= 'text' value= {registerData.username} onChange= {(e) => {
-                                const currentRegisterData = registerData;
-                                setRegisterData({...currentRegisterData, username: e.target.value});
-                                }}/>
-                        </label>
+                        <div className='registerUsernameAndCharCount'>
+                        <label className='registerUsernameLabel'>
+                            Username: <input className='registerInput' type= 'text' value= {registerData.username} onChange= {(e) => {
+                                    const currentRegisterData = registerData;
+                                    setRegisterData({...currentRegisterData, username: e.target.value});
+                                    }}/>
+                            </label>
+                            <p className={registerData.username.length > 8 ? 'usernameCharCountRed' : 'usernameCharCount'}>{registerData.username.length}/8</p>
+                        </div>
                         <label className='registerLabel'>
                         Email: <input className='registerInput' type= 'email' value= {registerData.email} onChange= {(e) => {
                                 const currentRegisterData = registerData;
                                 setRegisterData({...currentRegisterData, email: e.target.value});
                                 }}/>
                         </label>
-                        <label className='registerLabel'>
-                        Password: <input className='registerInput' type= 'password' value= {registerData.password} onChange= {(e) => {
-                                const currentRegisterData = registerData;
-                                setRegisterData({...currentRegisterData, password: e.target.value});
-                                }}/>
-                        </label>
+                        <div className='registerPasswordAndCharCount'>
+                            <label className='registerPasswordLabel'>
+                            Password: <input className='registerInput' type= 'password' value= {registerData.password} onChange= {(e) => {
+                                    const currentRegisterData = registerData;
+                                    setRegisterData({...currentRegisterData, password: e.target.value});
+                                    }}/>
+                            </label>
+                            <p className={(registerData.password.length < 8 || registerData.password.length > 15)  ? 'passwordCharCountRed' : 'passwordCharCount'}>8/{registerData.password.length}/15</p>
+                        </div>
                         <label className='registerLabel'>
                         Confirm Password: <input className='registerInput' type= 'password' value= {registerData.confirmPassword} onChange= {(e) => {
                                 const currentRegisterData = registerData;
