@@ -8,7 +8,7 @@ const server = express();
 server.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://your-frontend.com"
+    "http://localhost:5173"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -26,7 +26,7 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use(cors());
+//server.use(cors());
 
 const bodyParser = require("body-parser");
 server.use(bodyParser.json({limit: '50mb'}));
