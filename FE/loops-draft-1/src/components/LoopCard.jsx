@@ -19,6 +19,33 @@ export default function LoopCard(props){
     const [saveError, setSaveError] = useState({message: null});
     const [forkError, setForkError] = useState({message: null});
 
+    const [feErrors, setFeErrors] = useState(['Title must be filled out before submitting.']);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [submitName, setSubmitName] = useState('disabledLoopSubmit');
+
+    useEffect(()=>{
+        let currentErrors=[];
+
+        if (forkData.title.length == 0){
+            currentErrors = ['Title must be filled out before submitting.'];
+        }
+
+        if (forkData.title.length > 20){
+            currentErrors.push('Title must be 20 characters or fewer.');
+        }
+
+        if(currentErrors.length > 0){
+            setSubmitDisabled(true);
+            setSubmitName('disabledForkSubmit');
+        } else {
+            setSubmitDisabled(false);
+            setSubmitName('forkSubmitButton');
+        }
+
+        setFeErrors([...currentErrors]);
+
+    }, [forkData]);
+
     function renderReplyWindow(loopId){
         return(
             <>
@@ -47,12 +74,22 @@ export default function LoopCard(props){
             <>
             <form className="forkForm" onSubmit={(event)=>handleForkSubmit(event, loopId)}>
             <div className='forkEntries'>
-                <label className='forkTitle'>
-                Title: <input className='forkInput' type= 'text' value= {forkData.title} onChange= {(e) => {
-                        const currentForkData = forkData;
-                        setForkData({...currentForkData, title: e.target.value});
-                        }}/>
-                </label>
+                <div className='forkTitleWithCharCount'>
+                    <label className='forkTitle'>
+                    Title: <input className='forkInput' type= 'text' value= {forkData.title} onChange= {(e) => {
+                            const currentForkData = forkData;
+                            setForkData({...currentForkData, title: e.target.value});
+                            }}/>
+                    </label>
+                    <p className={forkData.title.length > 20 ? 'forkCharCountRed' : 'forkCharCount'}>{forkData.title.length}/20</p>
+                </div>
+                {feErrors.length > 0 &&
+                                    <div className='mappedForkErrors'>
+                                    {feErrors.map((error) =>{
+                                        return <p key={error}>{error}</p>;
+                                    })}
+                                    </div>
+                        }
                 <div className="forkStatusAndSubmit">
                         <label className='forkStatus'>
                         Status: 
@@ -71,7 +108,7 @@ export default function LoopCard(props){
                                 </select>
                         </label>
                         <div className='subForkOrCancel'>
-                        <button className="forkSubmitButton" id='submit'>Submit</button>
+                        <button disabled={submitDisabled} className={submitName} id='submit'>Submit</button>
                         <button  className="forkCancelButton"type='button' onClick={()=> setForkMenuOpen(false)}>Cancel</button>
                         </div>
                 </div>

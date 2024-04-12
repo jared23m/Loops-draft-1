@@ -1252,6 +1252,31 @@ img{
     border-radius: 5px;
 }
 
+.disabledForkSubmit{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    background-color: grey;
+}
+
+.disabledForkSubmit:hover{
+    cursor:default;
+    background-color: grey;
+    color:antiquewhite;
+}
+
+.mappedForkErrors{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgb(92, 0, 0);
+    max-width: 500px;
+    margin-right: 30px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 /*CHAR COUNT*/
 
 .titleWithCharCount{
@@ -1297,3 +1322,25 @@ img{
     border-radius: 5px;
     background-color: rgb(92, 0, 0);
 }
+
+.forkTitleWithCharCount{
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+.forkCharCount{
+    align-self: end;
+    margin-bottom: 0px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.forkCharCountRed{
+    align-self: end;
+    margin-bottom: 0px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(92, 0, 0);
+}
+
