@@ -127,6 +127,7 @@ label{
 #logOut{
     border: none;
     background-color: transparent;
+    padding: 5px;
     font-size: 100%;
     color: rgb(11,20,22);
     white-space: nowrap;
