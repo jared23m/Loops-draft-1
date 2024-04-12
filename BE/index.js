@@ -5,6 +5,12 @@ const express = require("express");
 const cors = require("cors");
 const server = express();
 
+api_config = {
+  'origins': ['http://localhost:5173']
+}
+
+cors(server, resources = {"/api" : api_config});
+
 server.use(cors());
 
 const bodyParser = require("body-parser");
