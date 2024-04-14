@@ -124,7 +124,7 @@ const {
     try {
       console.log("Starting to create loops...");
       const currentDate = new Date();
-      const timestamp = currentDate.toLocaleString();
+      const timestamp = currentDate.toLocaleString('en-US', { timeZone: 'America/Chicago' });
   
       await createLoop({ 
         userId: 1,

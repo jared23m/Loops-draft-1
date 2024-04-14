@@ -120,7 +120,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     }
 
     const currentDate = new Date();
-    body.timestamp = currentDate.toLocaleString();
+    body.timestamp = currentDate.toLocaleString('en-US', { timeZone: 'America/Chicago' });
     
     const loop = { ...body, userId };
     try {
@@ -226,7 +226,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     } 
 
     const currentDate = new Date();
-    body.timestamp = currentDate.toLocaleString();
+    body.timestamp = currentDate.toLocaleString('en-US', { timeZone: 'America/Chicago' });
     
     const loop = { ...body, userId };
   
