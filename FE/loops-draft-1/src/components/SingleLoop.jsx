@@ -5,7 +5,7 @@ import TinyLoopCard from "./TinyLoopCard";
 
 export default function SingleLoop(props){
 
-    const [error, setError] = useState({message:"Loading..."});
+    const [error, setError] = useState({message:"Loading... This may take a few minutes if the server is hasn't been used recently."});
     const [singleLoop, setSingleLoop] = useState({});
     const [refresh, setRefresh] = useState(0);
     const {loopId} = useParams();

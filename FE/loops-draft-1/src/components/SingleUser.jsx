@@ -7,7 +7,7 @@ import { lettersAndNumbers } from "../musicTheory"
 export default function SingleUser(props){
 
     const navigate = useNavigate();
-    const [error, setError] = useState({message: "Loading..."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
     const [singleUser, setSingleUser] = useState({});
     const [loopList, setLoopList] = useState([]);
     const [visibleLoops, setVisibleLoops] = useState([]);

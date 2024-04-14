@@ -36,7 +36,7 @@ export default function EditLoop(props){
             quality: 'maj'
             }],
     }); 
-    const [error, setError] = useState({message: "Loading..."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
     const {loopId, secondaryLoopId, mode} = useParams();
     const [keyIsChanging, setKeyIsChanging] = useState(null);
     const [submitError, setSubmitError] = useState({message: null});

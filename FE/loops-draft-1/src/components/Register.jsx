@@ -60,6 +60,7 @@ export default function Register(props){
 
     async function handleRegisterSubmit(event){
         event.preventDefault();
+        setError({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
         const currentData = registerData;
         const potentialSubmit = await fetchRegisterPost(currentData);
         if (!potentialSubmit){

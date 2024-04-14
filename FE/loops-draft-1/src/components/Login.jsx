@@ -12,6 +12,7 @@ export default function Login(props){
 
     async function handleLoginSubmit(event){
         event.preventDefault();
+        setError({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
         const potentialSubmit = await fetchLoginPost(loginData);
         if (!potentialSubmit){
             setError({message: "Failed to fetch."});

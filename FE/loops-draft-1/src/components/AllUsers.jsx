@@ -4,7 +4,7 @@ import UserCard from "./UserCard"
 
 export default function AllUsers(props){
 
-    const [error, setError] = useState({message: "Loading..."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
     const [allUsers, setAllUsers] = useState([]);
     const [searchData, setSearchData] = useState({
         query: '',

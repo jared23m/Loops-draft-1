@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 export default function Thruline(props){
 
-    const [error, setError] = useState({message: "Loading..."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
     const [thruline, setThruline] = useState([]);
     const [refresh, setRefresh] = useState(0);
 
