@@ -808,9 +808,8 @@ label{
 }
 
 .registerLabel{
-    width: 100%;
-    min-width: 300px;
     max-width: 500px;
+    margin-right: 30px;
 }
 
 .registerSubmitButton{

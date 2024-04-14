@@ -105,7 +105,7 @@ export default function Register(props){
                                     setRegisterData({...currentRegisterData, username: e.target.value});
                                     }}/>
                             </label>
-                            <p className={registerData.username.length > 8 ? 'usernameCharCountRed' : 'usernameCharCount'}>{registerData.username.length}/8</p>
+                            <p className={(registerData.username.length > 8 || registerData.username.length == 0) ? 'usernameCharCountRed' : 'usernameCharCount'}>{registerData.username.length}/8</p>
                         </div>
                         <label className='registerLabel'>
                         Email: <input className='registerInput' type= 'email' value= {registerData.email} onChange= {(e) => {
