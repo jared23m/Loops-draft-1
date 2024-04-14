@@ -60,6 +60,7 @@ export default function Register(props){
 
     async function handleRegisterSubmit(event){
         event.preventDefault();
+        setError({message: "Loading... This may take a few minutes if the server hasn't been used recently."});
         const currentData = registerData;
         const potentialSubmit = await fetchRegisterPost(currentData);
         if (!potentialSubmit){
@@ -104,7 +105,7 @@ export default function Register(props){
                                     setRegisterData({...currentRegisterData, username: e.target.value});
                                     }}/>
                             </label>
-                            <p className={registerData.username.length > 8 ? 'usernameCharCountRed' : 'usernameCharCount'}>{registerData.username.length}/8</p>
+                            <p className={(registerData.username.length > 8 || registerData.username.length == 0) ? 'usernameCharCountRed' : 'usernameCharCount'}>{registerData.username.length}/8</p>
                         </div>
                         <label className='registerLabel'>
                         Email: <input className='registerInput' type= 'email' value= {registerData.email} onChange= {(e) => {

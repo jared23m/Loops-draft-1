@@ -1,3 +1,6 @@
+//'http://localhost:3000/api/'
+//'https://loops-draft-1.onrender.com/api/'
+
 const API_URL = 'https://loops-draft-1.onrender.com/api/';
 
 //USERS

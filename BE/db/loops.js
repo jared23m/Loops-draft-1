@@ -473,7 +473,7 @@ async function createLoop({
     try{
       const loopWithChildren = await getLoopWithChildrenById(loopId, forkingUser);
       const currentDate = new Date();
-      const timestamp = currentDate.toLocaleString();
+      const timestamp = currentDate.toLocaleString('en-US', { timeZone: 'America/Chicago' });
 
       const relativeChordNames = loopWithChildren.relativeChords.map((relativeChord) => {
         return relativeChord.name;

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 export default function Thruline(props){
 
-    const [error, setError] = useState({message: "Loading..."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server hasn't been used recently."});
     const [thruline, setThruline] = useState([]);
     const [refresh, setRefresh] = useState(0);
 
@@ -36,7 +36,7 @@ export default function Thruline(props){
         <div className='thrulineMaster'>
             <p className='thrulineTitle'>Thruline</p>
         {error.message ?
-            <p>{error.message}</p>
+            <p className='errorMessage'>{error.message}</p>
         :
             <div className='loopList'>
                 <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
