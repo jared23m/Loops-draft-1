@@ -4,7 +4,7 @@ import UserCard from "./UserCard"
 
 export default function AllUsers(props){
 
-    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server is hasn't been used recently."});
+    const [error, setError] = useState({message: "Loading... This may take a few minutes if the server hasn't been used recently."});
     const [allUsers, setAllUsers] = useState([]);
     const [searchData, setSearchData] = useState({
         query: '',
@@ -144,7 +144,7 @@ export default function AllUsers(props){
         <div className='allUsersMaster'>
             <p className='allUsersTitle'>All Users</p>
         {error.message ?
-            <p>{error.message}</p>
+            <p className='errorMessage'>{error.message}</p>
         :
             <>
             {renderAllUsersSearchForm()}

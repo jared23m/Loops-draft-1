@@ -5,7 +5,7 @@ import TinyLoopCard from "./TinyLoopCard";
 
 export default function SingleLoop(props){
 
-    const [error, setError] = useState({message:"Loading... This may take a few minutes if the server is hasn't been used recently."});
+    const [error, setError] = useState({message:"Loading... This may take a few minutes if the server hasn't been used recently."});
     const [singleLoop, setSingleLoop] = useState({});
     const [refresh, setRefresh] = useState(0);
     const {loopId} = useParams();
@@ -176,7 +176,7 @@ export default function SingleLoop(props){
         <div className="singleLoopMaster">
             <p className='singleLoopTitle'>Loop Tree</p>
         {error.message ?
-            <p>{error.message}</p>
+            <p className='errorMessage'>{error.message}</p>
         :
             <div>
             {renderLoopWithChildren(singleLoop)}

@@ -1398,3 +1398,8 @@ img{
     width: 100%;
 }
 
+/* ERROR MESSAGE */
+
+.errorMessage{
+    margin-right: 30px;
+}
