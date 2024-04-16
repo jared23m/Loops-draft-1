@@ -31,6 +31,7 @@ export default function SingleUser(props){
         jottingsQuery: '',
         startLoops: true,
         replyLoops: true,
+        originalLoops: true,
         forkedLoops: true
     })
     const [privateSearchData, setPrivateSearchData] = useState({
@@ -38,6 +39,7 @@ export default function SingleUser(props){
         privateLoops: true,
         loopBankLoops: true,
         savedLoops: true,
+        unsavedLoops: true,
         myLoops: true,
         othersLoops: true
     })
@@ -108,7 +110,10 @@ export default function SingleUser(props){
                     })
                     initializeSavedLoops.reverse();
                     setSingleUser({...potentialSingleUser, savedLoops: true});
-                    setLoopList([...initializeLoops, ...initializeSavedLoops])
+                    const potentialLoopList = [...initializeLoops, ...initializeSavedLoops];
+                    const sortedLoopList = potentialLoopList.sort((a, b) => a.id - b.id);
+                    sortedLoopList.reverse();
+                    setLoopList([...sortedLoopList]);
                 } else {
                     setSingleUser({...potentialSingleUser, savedLoops: false});
                     setLoopList([...initializeLoops])
@@ -219,6 +224,14 @@ export default function SingleUser(props){
                         Reply Loops
                     </label>
                     <label className='searchCheck'>
+                        <input type="checkbox" value="originalLoops" checked={searchData.originalLoops} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentOriginalLoops = currentSearchData.originalLoops;
+                            setSearchData({...currentSearchData, originalLoops: !currentOriginalLoops});
+                        }}/>
+                        Original Loops
+                    </label>
+                    <label className='searchCheck'>
                         <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
                             const currentSearchData = searchData;
                             const currentForkedLoops = currentSearchData.forkedLoops;
@@ -259,6 +272,14 @@ export default function SingleUser(props){
                             setPrivateSearchData({...currentPrivateSearchData, savedLoops: !currentSavedLoops});
                         }}/>
                         Saved Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="unsavedLoops" checked={privateSearchData.unsavedLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentUnsavedLoops = currentPrivateSearchData.unsavedLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, unsavedLoops: !currentUnsavedLoops});
+                        }}/>
+                        Unsaved Loops
                         </label>
                         <label className='searchCheck'>
                         <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
@@ -375,6 +396,12 @@ export default function SingleUser(props){
                 })
             }
 
+            if (!searchData.originalLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.originalloopid != null;
+                })
+            }
+
             if (!searchData.forkedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
                     return loop.originalloopid == null;
@@ -410,6 +437,12 @@ export default function SingleUser(props){
             if (!privateSearchData.savedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
                     return !loop.savedByMe;
+                })
+            }
+
+            if (!privateSearchData.unsavedLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.savedByMe;
                 })
             }
 
