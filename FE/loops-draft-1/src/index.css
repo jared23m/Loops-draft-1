@@ -1403,3 +1403,24 @@ img{
 .errorMessage{
     margin-right: 30px;
 }
+
+/*Check ALL AND UNCHECK ALL*/
+
+.checkAllUncheckAll{
+    display: flex;
+    width: 200px;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.checkAllButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
+
+.uncheckAllButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
