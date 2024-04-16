@@ -30,6 +30,48 @@ export default function AllUsers(props){
         allUsersGet(props.token);
     }, []);
 
+
+    function handleUncheckAll(){
+        const currentSearchData = searchData;
+
+        if(props.admin){
+            setSearchData({
+                ...currentSearchData,
+                admin: false,
+                nonAdmin: false,
+                active: false,
+                notActive: false
+            })
+        } else {
+            setSearchData({
+                ...currentSearchData,
+                admin: false,
+                nonAdmin: false,
+            })
+        }
+        
+    }
+
+    function handleCheckAll(){
+        const currentSearchData = searchData;
+
+        if(props.admin){
+            setSearchData({
+                ...currentSearchData,
+                admin: true,
+                nonAdmin: true,
+                active: true,
+                notActive: true
+            })
+        } else {
+            setSearchData({
+                ...currentSearchData,
+                admin: true,
+                nonAdmin: true,
+            })
+        }
+        
+    }
     function renderAllUsersSearchForm(){
         return (
             <div>
@@ -39,6 +81,10 @@ export default function AllUsers(props){
                             setSearchData({...currentSearchData, query: e.target.value});
                             }}/>
                 </label>
+                <div className="checkAllUncheckAll">
+                    <button className='checkAllButton'onClick={handleCheckAll}>Check All</button>
+                    <button className='uncheckAllButton' onClick={handleUncheckAll}>Uncheck All</button>
+                </div>
                 <div className='checkBoxes'>
                     <label className='searchCheck'>
                         <input type="checkbox" value="admin" checked={searchData.admin} onChange={()=>{

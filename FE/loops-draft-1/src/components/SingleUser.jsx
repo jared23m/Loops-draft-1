@@ -191,6 +191,54 @@ export default function SingleUser(props){
   
     }
 
+    function handleUncheckAll(){
+        const currentSearchData = searchData;
+        setSearchData({
+            ...currentSearchData,
+            startLoops: false,
+            replyLoops: false,
+            originalLoops: false,
+            forkedLoops: false
+        })
+
+        if(singleUser.savedLoops){
+            setPrivateSearchData({
+                publicLoops: false,
+                privateLoops: false,
+                loopBankLoops: false,
+                savedLoops: false,
+                unsavedLoops: false,
+                myLoops: false,
+                othersLoops: false
+            })
+        }
+        
+    }
+
+    function handleCheckAll(){
+        const currentSearchData = searchData;
+        setSearchData({
+            ...currentSearchData,
+            startLoops: true,
+            replyLoops: true,
+            originalLoops: true,
+            forkedLoops: true
+        })
+
+        if(singleUser.savedLoops){
+            setPrivateSearchData({
+                publicLoops: true,
+                privateLoops: true,
+                loopBankLoops: true,
+                savedLoops: true,
+                unsavedLoops: true,
+                myLoops: true,
+                othersLoops: true
+            })
+        }
+        
+    }
+
     function renderUserSearchForm(){
         return (
             <div className='searchForm'>
@@ -206,6 +254,10 @@ export default function SingleUser(props){
                             setSearchData({...currentSearchData, jottingsQuery: e.target.value});
                             }}/>
                 </label>  
+                <div className="checkAllUncheckAll">
+                    <button className='checkAllButton' onClick={handleCheckAll}>Check All</button>
+                    <button className='uncheckAllButton'onClick={handleUncheckAll}>Uncheck All</button>
+                </div>
                 <div className="checkBoxes">
                     <label className='searchCheck'>
                         <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{

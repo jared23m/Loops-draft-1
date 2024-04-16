@@ -34,6 +34,30 @@ export default function AllLoops(props){
         allLoopsGet(props.token);
     }, [refresh]);
 
+    function handleUncheckAll(){
+        const currentSearchData = searchData;
+        setSearchData({
+            ...currentSearchData,
+            startLoops: false,
+            replyLoops: false,
+            originalLoops: false,
+            forkedLoops: false
+        })
+        
+    }
+
+    function handleCheckAll(){
+        const currentSearchData = searchData;
+        setSearchData({
+            ...currentSearchData,
+            startLoops: true,
+            replyLoops: true,
+            originalLoops: true,
+            forkedLoops: true
+        })
+    }
+
+    
     function renderAllLoopsSearchForm(){
         return (
             <div className='searchForm'>
@@ -49,6 +73,10 @@ export default function AllLoops(props){
                             setSearchData({...currentSearchData, jottingsQuery: e.target.value});
                             }}/>
                 </label>
+                <div className="checkAllUncheckAll">
+                    <button className='checkAllButton' onClick={handleCheckAll}>Check All</button>
+                    <button className='uncheckAllButton' onClick={handleUncheckAll}>Uncheck All</button>
+                </div>
                 <div className='checkBoxes'>
                 <label className='searchCheck'>
                     <input type="checkbox" value="startLoops" checked={searchData.startLoops} onChange={()=>{
