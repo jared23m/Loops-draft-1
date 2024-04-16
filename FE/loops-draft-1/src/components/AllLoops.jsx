@@ -13,6 +13,7 @@ export default function AllLoops(props){
         jottingsQuery: '',
         startLoops: true,
         replyLoops: true,
+        originalLoops: true,
         forkedLoops: true
     })
 
@@ -64,6 +65,14 @@ export default function AllLoops(props){
                         setSearchData({...currentSearchData, replyLoops: !currentReplyLoops});
                     }}/>
                     Reply Loops
+                </label>
+                <label className='searchCheck'>
+                        <input type="checkbox" value="originalLoops" checked={searchData.originalLoops} onChange={()=>{
+                            const currentSearchData = searchData;
+                            const currentOriginalLoops = currentSearchData.originalLoops;
+                            setSearchData({...currentSearchData, originalLoops: !currentOriginalLoops});
+                        }}/>
+                        Original Loops
                 </label>
                 <label className='searchCheck'>
                     <input type="checkbox" value="forkedLoops" checked={searchData.forkedLoops} onChange={()=>{
@@ -170,6 +179,12 @@ export default function AllLoops(props){
                 })
             }
 
+            if (!searchData.originalLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.originalloopid != null;
+                })
+            }
+            
             if (!searchData.forkedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
                     return loop.originalloopid == null;
