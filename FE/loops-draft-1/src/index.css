@@ -1424,3 +1424,24 @@ img{
     border: 1px solid antiquewhite;
     border-radius: 5px;
 }
+
+/*ACCESS*/
+
+.allowAccessLoopCardButton{
+    margin-right: auto;
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.accessMaster{
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px){
+    .accessMaster{
+        margin-top: 150px;
+    }
+}

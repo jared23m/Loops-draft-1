@@ -13,6 +13,7 @@ import Thruline from './components/Thruline'
 import NavBar from './components/NavBar'
 import LoopBank from './components/LoopBank'
 import Home from './components/Home'
+import Access from './components/Access'
 
 function App() {
 
@@ -87,6 +88,10 @@ function App() {
     <Route
       path="/thruline/:loopId"
       element={<Thruline token={token} admin={admin} accountId={accountId}/>}
+      ></Route>
+    <Route
+      path="/access/:loopId"
+      element={<Access token={token} admin={admin} accountId={accountId}/>}
       ></Route>
     </Routes>
     </>
