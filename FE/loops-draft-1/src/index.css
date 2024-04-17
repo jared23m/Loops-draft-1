@@ -1445,3 +1445,66 @@ img{
         margin-top: 150px;
     }
 }
+
+.accessListAndUserList{
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 30px;
+    gap: 1rem;
+}
+
+.accessList{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.accessUserList{
+    display: flex;
+    flex-direction: column;
+}
+.userAccessCard1{
+    display: flex;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 300px;
+    justify-content: space-between;
+}
+
+.userAccessCard2{
+    display: flex;
+    margin-bottom: 20px;
+    width: 300px;
+    justify-content: space-between;
+}
+
+.reverseOrderButtonAccess{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    margin-right: auto;
+}
+
+.submitAccessButton{
+    padding: 10px;
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+    background-color: green;
+    margin-right: auto;
+}
+
+.accessTitle{
+    font-size: 400%;
+    margin-bottom: 20px;
+}
+
+.grantAccessButton{
+    border: 1px solid antiquewhite;
+    border-radius: 5px;
+}
+
+.accessSearch{
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+}

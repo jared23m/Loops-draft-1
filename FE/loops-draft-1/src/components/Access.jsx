@@ -11,6 +11,7 @@ export default function Access(props){
     const [fetched, setFetched] = useState(0);
     const {loopId} = useParams();
     const navigate = useNavigate();
+    const [searchData, setSearchData] = useState({query: ''});
 
     useEffect(()=>{
         async function allUsersGet(token){
@@ -119,36 +120,79 @@ export default function Access(props){
         }
     }
 
+    function renderAccessSearchForm(){
+        return(
+        <label className='accessSearch'>
+                Search By Username: <input className='allUsersSearchInput' type= 'text' value= {searchData.query} onChange= {(e) => {
+                            const currentSearchData = searchData;
+                            setSearchData({...currentSearchData, query: e.target.value});
+                            }}/>
+        </label>
+        )
+    }
+
+    useEffect(()=>{
+        if (allUsers){
+            let currentVisibleUsers = allUsers;
+
+            if (!searchData.query == ''){
+                const includesQuery = currentVisibleUsers.filter((user)=>{
+                    return user.username.toLowerCase().includes(searchData.query.toLowerCase());
+                })
+
+                const startsWithQuery = includesQuery.filter((user)=>{
+                    return user.username.toLowerCase().startsWith(searchData.query.toLowerCase());
+                })
+
+
+                const includesButDoesNotStartWith = includesQuery.filter((includesUser) =>{
+                    const found = startsWithQuery.find((startsWithUser) => {
+                        return includesUser.id == startsWithUser.id;
+                    })
+
+                    return !found;
+                })
+
+                currentVisibleUsers = [...startsWithQuery, ...includesButDoesNotStartWith];
+            }
+
+            setVisibleUsers(currentVisibleUsers);
+        }
+    }, [allUsers, searchData]);
+
     return (
         <div className='accessMaster'>
             <p className='accessTitle'>Allow Access</p>
         {error.message ?
             <p className='errorMessage'>{error.message}</p>
         :
-            <>
-            <button onClick={handleAccessSubmit}>Submit Changes</button>
-            <p>Allowing Access For:</p>
-            {accessList.map((user)=>{
-                return (
-                    <div key={user.id}>
-                        <p>{user.username}</p>
-                        <button onClick={()=>handleRemoveAccess(user.id)}>Remove Access</button>
-                    </div>
-                )
-            })}
-            <div className='accessUserList'>
-                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
-                {visibleUsers.map((user)=>{
-                    return (
-                        <div key={user.id}>
-                            <p>{user.username}</p>
-                            <button onClick={()=>handleGiveAccess(user.id)}>Give Access</button>
-                        </div>
-                    )
-                })}
-                <button className='reverseOrderButton'onClick={handleReverseOrder}>Reverse Order</button>
+            <div className='accessListAndUserList'>
+                <div className='accessList'>
+                    <button className='submitAccessButton'onClick={handleAccessSubmit}>Submit Changes</button>
+                    <p>Allowing Access For:</p>
+                    {accessList.map((user)=>{
+                        return (
+                            <div className='userAccessCard2' key={user.id}>
+                                <p>{user.username}</p>
+                                <button className='grantAccessButton'onClick={()=>handleRemoveAccess(user.id)}>Remove Access</button>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className='accessUserList'>
+                    {renderAccessSearchForm()}
+                    <button className='reverseOrderButtonAccess'onClick={handleReverseOrder}>Reverse Order</button>
+                    {visibleUsers.map((user)=>{
+                        return (
+                            <div className='userAccessCard1'key={user.id}>
+                                <p>{user.username}</p>
+                                <button className='grantAccessButton' onClick={()=>handleGiveAccess(user.id)}>Give Access</button>
+                            </div>
+                        )
+                    })}
+                    <button className='reverseOrderButtonAccess'onClick={handleReverseOrder}>Reverse Order</button>
+                </div>
             </div>
-            </>
         }
         </div>
     )
