@@ -204,7 +204,7 @@ export default function LoopCard(props){
                 }
             </div>
             {(props.loop.status == 'private' && props.loop.userid == props.accountId) &&
-                    <button className='allowAccessLoopCardButton' onClick={()=>navigate(`/access/${props.loop.id}`)}>Allow Other Users to Access</button>
+                    <button className='allowAccessLoopCardButton' onClick={()=>navigate(`/access/${props.loop.id}`)}>Allow Access</button>
             }
             {props.loop.status != 'loopBank' &&
             <div className='TLAndSL'>
