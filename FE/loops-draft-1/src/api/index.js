@@ -363,6 +363,48 @@ export async function fetchSaveLoopPost(token, loopId){
     }
 }
 
+//ACCESS
+
+export async function fetchAccessGet(token, loopId){
+    try{
+        const response = await fetch(`${API_URL}access/${loopId}`, 
+        { 
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        return error;
+    }
+}
+
+export async function fetchAccessPost(token, loopId, userArr){
+    try{
+            const response = await fetch(`${API_URL}access/${loopId}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    userArr
+                })
+            });
+            const json = await response.json();
+            return json;
+    } catch (error){
+            return (error);
+    }
+}
+
+
+
+
+
 
 
 
