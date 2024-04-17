@@ -19,7 +19,8 @@ const {
 const {
   keySigNames,
   relativeChordNameOptions,
-  alphabetWithSpaces
+  alphabetWithSpaces,
+  client
 } = require("../db/index");
 
 loopsRouter.post("/", requireUser, async (req, res, next) => {
@@ -157,11 +158,23 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       });
       return
     } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
-      next({
-        name: "PrivateLoopError",
-        message: `This loop is private, or a reply to a private loop. You can only reply to it if you are the creator. `
-      });
-      return
+      const {rows: [accessGiven]} = await client.query(
+        `
+        SELECT id
+        FROM access
+        WHERE userId = $1 AND loopId = $2
+        `,
+        [userId, loopInQuestion.id]
+      )
+
+      if (!(accessGiven && accessGiven.length > 0)){
+        next({
+          name: "PrivateLoopError",
+          message: `This loop is private, or a reply to a private loop. You can only reply to it if you are the creator. `
+        });
+        return
+      }
+      
     }
 
     body.parentLoopId = loopId;
@@ -290,11 +303,23 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
             });
             return
           } else if (startLoop.status == 'private' && startLoop.userid != userId){
-            next({
-              name: "InvalidCredentials",
-              message: `This loop's start loop is currently private and not your own. You cannot edit this.`
-            });
-            return
+            const {rows: [accessGiven]} = await client.query(
+              `
+              SELECT id
+              FROM access
+              WHERE userId = $1 AND loopId = $2
+              `,
+              [userId, startLoop.id]
+            )
+      
+            if (!(accessGiven && accessGiven.length > 0)){
+              next({
+                name: "InvalidCredentials",
+                message: `This loop's start loop is currently private and not your own. You cannot edit this.`
+              });
+              return
+            }
+            
           }else if ((newBody.status || newBody.title) && potentialLoop.status == 'reply'){
             next({
                 name: "LoopStatusInvalid",
@@ -439,11 +464,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         });
         return
       } else if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
-        next({
-          name: "LoopStatusError",
-          message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
-        });
-        return
+        const {rows: [accessGiven]} = await client.query(
+          `
+          SELECT id
+          FROM access
+          WHERE userId = $1 AND loopId = $2
+          `,
+          [reqUserId, loopId]
+        )
+  
+        if (!(accessGiven && accessGiven.length > 0)){
+          next({
+            name: "LoopStatusError",
+            message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
+          });
+          return
+        }
       }
       let loop;
       if (req.user){
@@ -476,11 +512,22 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         return
       }
       if ((!req.user || !req.user.admin) && (loopInQuestion.status == 'private' && reqUserId != loopInQuestion.userid)){
-        next({
-          name: "LoopStatusError",
-          message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
-        });
-        return
+        const {rows: [accessGiven]} = await client.query(
+          `
+          SELECT id
+          FROM access
+          WHERE userId = $1 AND loopId = $2
+          `,
+          [reqUserId, loopInQuestion.id]
+        )
+  
+        if (!(accessGiven && accessGiven.length > 0)){
+          next({
+            name: "LoopStatusError",
+            message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
+          });
+          return
+        }
       } 
       let thruline;
       if (req.user){
@@ -514,11 +561,23 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       }
 
       if (!req.user.admin && (startLoop.status == 'private' && startLoop.userid != req.user.id)){
-        next({
-          name: "InvalidCredentials",
-           message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
-        });
-        return
+
+        const {rows: [accessGiven]} = await client.query(
+          `
+          SELECT id
+          FROM access
+          WHERE userId = $1 AND loopId = $2
+          `,
+          [req.user.id, startLoop.id]
+        )
+  
+        if (!(accessGiven && accessGiven.length > 0)){
+          next({
+            name: "InvalidCredentials",
+             message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
+          });
+          return
+        }
       }
 
       if (!req.user.admin && !loopIsLonely){
@@ -564,12 +623,23 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       });
       return
     } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
-      next({
-        name: "PrivateLoopError",
-        message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
-      });
-      return
-    } 
+      const {rows: [accessGiven]} = await client.query(
+        `
+        SELECT id
+        FROM access
+        WHERE userId = $1 AND loopId = $2
+        `,
+        [userId, loopInQuestion.id]
+      )
+
+      if (!(accessGiven && accessGiven.length > 0)){
+        next({
+          name: "PrivateLoopError",
+          message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
+        });
+        return
+      }
+    }
 
     if (!(body.status && (body.status == 'public' || body.status == 'private'))){
       next({

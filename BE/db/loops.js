@@ -304,6 +304,7 @@ async function createLoop({
 
   async function getAllPublicLoopsWithChords(reqUserId = null){
     try {
+
       const {rows: loopIds} = await client.query(
         `
         SELECT id
@@ -323,7 +324,30 @@ async function createLoop({
 
       )
 
-      return publicLoopsWithChords;
+      let joinedLoops = publicLoopsWithChords;
+
+      if (reqUserId){
+        const {rows: accessedLoops} = await client.query(
+          `
+          SELECT loopId
+          FROM access
+          WHERE userId = $1
+          `,
+          [reqUserId]
+        );
+
+        const accessedLoopsWithChords = await Promise.all(
+          accessedLoops.map((id)=>{
+            return getLoopWithChordsAndStartById(id.loopid, reqUserId);
+          })
+        )
+
+        joinedLoops = [...publicLoopsWithChords, ...accessedLoopsWithChords];
+      }
+
+      const sortedJoinedLoops = joinedLoops.sort((a, b) => a.id - b.id);
+    
+      return sortedJoinedLoops;
 
     } catch (error){
       throw (error);

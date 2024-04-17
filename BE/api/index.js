@@ -50,6 +50,9 @@ apiRouter.use("/loops", loopsRouter);
 const savesRouter = require("./saves");
 apiRouter.use("/saves", savesRouter);
 
+const accessRouter = require("./access");
+apiRouter.use("/access", accessRouter);
+
 apiRouter.use((error, req, res, next) => {
   res.send(error);
 });

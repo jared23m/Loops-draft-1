@@ -108,10 +108,34 @@ async function createUser({ email, password, username, admin }) {
         })
       )
 
-      return {
-        ...userInfo,
-        loops: loopsWithChords,
-        savedLoops: savedLoopsWithChords
+      if (reqUserId){
+        const {rows: accessedLoops} = await client.query(
+          `
+          SELECT loopId
+          FROM access
+          WHERE userId = $1
+          `,
+          [reqUserId]
+        );
+
+        const accessedLoopsWithChords = await Promise.all(
+          accessedLoops.map((id)=>{
+            return getLoopWithChordsAndStartById(id.loopid, reqUserId);
+          })
+        )
+
+        return {
+          ...userInfo,
+          loops: loopsWithChords,
+          savedLoops: savedLoopsWithChords,
+          accessedLoops: accessedLoopsWithChords
+        }
+      } else {
+        return {
+          ...userInfo,
+          loops: loopsWithChords,
+          savedLoops: savedLoopsWithChords
+        }
       }
       
     } catch (error){
