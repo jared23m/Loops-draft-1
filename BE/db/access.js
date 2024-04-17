@@ -68,11 +68,35 @@ const { getLoopRowById, getStartLoopRowById } = require('./loops');
         throw (error);
     }
   }
+
+  async function getUserIdsThatHaveAccess(loopId){
+    try {
+
+      const {rows: users} = await client.query(
+          `
+          SELECT userId
+          FROM access
+          WHERE loopId = $1
+        `,
+        [loopId]
+        );
+
+      const userIds = users.map((user)=>{
+        return user.userid;
+      })
+      
+      return userIds;
+
+  } catch (error){
+      throw (error);
+  }
+  }
   
 
   
   module.exports = {
     updateAccess,
     grantAccess,
-    getAllAccess
+    getAllAccess,
+    getUserIdsThatHaveAccess
   }

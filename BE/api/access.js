@@ -7,7 +7,7 @@ const { client } = require("../db");
 const {
     getLoopRowById
 } = require("../db/loops");
-const { updateAccess } = require("../db/access");
+const { updateAccess, getUserIdsThatHaveAccess} = require("../db/access");
 
 
 accessRouter.post("/:loopId", requireUser, async (req, res, next) => {
@@ -37,6 +37,38 @@ accessRouter.post("/:loopId", requireUser, async (req, res, next) => {
         const accessUpdated = await updateAccess(loopId, userArr);
 
         res.send(accessUpdated);
+
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  accessRouter.get("/:loopId", requireUser, async (req, res, next) => {
+    const userId = req.user.id;
+    const {loopId} = req.params;
+
+    try{
+          const loopInQuestion = await getLoopRowById(loopId);
+
+          if (loopInQuestion.status != 'private'){
+            next({
+                name: "LoopStatusError",
+                message: "You cannot see who has access to this loop because its status is something other than private."
+              });
+              return
+          }
+
+          if (userId != loopInQuestion.userid){
+            next({
+                name: "LoopStatusError",
+                message: "You cannot see who has access to this loop because it is a private loop that isn't yours."
+              });
+              return
+          }
+
+        const userIdsThatHaveAccess = await getUserIdsThatHaveAccess(loopId);
+
+        res.send(userIdsThatHaveAccess);
 
     } catch (err) {
       next(err);
