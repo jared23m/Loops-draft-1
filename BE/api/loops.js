@@ -167,7 +167,9 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         [userId, loopInQuestion.id]
       )
 
-      if (!(accessGiven && accessGiven.length > 0)){
+      console.log(accessGiven);
+
+      if (!(accessGiven)){
         next({
           name: "PrivateLoopError",
           message: `This loop is private, or a reply to a private loop. You can only reply to it if you are the creator. `
@@ -312,7 +314,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               [userId, startLoop.id]
             )
       
-            if (!(accessGiven && accessGiven.length > 0)){
+            if (!(accessGiven)){
               next({
                 name: "InvalidCredentials",
                 message: `This loop's start loop is currently private and not your own. You cannot edit this.`
@@ -473,7 +475,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           [reqUserId, loopId]
         )
   
-        if (!(accessGiven && accessGiven.length > 0)){
+        if (!(accessGiven)){
           next({
             name: "LoopStatusError",
             message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
@@ -521,7 +523,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           [reqUserId, loopInQuestion.id]
         )
   
-        if (!(accessGiven && accessGiven.length > 0)){
+        if (!(accessGiven)){
           next({
             name: "LoopStatusError",
             message: "You cannot get this loop from this endpoint because it is a private loop that you do not own."
@@ -571,7 +573,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           [req.user.id, startLoop.id]
         )
   
-        if (!(accessGiven && accessGiven.length > 0)){
+        if (!(accessGiven)){
           next({
             name: "InvalidCredentials",
              message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
@@ -632,7 +634,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         [userId, loopInQuestion.id]
       )
 
-      if (!(accessGiven && accessGiven.length > 0)){
+      if (!(accessGiven)){
         next({
           name: "PrivateLoopError",
           message: `This loop is private, or a reply to a private loop. You can only fork it if you are the creator. `
