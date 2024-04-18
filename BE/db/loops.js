@@ -677,5 +677,6 @@ async function createLoop({
     getLoopIsLonely,
     getAllLoopsWithChords,
     getLoopWithChordsAndStartById,
-    getLoopBankByUser
+    getLoopBankByUser,
+    getLoopWithChildrenInArray
   }
