@@ -162,7 +162,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
         `
         SELECT id
         FROM access
-        WHERE userId = $1 AND loopId = $2
+        WHERE userId = $1 AND loopId = $2;
         `,
         [userId, loopInQuestion.id]
       )
@@ -309,12 +309,17 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
               `
               SELECT id
               FROM access
-              WHERE userId = $1 AND loopId = $2
+              WHERE userId = $1 AND loopId = $2;
               `,
               [userId, startLoop.id]
             )
       
-            if (!(accessGiven)){
+            if (accessGiven && userId != potentialLoop.userid){
+              next({
+                name: "InvalidCredentials",
+                message: `This loop is not your own. You cannot edit this.`
+              });
+            } else if (!accessGiven){
               next({
                 name: "InvalidCredentials",
                 message: `This loop's start loop is currently private and not your own. You cannot edit this.`
@@ -470,7 +475,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           `
           SELECT id
           FROM access
-          WHERE userId = $1 AND loopId = $2
+          WHERE userId = $1 AND loopId = $2;
           `,
           [reqUserId, loopId]
         )
@@ -518,7 +523,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           `
           SELECT id
           FROM access
-          WHERE userId = $1 AND loopId = $2
+          WHERE userId = $1 AND loopId = $2;
           `,
           [reqUserId, loopInQuestion.id]
         )
@@ -568,18 +573,24 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
           `
           SELECT id
           FROM access
-          WHERE userId = $1 AND loopId = $2
+          WHERE userId = $1 AND loopId = $2;
           `,
           [req.user.id, startLoop.id]
         )
   
-        if (!(accessGiven)){
+        if (accessGiven && req.user.id != aboutToDestroy.userid){
           next({
             name: "InvalidCredentials",
-             message: `You cannot delete from a private loop tree that isn't yours, even if you created the reply loop.`
+            message: `This loop is not your own. You cannot delete this.`
+          });
+        } else if (!accessGiven){
+          next({
+            name: "InvalidCredentials",
+            message: `This loop's start loop is currently private and not your own. You cannot delete this.`
           });
           return
         }
+
       }
 
       if (!req.user.admin && !loopIsLonely){
@@ -606,7 +617,7 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
     const { body } = req;
 
     try {
-    
+
       const loopInQuestion = await getStartLoopRowById(loopId);
 
       if(!body.title){
@@ -617,21 +628,21 @@ loopsRouter.post("/", requireUser, async (req, res, next) => {
       return
       }
   
-  
     if (loopInQuestion.status == 'loopBank'){
       next({
         name: "LoopBankError",
         message: `This loop is a loopBank loop. You cannot fork it, even if you are the creator.`
       });
       return
-    } else if (loopInQuestion.status == "private" && userId != loopInQuestion.userid) {
+    } else if (loopInQuestion.status == "private" && forkingUser != loopInQuestion.userid) {
+      console.log('here');
       const {rows: [accessGiven]} = await client.query(
         `
         SELECT id
         FROM access
-        WHERE userId = $1 AND loopId = $2
+        WHERE userId = $1 AND loopId = $2;
         `,
-        [userId, loopInQuestion.id]
+        [forkingUser, loopInQuestion.id]
       )
 
       if (!(accessGiven)){
