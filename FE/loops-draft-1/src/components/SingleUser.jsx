@@ -90,7 +90,6 @@ export default function SingleUser(props){
                 setError(potentialSingleUser);
             } else if (potentialSingleUser){
                 let initializeLoops = potentialSingleUser.loops;
-                initializeLoops.reverse();
 
                 if (potentialSingleUser.savedLoops){
                     let initializeSavedLoops = potentialSingleUser.savedLoops;
@@ -108,9 +107,25 @@ export default function SingleUser(props){
                         }
 
                     })
-                    initializeSavedLoops.reverse();
+
+                    let initializeAccessedLoops = potentialSingleUser.accessedLoops;
+                    initializeAccessedLoops.forEach((loop)=>{
+                        loop['accessedByMe'] = true;
+                    })
+                    initializeAccessedLoops.forEach((loop, index)=>{
+                        const matchingIndex = initializeSavedLoops.findIndex((savedLoop) =>{
+                            return savedLoop.id == loop.id;
+                        })
+
+                        if(matchingIndex != (-1)){
+                            initializeAccessedLoops[index]['savedByMe'] = true;
+                            initializeSavedLoops.splice(matchingIndex, 1);
+                        }
+
+                    })
                     setSingleUser({...potentialSingleUser, savedLoops: true});
-                    const potentialLoopList = [...initializeLoops, ...initializeSavedLoops];
+                    const potentialLoopList = [...initializeLoops, ...initializeSavedLoops, ...initializeAccessedLoops];
+                    console.log(potentialLoopList);
                     const sortedLoopList = potentialLoopList.sort((a, b) => a.id - b.id);
                     sortedLoopList.reverse();
                     setLoopList([...sortedLoopList]);

@@ -128,7 +128,7 @@ async function createUser({ email, password, username, admin }) {
           ...userInfo,
           loops: loopsWithChords,
           savedLoops: savedLoopsWithChords,
-          accessedLoops: accessedLoopsWithChords
+          accessedLoops: accessedLoopsWithChords.flat(Infinity)
         }
       } else {
         return {
