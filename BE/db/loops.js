@@ -338,11 +338,12 @@ async function createLoop({
 
         const accessedLoopsWithChords = await Promise.all(
           accessedLoops.map((id)=>{
-            return getLoopWithChordsAndStartById(id.loopid, reqUserId);
+            return getLoopWithChildrenInArray(id.loopid, reqUserId);
           })
         )
 
         joinedLoops = [...publicLoopsWithChords, ...accessedLoopsWithChords];
+        joinedLoops = joinedLoops.flat(Infinity);
       }
 
       const sortedJoinedLoops = joinedLoops.sort((a, b) => a.id - b.id);
@@ -354,6 +355,35 @@ async function createLoop({
     }
   }
 
+  async function getLoopWithChildrenInArray(loopId, reqUserId){
+    try {
+      const {rows: childrenIds} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE parentLoopId = $1
+        `,
+        [loopId]
+      );
+
+      const chordsAndStart = await getLoopWithChordsAndStartById(loopId, reqUserId);
+      let returnArr = [chordsAndStart];
+
+      if (childrenIds.length > 0){
+        const children = await Promise.all(
+          childrenIds.map((childId) =>{
+            return getLoopWithChildrenInArray(childId.id, reqUserId);
+          })
+        );
+
+        returnArr = [chordsAndStart, ...children];
+      }
+
+      return returnArr;
+    } catch (error){
+      throw error;
+    }
+  }
 
   async function getAllLoopsWithChords(reqUserId = null){
     try {
