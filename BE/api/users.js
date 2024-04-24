@@ -205,7 +205,38 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     if (req.user && (req.user.id == userId || req.user.admin)) {
-      user = await getPrivateUserPageById(userId, req.user.id);
+      const loggedInUser = await getPrivateUserPageById(userId, req.user.id);
+      if (loggedInUser.savedLoops){
+        const arrays = [loggedInUser.loops, loggedInUser.savedLoops, loggedInUser.accessedLoops];
+        const mergedArray = arrays.reduce((acc, curr) => {
+          curr.forEach(loop => {
+            if (!acc.ids[loop.id]) {
+              acc.ids[loop.id] = true;
+              acc.result.push(loop);
+            }
+          });
+          return acc;
+        }, { ids: {}, result: [] }).result;
+    
+        mergedArray.forEach((loop) => {
+          const foundAccessed = loggedInUser.accessedLoops.find((accessedLoop)=>{
+            accessedLoop.id == loop.id
+          })
+    
+          if (foundAccessed){
+            loop['accessedByMe'] = true;
+          }
+        })
+    
+        console.log('merged',mergedArray);
+    
+        loggedInUser.loops = mergedArray;
+        loggedInUser.savedLoops = true;
+        delete loggedInUser.accessedLoops;
+      }
+
+      user = loggedInUser;
+
     } else if (req.user) {
       user = await getPublicUserPageById(userId, req.user.id);
     } else {

@@ -324,31 +324,9 @@ async function createLoop({
 
       )
 
-      let joinedLoops = publicLoopsWithChords;
-
-      if (reqUserId){
-        const {rows: accessedLoops} = await client.query(
-          `
-          SELECT loopId
-          FROM access
-          WHERE userId = $1
-          `,
-          [reqUserId]
-        );
-
-        const accessedLoopsWithChords = await Promise.all(
-          accessedLoops.map((id)=>{
-            return getLoopWithChildrenInArray(id.loopid, reqUserId);
-          })
-        )
-
-        joinedLoops = [...publicLoopsWithChords, ...accessedLoopsWithChords];
-        joinedLoops = joinedLoops.flat(Infinity);
-      }
-
-      const sortedJoinedLoops = joinedLoops.sort((a, b) => a.id - b.id);
+      const sortedLoops = publicLoopsWithChords.sort((a, b) => a.id - b.id);
     
-      return sortedJoinedLoops;
+      return sortedLoops;
 
     } catch (error){
       throw (error);

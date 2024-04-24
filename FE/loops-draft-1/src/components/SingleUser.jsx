@@ -89,51 +89,10 @@ export default function SingleUser(props){
             if (potentialSingleUser && potentialSingleUser.message){
                 setError(potentialSingleUser);
             } else if (potentialSingleUser){
-                let initializeLoops = potentialSingleUser.loops;
-
-                if (potentialSingleUser.savedLoops){
-                    let initializeSavedLoops = potentialSingleUser.savedLoops;
-                    initializeSavedLoops.forEach((loop)=>{
-                        loop['savedByMe'] = true;
-                    })
-                    initializeLoops.forEach((loop, index)=>{
-                        const matchingIndex = initializeSavedLoops.findIndex((savedLoop) =>{
-                            return savedLoop.id == loop.id;
-                        })
-
-                        if(matchingIndex != (-1)){
-                            initializeLoops[index]['savedByMe'] = true;
-                            initializeSavedLoops.splice(matchingIndex, 1);
-                        }
-
-                    })
-
-                    let initializeAccessedLoops = potentialSingleUser.accessedLoops;
-                    initializeAccessedLoops.forEach((loop)=>{
-                        loop['accessedByMe'] = true;
-                    })
-                    initializeAccessedLoops.forEach((loop, index)=>{
-                        const matchingIndex = initializeSavedLoops.findIndex((savedLoop) =>{
-                            return savedLoop.id == loop.id;
-                        })
-
-                        if(matchingIndex != (-1)){
-                            initializeAccessedLoops[index]['savedByMe'] = true;
-                            initializeSavedLoops.splice(matchingIndex, 1);
-                        }
-
-                    })
-                    setSingleUser({...potentialSingleUser, savedLoops: true});
-                    const potentialLoopList = [...initializeLoops, ...initializeSavedLoops, ...initializeAccessedLoops];
-                    console.log(potentialLoopList);
-                    const sortedLoopList = potentialLoopList.sort((a, b) => a.id - b.id);
-                    sortedLoopList.reverse();
-                    setLoopList([...sortedLoopList]);
-                } else {
-                    setSingleUser({...potentialSingleUser, savedLoops: false});
-                    setLoopList([...initializeLoops])
-                }
-
+                setSingleUser({...potentialSingleUser});  
+                const sortedLoopList = potentialSingleUser.loops.sort((a, b) => a.id - b.id);
+                sortedLoopList.reverse();
+                setLoopList([...sortedLoopList]);
                 setError({message: null});
             } else {
                 setError({message: "Unable to fetch data."});
@@ -503,13 +462,13 @@ export default function SingleUser(props){
 
             if (!privateSearchData.savedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
-                    return !loop.savedByMe;
+                    return !loop.saved;
                 })
             }
 
             if (!privateSearchData.unsavedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
-                    return loop.savedByMe;
+                    return loop.saved;
                 })
             }
 
