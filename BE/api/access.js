@@ -18,6 +18,31 @@ accessRouter.post("/:loopId", requireUser, async (req, res, next) => {
     try{
           const loopInQuestion = await getLoopRowById(loopId);
 
+         const foundSelf = userArr.find((userArrId)=>{
+           return userArrId == userId;
+          })
+
+          if (foundSelf){
+            next({
+              name: "SelfIdError",
+              message: "You cannot give access to to yourself."
+            });
+            return
+          }
+          
+
+        function hasDuplicates(arr) {
+            return new Set(arr).size !== arr.length;
+        }
+        
+        if (hasDuplicates(userArr)){
+          next({
+            name: "DuplicatesError",
+            message: "The access list has duplicate user ids."
+          });
+          return
+        }
+        
           if (loopInQuestion.status != 'private'){
             next({
                 name: "LoopStatusError",
