@@ -1508,3 +1508,13 @@ img{
     display: flex;
     flex-direction: column;
 }
+
+@media only screen and (min-width: 541px){
+    .accessList{
+        position: fixed;
+    }
+
+    .accessUserList{
+        margin-left: 300px;
+    }
+}
