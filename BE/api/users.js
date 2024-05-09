@@ -217,8 +217,6 @@ usersRouter.get("/:userId/", async (req, res, next) => {
           });
           return acc;
         }, { ids: {}, result: [] }).result;
-
-        console.log('accessedLoops', loggedInUser.accessedLoops);
     
         mergedArray.forEach((loop) => {
           const foundAccessed = loggedInUser.accessedLoops.find((accessedLoop)=>{
@@ -230,7 +228,6 @@ usersRouter.get("/:userId/", async (req, res, next) => {
           }
         })
     
-        console.log('merged',mergedArray);
     
         loggedInUser.loops = mergedArray;
         loggedInUser.savedLoops = true;

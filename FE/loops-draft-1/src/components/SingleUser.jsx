@@ -350,10 +350,6 @@ export default function SingleUser(props){
 
 
     useEffect(()=>{
-        console.log(loopList);
-    }, [loopList]);
-    
-    useEffect(()=>{
         if (loopList){
             let currentVisibleLoops = loopList;
 
