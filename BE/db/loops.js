@@ -304,6 +304,7 @@ async function createLoop({
 
   async function getAllPublicLoopsWithChords(reqUserId = null){
     try {
+
       const {rows: loopIds} = await client.query(
         `
         SELECT id
@@ -323,13 +324,44 @@ async function createLoop({
 
       )
 
-      return publicLoopsWithChords;
+      const sortedLoops = publicLoopsWithChords.sort((a, b) => a.id - b.id);
+    
+      return sortedLoops;
 
     } catch (error){
       throw (error);
     }
   }
 
+  async function getLoopWithChildrenInArray(loopId, reqUserId){
+    try {
+      const {rows: childrenIds} = await client.query(
+        `
+        SELECT id
+        FROM loops
+        WHERE parentLoopId = $1
+        `,
+        [loopId]
+      );
+
+      const chordsAndStart = await getLoopWithChordsAndStartById(loopId, reqUserId);
+      let returnArr = [chordsAndStart];
+
+      if (childrenIds.length > 0){
+        const children = await Promise.all(
+          childrenIds.map((childId) =>{
+            return getLoopWithChildrenInArray(childId.id, reqUserId);
+          })
+        );
+
+        returnArr = [chordsAndStart, ...children];
+      }
+
+      return returnArr;
+    } catch (error){
+      throw error;
+    }
+  }
 
   async function getAllLoopsWithChords(reqUserId = null){
     try {
@@ -623,5 +655,6 @@ async function createLoop({
     getLoopIsLonely,
     getAllLoopsWithChords,
     getLoopWithChordsAndStartById,
-    getLoopBankByUser
+    getLoopBankByUser,
+    getLoopWithChildrenInArray
   }

@@ -80,6 +80,20 @@ export default function Home(){
             You could think of this as one song, one of potentially hundreds or even thousands of songs 
             created from one single loop tree.
             </p>
+            <p>
+            If you own a private loop tree, you can allow others to access the loop tree by clicking on the 
+            "Allow Access" button. Only you and the people you give access to can view and reply to the loops
+            in the loop tree. This is perfect for if you have a secret project that you only want a few other
+            users to know about.
+            </p>
+            <div className='getStarted'>
+            <p>To get started:</p>
+            <div className='homeLogInSignUp'>
+            <button className='homeLogIn'type='button' onClick={()=> navigate('/login')}>Log In</button>
+            <p>or</p>
+            <button className='homeSignUp'type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+            </div>
+            </div>
         </div>
     )
 }

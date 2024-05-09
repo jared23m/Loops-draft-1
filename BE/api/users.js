@@ -79,14 +79,6 @@ usersRouter.post("/register", async (req, res, next) => {
       return
     }
 
-    if (!lettersAndNumbers(username)){
-      next({
-        name: "UsernameInvalid",
-        message: "Usernames can only have letters and numbers.",
-      });
-      return
-    }
-
     const user = await getUserRowByUsername(username);
     if (user) {
       next({
@@ -205,7 +197,37 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     if (req.user && (req.user.id == userId || req.user.admin)) {
-      user = await getPrivateUserPageById(userId, req.user.id);
+      const loggedInUser = await getPrivateUserPageById(userId, req.user.id);
+      if (loggedInUser.savedLoops){
+        const arrays = [loggedInUser.loops, loggedInUser.savedLoops, loggedInUser.accessedLoops];
+        const mergedArray = arrays.reduce((acc, curr) => {
+          curr.forEach(loop => {
+            if (!acc.ids[loop.id]) {
+              acc.ids[loop.id] = true;
+              acc.result.push(loop);
+            }
+          });
+          return acc;
+        }, { ids: {}, result: [] }).result;
+    
+        mergedArray.forEach((loop) => {
+          const foundAccessed = loggedInUser.accessedLoops.find((accessedLoop)=>{
+            return accessedLoop.id == loop.id;
+          })
+    
+          if (foundAccessed){
+            loop['accessedByMe'] = true;
+          }
+        })
+    
+    
+        loggedInUser.loops = mergedArray;
+        loggedInUser.savedLoops = true;
+        delete loggedInUser.accessedLoops;
+      }
+
+      user = loggedInUser;
+
     } else if (req.user) {
       user = await getPublicUserPageById(userId, req.user.id);
     } else {
@@ -358,14 +380,7 @@ usersRouter.patch("/:userId/", requireUser, async (req, res, next) => {
       });
       return
     }
-
-    if (newBody.username && !lettersAndNumbers(newBody.username)){
-      next({
-        name: "UsernameInvalid",
-        message: "Usernames can only have letters and numbers.",
-      });
-      return
-    }
+    
     if (newBody.username){
       const user = await getUserRowByUsername(newBody.username);
       if (user && user.id != req.user.id) {

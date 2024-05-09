@@ -29,11 +29,22 @@ savesRouter.post("/:loopId", requireUser, async (req, res, next) => {
           }
 
           if (startLoop.status == 'private' && userId != startLoop.userid){
-            next({
-                name: "LoopStatusError",
-                message: "You cannot save this loop because its start loop is a private loop that isn't yours."
+            const {rows: [accessGiven]} = await client.query(
+              `
+              SELECT id
+              FROM access
+              WHERE userId = $1 AND loopId = $2;
+              `,
+              [userId, startLoop.id]
+            )
+      
+            if (!(accessGiven)){
+              next({
+                name: "PrivateLoopError",
+                message: `This loop is private, or a reply to a private loop. You can only save it if you are the creator. `
               });
               return
+            }
 
           }
 

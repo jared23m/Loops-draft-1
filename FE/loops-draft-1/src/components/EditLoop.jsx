@@ -517,13 +517,13 @@ export default function EditLoop(props){
     return (
         <div className='editLoopMaster'>
             <p className='loopEditorTitle'>Loop Editor</p>
-            {(!props.token && mode != 'new') ?
-            <>
+            {(!props.token) ?
+            <div className='loginRedirect'>
                 <p>You cannot access this page without being logged in.</p>
-                <button type='button' onClick={()=> navigate('/login')}>Log In</button>
+                <button className="editLogIn" type='button' onClick={()=> navigate('/login')}>Log In</button>
                 <p>or</p>
-                <button type='button' onClick={()=> navigate('/register')}>Sign Up</button>
-            </>
+                <button className="editSignUp" type='button' onClick={()=> navigate('/register')}>Sign Up</button>
+            </div>
             :
                     <>
                     {error.message ?

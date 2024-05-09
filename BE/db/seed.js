@@ -26,12 +26,19 @@ const {
   getRelativeChordsByLoopId
 } = require('./relativeChords');
 
+const{
+  updateAccess,
+  grantAccess,
+  getAllAccess
+} = require('./access');
+
   
   async function dropTables() {
     try {
       console.log("Starting to drop tables...");
   
       await client.query(`
+        DROP TABLE IF EXISTS access;
         DROP TABLE IF EXISTS saves;
         DROP TABLE IF EXISTS relative_chords;
         DROP TABLE IF EXISTS loops;
@@ -86,6 +93,12 @@ const {
             userId INTEGER REFERENCES users(id),
             loopId INTEGER REFERENCES loops(id)
           );
+
+        CREATE TABLE access (
+          id SERIAL PRIMARY KEY,
+          userId INTEGER REFERENCES users(id),
+          loopId INTEGER REFERENCES loops(id)
+        );
 
       `);
   
@@ -165,6 +178,17 @@ const {
         timestamp: timestamp,
         relativeChordNames: ["I", "V", "vi", "IV"]
       });
+
+      await createLoop({ 
+        userId: 1,
+        parentLoopId: null,
+        status: "private",
+        keySig: "Fmaj/Dmin",
+        timestamp: timestamp,
+        relativeChordNames: ["I", "V", "vi", "IV"],
+        jottings: "test to see if access can be granted"
+      });
+
       console.log("Finished creating loops!");
     } catch (error) {
       console.error("Error creating loops!");
@@ -204,7 +228,8 @@ const {
       console.log("publicLoops", publicLoopsWithChords);
 
       const loopBank = await getLoopBankByUser(2);
-      console.log('loopBank', loopBank)
+      console.log('loopBank', loopBank);
+
 
     } catch (error){
       console.log("Error testing db")
