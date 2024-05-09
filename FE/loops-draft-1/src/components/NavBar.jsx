@@ -9,11 +9,11 @@ export default function NavBar(props){
        
         <div className='navButtonContainer'>
             <Link className='navLink' id='homeAbout'to='/'>Home</Link>
-            <Link className='navLink' id='createLoop' to="/edit/new">Create</Link>
             <Link className='navLink' id='allLoops'to="/loops">Loops</Link>
             <Link className='navLink' id='allUsers'to="/users">Users</Link>
             {props.accountId ? 
             <>
+                <Link className='navLink' id='createLoop' to="/edit/new">Create</Link>
                 <Link className='navLink' id='account' to={`/users/${props.accountId}`}>Account</Link>
                 <button className='navButton' id='logOut'onClick={()=>{
                     props.setToken(null);
