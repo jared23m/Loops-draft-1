@@ -25,10 +25,6 @@ export default function Register(props){
                 currentErrors.push('Username length must be 8 characters or fewer.');
             }
 
-            if(!lettersAndNumbers(registerData.username)){
-                currentErrors.push('Username must only have letters and numbers.');
-            }
-
             if(registerData.password.length > 0 && (registerData.password.length < 8 || registerData.password.length > 15)){
                 currentErrors.push('Password must be 8-15 characters.');
             }

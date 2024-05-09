@@ -53,10 +53,6 @@ export default function SingleUser(props){
                 currentErrors.push('Username length must be 8 characters or fewer.');
             }
 
-            if(updateData.username.length > 0 & !lettersAndNumbers(updateData.username)){
-                currentErrors.push('Username must only have letters and numbers.');
-            }
-
             if(updateData.password.length > 0 && (updateData.password.length < 8 || updateData.password.length > 15)){
                 currentErrors.push('Password must be 8-15 characters.');
             }
