@@ -217,10 +217,12 @@ usersRouter.get("/:userId/", async (req, res, next) => {
           });
           return acc;
         }, { ids: {}, result: [] }).result;
+
+        console.log('accessedLoops', loggedInUser.accessedLoops);
     
         mergedArray.forEach((loop) => {
           const foundAccessed = loggedInUser.accessedLoops.find((accessedLoop)=>{
-            accessedLoop.id == loop.id
+            return accessedLoop.id == loop.id;
           })
     
           if (foundAccessed){

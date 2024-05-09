@@ -40,6 +40,8 @@ export default function SingleUser(props){
         loopBankLoops: true,
         savedLoops: true,
         unsavedLoops: true,
+        accessedLoops: true,
+        nonAccessedLoops: true,
         myLoops: true,
         othersLoops: true
     })
@@ -308,6 +310,22 @@ export default function SingleUser(props){
                         Unsaved Loops
                         </label>
                         <label className='searchCheck'>
+                        <input type="checkbox" value="accessedLoops" checked={privateSearchData.accessedLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentAccessedLoops = currentPrivateSearchData.accessedLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, accessedLoops: !currentAccessedLoops});
+                        }}/>
+                        Accessed Loops
+                        </label>
+                        <label className='searchCheck'>
+                        <input type="checkbox" value="nonAccessedLoops" checked={privateSearchData.nonAccessedLoops} onChange={()=>{
+                            const currentPrivateSearchData = privateSearchData;
+                            const currentNonAccessedLoops = currentPrivateSearchData.nonAccessedLoops;
+                            setPrivateSearchData({...currentPrivateSearchData, nonAccessedLoops: !currentNonAccessedLoops});
+                        }}/>
+                        Non-Accessed Loops
+                        </label>
+                        <label className='searchCheck'>
                         <input type="checkbox" value="myLoops" checked={privateSearchData.myLoops} onChange={()=>{
                             const currentPrivateSearchData = privateSearchData;
                             const currentMyLoops = currentPrivateSearchData.myLoops;
@@ -330,6 +348,11 @@ export default function SingleUser(props){
         )
     }
 
+
+    useEffect(()=>{
+        console.log(loopList);
+    }, [loopList]);
+    
     useEffect(()=>{
         if (loopList){
             let currentVisibleLoops = loopList;
@@ -469,6 +492,18 @@ export default function SingleUser(props){
             if (!privateSearchData.unsavedLoops){
                 currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
                     return loop.saved;
+                })
+            }
+
+            if (!privateSearchData.accessedLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return !loop.accessedByMe;
+                })
+            }
+
+            if (!privateSearchData.nonAccessedLoops){
+                currentVisibleLoops = currentVisibleLoops.filter((loop)=>{
+                    return loop.accessedByMe;
                 })
             }
 
