@@ -1548,3 +1548,27 @@ img{
     border: 1px solid antiquewhite;
     padding: 10px;
 }
+
+/* Demo Video */
+
+@media only screen and (max-width: 625px){
+    .demoVid{
+        width: 500px;
+        height: 300px;
+    }
+}
+
+@media only screen and (max-width: 460px){
+    .demoVid{
+        width: 400px;
+        height: 250px;
+    }
+}
+
+@media only screen and (max-width: 385px){
+    .demoVid{
+        width: 300px;
+        height: 200px;
+    }
+}
+

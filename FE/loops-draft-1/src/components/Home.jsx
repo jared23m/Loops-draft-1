@@ -7,6 +7,9 @@ export default function Home(){
             <h1>
             For anyone new...
             </h1>
+            <iframe className='demoVid'width="700" height="397"
+            src="https://www.youtube.com/embed/Sc1z7Y4p7Co">
+            </iframe>
             <div className='pic1container'>
             <p>
             Loops is a collaborative songwriting tool, but it can also be used on your own. 
